@@ -17,6 +17,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.HorseEntity;
+import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.util.text.*;
 import net.minecraft.world.BossInfo;
 import net.minecraftforge.client.event.GuiContainerEvent;
@@ -66,7 +67,10 @@ public class HorseStatsMod
 
                 // Stats
                 rx = 60;
-                this.renderText("Stats:", (int) rx, (int) ry, 0X444444);
+                // The skeleton horse name is too big and overrides "Stats:"
+                if (!(Minecraft.getInstance().player.getRidingEntity() instanceof SkeletonHorseEntity))
+                    this.renderText("Stats:", (int) rx, (int) ry, 0X444444);
+
 
                 // Health
                 rx += 30;
