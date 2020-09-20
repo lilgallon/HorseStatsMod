@@ -1,0 +1,18 @@
+modLoader="javafml" #mandatory
+loaderVersion="[32,)" #mandatory -> 1.16.1 and later
+license="GNU GPL-3.0"
+issueTrackerURL="https://github.com/N3ROO/HorseStatsMod/issues" #optional
+
+[[mods]] #mandatory
+modId="horsestatsmod" #mandatory
+version="1.0.0" #mandatory
+displayName="Quick Search Mod" #mandatory
+updateJSONURL="https://raw.githubusercontent.com/N3ROO/HorseStatsMod/MC_1.16.3/update.json" #optional
+displayURL="https://github.com/N3ROO/HorseStatsMod" #optional
+logoFile="quicksearch.png" #optional (jar root)
+# credits="" #optional
+authors="nero (@N3ROO on Github)" #optional
+description='''
+A mod to search for items in containers (chest, inventory, whatever).
+
+'''
