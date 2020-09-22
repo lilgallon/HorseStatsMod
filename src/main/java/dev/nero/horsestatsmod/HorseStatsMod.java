@@ -43,6 +43,7 @@ public class HorseStatsMod
     private void onDrawForegroundEvent(final GuiContainerEvent.DrawForeground event) {
         if (event.getGuiContainer() instanceof HorseInventoryScreen) {
             try {
+                // 1. GET THE STATISTICS OF THAT RIDDEN HORSE
                 AbstractHorseEntity horse = (AbstractHorseEntity) Minecraft.getInstance().player.getRidingEntity();
 
                 double health = horse.getAttribute(Attributes.field_233818_a_).getValue();
@@ -56,6 +57,8 @@ public class HorseStatsMod
                 ); // convert to blocks
                 speed = speed * 43; // convert to m/s
 
+                // 2.
+
                 double mouseX = Minecraft.getInstance().mouseHelper.getMouseX() - 2*event.getGuiContainer().getGuiLeft();
                 double mouseY = Minecraft.getInstance().mouseHelper.getMouseY() - 2*event.getGuiContainer().getGuiTop();
 
@@ -67,7 +70,7 @@ public class HorseStatsMod
                 // Stats
                 rx = 60;
                 // The skeleton horse name is too big and overrides "Stats:"
-                if (!(Minecraft.getInstance().player.getRidingEntity() instanceof SkeletonHorseEntity))
+                if (!(Minecraft.getInstance().player.getRidingEntity().getDisplayName().getString().length() > 8))
                     this.renderText("Stats:", (int) rx, (int) ry, 0X444444);
 
 
@@ -120,6 +123,10 @@ public class HorseStatsMod
                 LOGGER.error("The player is looking into an horse inventory without riding it? Is that possible?");
             }
         }
+    }
+
+    private void renderStatsWithHoveringText() {
+
     }
 
     private void drawHoveringText(Screen screen, int x, int y, String title, String min, String max, String... notes) {
