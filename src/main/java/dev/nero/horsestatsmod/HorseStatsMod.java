@@ -12,7 +12,6 @@ package dev.nero.horsestatsmod;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.nero.horsestatsmod.config.TheModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.HorseInventoryScreen;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -21,6 +20,7 @@ import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
@@ -82,7 +82,6 @@ public class HorseStatsMod
                 if (TheModConfig.displayStats()) {
                     // Show the stats on the GUI
                     displayStatsAndHoveringTexts(
-                            event.getGuiContainer(),
                             mouseX, mouseY,
                             health, jumpHeight, speed);
                 } else {
@@ -141,12 +140,11 @@ public class HorseStatsMod
                         TextFormatting.GREEN + MAX_SPEED)
             );
 
-            this.drawHoveringText(guiContainer, mouseX, mouseY, textLines);
+            this.drawHoveringText(mouseX, mouseY, textLines);
         }
     }
 
     private void displayStatsAndHoveringTexts(
-            ContainerScreen guiContainer,
             int mouseX, int mouseY,
             double health, double jumpHeight, double speed) {
 
@@ -175,7 +173,6 @@ public class HorseStatsMod
 
         if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw, rh)) {
             drawHoveringText(
-                    guiContainer,
                     mouseX, mouseY,
                     "Health:", "15.0", "30.0", "player: 20.0"
             );
@@ -190,7 +187,6 @@ public class HorseStatsMod
         );
         if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw-6, rh)) { // -12 because max is x.xx and not xx.xx
             drawHoveringText(
-                    guiContainer,
                     mouseX, mouseY,
                     "Jump (blocks):", "1.25", "5.0", "player: 1.25"
             );
@@ -205,7 +201,6 @@ public class HorseStatsMod
         );
         if (posInRect(mouseX, mouseY, rx-2,  ry-2, rw, rh)) {
             drawHoveringText(
-                    guiContainer,
                     mouseX, mouseY,
                     "Speed (m/s):", "4.8", "14.5",
                     "player: 4.317 (walk)", "player: 5.612 (sprint)", "player: 7.143 (sprint+jump)"
@@ -213,7 +208,7 @@ public class HorseStatsMod
         }
     }
 
-    private void drawHoveringText(Screen screen, int x, int y, String title, String min, String max, String... notes) {
+    private void drawHoveringText(int x, int y, String title, String min, String max, String... notes) {
         List<ITextComponent> textLines = new ArrayList<>();
         textLines.add(new StringTextComponent(title));
         textLines.add(new StringTextComponent(TextFormatting.RED + "min: " + min));
@@ -222,16 +217,28 @@ public class HorseStatsMod
             textLines.add(new StringTextComponent(note));
         }
 
-        this.drawHoveringText(screen, x, y, textLines);
+        this.drawHoveringText(x, y, textLines);
     }
 
-    private void drawHoveringText(Screen screen, int x, int y, List<ITextComponent> textLines) {
-        screen.func_243308_b(
+    private void drawHoveringText(int x, int y, List<ITextComponent> textLines) {
+
+        GuiUtils.drawHoveringText(
                 new MatrixStack(),
                 textLines,
                 // why /2? bc it works that way, I did not inspect the mc code in depth to understand
-                x/2, y/2
+                x/2, y/2,
+                Minecraft.getInstance().getMainWindow().getWidth(),
+                Minecraft.getInstance().getMainWindow().getHeight(),150,
+                Minecraft.getInstance().fontRenderer
         );
+/*
+        screen.renderToolTip(
+                new MatrixStack(),
+                Lists.transform(textLines, ITextComponent::func_241878_f),
+                // why /2? bc it works that way, I did not inspect the mc code in depth to understand
+                x/2, y/2,
+                Minecraft.getInstance().fontRenderer
+        );*/
     }
 
     /**
