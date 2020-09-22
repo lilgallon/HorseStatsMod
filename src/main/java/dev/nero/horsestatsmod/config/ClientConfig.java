@@ -14,7 +14,7 @@ public class ClientConfig {
                          "(in the GUI) to show a tooltip with its stats. Can be useful with some resource packs or " +
                          "mods that change the GUI of horses")
                 .translation("horsestatsmod" + ".config." + "displayStats")
-                .define("displayStats", true);
+                .define("displayStats", false);
 
         coloredStats = builder
                 .comment("Shows the stats with colors (ignored if displayStats is false). If turned on, it will " +
