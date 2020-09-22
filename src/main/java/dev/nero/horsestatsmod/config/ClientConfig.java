@@ -20,7 +20,7 @@ public class ClientConfig {
                 .comment("Shows the stats with colors (ignored if displayStats is false). If turned on, it will " +
                          " display the stats with the default gray color. Can be useful with some resource packs.")
                 .translation("horsestatsmod" + ".config." + "coloredStats")
-                .define("coloredStats", false);
+                .define("coloredStats", true);
 
         builder.pop();
     }
