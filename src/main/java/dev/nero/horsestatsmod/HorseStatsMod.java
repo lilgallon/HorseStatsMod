@@ -12,18 +12,15 @@ package dev.nero.horsestatsmod;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.nero.horsestatsmod.config.TheModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.HorseInventoryScreen;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +34,13 @@ public class HorseStatsMod
 {
     // If you need to log some stuff
     private static final Logger LOGGER = LogManager.getLogger();
+
+    private final double MIN_HEALTH = 15;
+    private final double MAX_HEALTH = 30;
+    private final double MIN_JUMP_HEIGHT = 1.25;
+    private final double MAX_JUMP_HEIGHT = 5;
+    private final double MIN_SPEED = 4.8;
+    private final double MAX_SPEED = 14.5;
 
     public HorseStatsMod() {
         MinecraftForge.EVENT_BUS.addListener(this::onDrawForegroundEvent);
@@ -94,21 +98,51 @@ public class HorseStatsMod
 
     private void displayStatsInHoveringText(
             ContainerScreen guiContainer,
-            double mouseX, double mouseY,
+            int mouseX, int mouseY,
             double health, double jumpHeight, double speed) {
-        // TODO: inspect 2* everywhere
-        // todo double -> int
-        int rx = 0;
-        int ry = 0;
-        int rw = 300;
-        int rh = 11;
 
-        AbstractGui.func_238467_a_(
-                new MatrixStack(),
-                rx, ry,
-                rx + rw, rx + rh,
-                0x88666666
-        );
+        // todo double -> int
+        // This represents a rectangle that contains all the header of the container (horse name)
+        final int RX = 3;
+        final int RY = 3;
+        final int RW = guiContainer.getXSize() - 6;
+        final int RH = 14;
+
+        if (posInRect(mouseX, mouseY, RX, RY, RW, RH)) {
+            List<ITextComponent> textLines = new ArrayList<>();
+
+            // Health
+            textLines.add(new StringTextComponent(
+                "Health: " +
+                TextFormatting.RED + MIN_HEALTH +
+                TextFormatting.RESET + "/" +
+                getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
+                TextFormatting.RESET + "/" +
+                TextFormatting.GREEN + MAX_HEALTH)
+            );
+
+            // Jump height
+            textLines.add(new StringTextComponent(
+                "Jump height: " +
+                TextFormatting.RED + MIN_JUMP_HEIGHT +
+                TextFormatting.RESET + "/" +
+                getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
+                TextFormatting.RESET + "/" +
+                TextFormatting.GREEN + MAX_JUMP_HEIGHT)
+            );
+
+            // Speed
+            textLines.add(new StringTextComponent(
+                "Speed: " +
+                        TextFormatting.RED + MIN_SPEED +
+                        TextFormatting.RESET + "/" +
+                        getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
+                        TextFormatting.RESET + "/" +
+                        TextFormatting.GREEN + MAX_SPEED)
+            );
+
+            this.drawHoveringText(guiContainer, mouseX, mouseY, textLines);
+        }
     }
 
     private void displayStatsAndHoveringTexts(
@@ -119,27 +153,27 @@ public class HorseStatsMod
         // The boxes positions (x,y) and dimensions (w,h) defining when to display the hovering text relative to the
         // top left of the container
         int rx;
-        int ry = 12;
-        int rw = 59;
-        int rh = 22;
+        int ry = 6;
+        int rw = 29;
+        int rh = 11;
 
-        // Starts at x=120 by displaying "Stats:" (if it fits the GUI)
-        rx = 120;
+        // Starts at x=60 by displaying "Stats:" (if it fits the GUI)
+        rx = 60;
 
         // 7 is the maximum number of letters for "Stats" to be displayed, because otherwise it overlaps with
         // the horse's name
         if (!(Minecraft.getInstance().player.getRidingEntity().getDisplayName().getString().length() > 8))
             this.renderText("Stats:", rx, ry, 0X444444);
 
-        // Health (60 units shift to the right)
-        rx += 60;
+        // Health (30 units shift to the right)
+        rx += 30;
         this.renderText(
                 String.format("%.2f", health),
                 rx, ry,
-                TheModConfig.coloredStats() ? getColor(health, 15, 30) : 0X444444
+                TheModConfig.coloredStats() ? getColorHex(health, MIN_HEALTH, MAX_HEALTH) : 0X444444
         );
 
-        if (posInRect(mouseX, mouseY, rx - 4,  ry - 4, rw, rh)) {
+        if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw, rh)) {
             drawHoveringText(
                     guiContainer,
                     mouseX, mouseY,
@@ -147,14 +181,14 @@ public class HorseStatsMod
             );
         }
 
-        // Jump (60 units shift to the right as well)
-        rx += 60;
+        // Jump (30 units shift to the right as well)
+        rx += 30;
         this.renderText(
                 String.format("%.2f", jumpHeight),
                 rx, ry,
-                TheModConfig.coloredStats() ? getColor(jumpHeight, 1.25, 5) : 0X444444
+                TheModConfig.coloredStats() ? getColorHex(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) : 0X444444
         );
-        if (posInRect(mouseX, mouseY, rx - 4,  ry - 2, rw-12, rh)) { // -12 because max is x.xx and not xx.xx
+        if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw-6, rh)) { // -12 because max is x.xx and not xx.xx
             drawHoveringText(
                     guiContainer,
                     mouseX, mouseY,
@@ -162,14 +196,14 @@ public class HorseStatsMod
             );
         }
 
-        // Speed (48 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
-        rx += 48;
+        // Speed (24 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
+        rx += 24;
         this.renderText(
                 String.format("%.2f", speed),
                 rx, ry,
-                TheModConfig.coloredStats() ? getColor(speed, 4.8, 14.5) : 0X444444
+                TheModConfig.coloredStats() ? getColorHex(speed, MIN_SPEED, MAX_SPEED) : 0X444444
         );
-        if (posInRect(mouseX, mouseY, rx-4,  ry-4, rw, rh)) {
+        if (posInRect(mouseX, mouseY, rx-2,  ry-2, rw, rh)) {
             drawHoveringText(
                     guiContainer,
                     mouseX, mouseY,
@@ -188,6 +222,10 @@ public class HorseStatsMod
             textLines.add(new StringTextComponent(note));
         }
 
+        this.drawHoveringText(screen, x, y, textLines);
+    }
+
+    private void drawHoveringText(Screen screen, int x, int y, List<ITextComponent> textLines) {
         screen.func_243308_b(
                 new MatrixStack(),
                 textLines,
@@ -202,11 +240,8 @@ public class HorseStatsMod
      * @param max the max possible value
      * @return an hex color according to the percentage of val in min/max
      */
-    private int getColor(double val, double min, double max) {
-        val = val - min;
-        max = max - min;
-
-        double p = 100d * val / max;
+    private int getColorHex(double val, double min, double max) {
+        double p = this.getPercentage(val, min, max);
 
         if (p <= 25) {
             return 0xd12300;
@@ -217,6 +252,37 @@ public class HorseStatsMod
         } else {
             return 0x77bf04;
         }
+    }
+
+    /**
+     * @param val the value
+     * @param min the min possible value
+     * @param max the max possible value
+     * @return a TextFormatting color according to the percentage of val in min/max
+     */
+    private TextFormatting getColorTextFormat(double val, double min, double max) {
+        double p = this.getPercentage(val, min, max);
+
+        if (p <= 25) {
+            return TextFormatting.RED;
+        } else if (p > 25 && p <= 50) {
+            return TextFormatting.GOLD;
+        } else if (p > 50 && p <= 75) {
+            return TextFormatting.YELLOW;
+        } else {
+            return TextFormatting.GREEN;
+        }
+    }
+
+    /**
+     * Basic percentage function
+     * @param val the value
+     * @param min the min possible value
+     * @param max the max possible value
+     * @return the percentage (0<=x<=100)
+     */
+    private double getPercentage(double val, double min, double max) {
+        return 100d * (val-min) / (max-min);
     }
 
     /**
@@ -231,8 +297,7 @@ public class HorseStatsMod
         Minecraft.getInstance().fontRenderer.func_238421_b_(
                 new MatrixStack(),
                 text,
-                // same comment as in this#drawHoveringText, sounds like everything is multiplied by two at some point
-                x/2, y/2,
+                x, y,
                 color
         );
     }
@@ -247,6 +312,17 @@ public class HorseStatsMod
      * @return true if the given position is in the given rectangle
      */
     private boolean posInRect(int px, int py, int rx, int ry, int rw, int rh) {
+        // These multiplications are here to match the rectangle drawn by calling AbstractGui.fillRect(a, b, c, d, col)
+        // This method multiplies everything by two (the other drawing methods do the same thing, I don't know why. If
+        // you know, please open an issue and explain that). So the rectangle given will be multiplied by 2 to match
+        // the rectangle that would be drawn with the same parameters.
+        // When creating a rectangle, I use the fillRect function to visualize the rectangle. Then I use this function
+        // to check if the mouse is inside or not. This multiplication prevents doing a lot more when calling this
+        // function. Just ignore that, act like if it worked as intended. It's a little hack.
+        rx *= 2;
+        ry *= 2;
+        rw *= 2;
+        rh *= 2;
         return (px >= rx && px <= rx + rw) && (py >= ry && py <= ry + rh);
     }
 }
