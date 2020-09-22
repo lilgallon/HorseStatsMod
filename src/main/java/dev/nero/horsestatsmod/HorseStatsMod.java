@@ -10,21 +10,19 @@
 package dev.nero.horsestatsmod;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import dev.nero.horsestatsmod.config.TheModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.HorseInventoryScreen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
-import net.minecraft.entity.passive.horse.HorseEntity;
 import net.minecraft.entity.passive.horse.SkeletonHorseEntity;
 import net.minecraft.util.text.*;
-import net.minecraft.world.BossInfo;
 import net.minecraftforge.client.event.GuiContainerEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +37,7 @@ public class HorseStatsMod
 
     public HorseStatsMod() {
         MinecraftForge.EVENT_BUS.addListener(this::onDrawForegroundEvent);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, TheModConfig.CLIENT_SPEC);
     }
 
     private void onDrawForegroundEvent(final GuiContainerEvent.DrawForeground event) {
@@ -81,6 +80,7 @@ public class HorseStatsMod
                 );
                 if (posInRect(mouseX, mouseY, (rx-2)*2,  (ry-2)*2, rw*2, rh*2)) {
                     drawHoveringText(
+                            event.getGuiContainer(),
                             (int) mouseX/2, (int) mouseY/2,
                             "Health:", "15.0", "30.0", "player: 20.0"
                     );
@@ -95,6 +95,7 @@ public class HorseStatsMod
                 );
                 if (posInRect(mouseX, mouseY, (rx-2)*2,  (ry-2)*2, (rw-6)*2, rh*2)) {
                     drawHoveringText(
+                            event.getGuiContainer(),
                             (int) mouseX/2, (int) mouseY/2,
                             "Jump (blocks):", "1.25", "5.0", "player: 1.25"
                     );
@@ -109,6 +110,7 @@ public class HorseStatsMod
                 );
                 if (posInRect(mouseX, mouseY, (rx-2)*2,  (ry-2)*2, rw*2, rh*2)) {
                     drawHoveringText(
+                            event.getGuiContainer(),
                             (int) mouseX/2, (int) mouseY/2,
                             "Speed (m/s):", "4.8", "14.5",
                             "player: 4.317 (walk)", "player: 5.612 (sprint)", "player: 7.143 (sprint+jump)"
@@ -120,8 +122,8 @@ public class HorseStatsMod
         }
     }
 
-    private void drawHoveringText(int x, int y, String title, String min, String max, String... notes) {
-        List<ITextProperties> textLines = new ArrayList<>();
+    private void drawHoveringText(Screen screen, int x, int y, String title, String min, String max, String... notes) {
+        List<ITextComponent> textLines = new ArrayList<>();
         textLines.add(new StringTextComponent(title));
         textLines.add(new StringTextComponent(TextFormatting.RED + "min: " + min));
         textLines.add(new StringTextComponent(TextFormatting.GREEN + "max: " + max));
@@ -129,13 +131,10 @@ public class HorseStatsMod
             textLines.add(new StringTextComponent(note));
         }
 
-        GuiUtils.drawHoveringText(
-                new MatrixStack(), textLines,
-                x,
-                y,
-                Minecraft.getInstance().getMainWindow().getWidth(),
-                Minecraft.getInstance().getMainWindow().getHeight(),
-                150, Minecraft.getInstance().fontRenderer
+        screen.func_243308_b(
+                new MatrixStack(),
+                textLines,
+                x, y
         );
     }
 
