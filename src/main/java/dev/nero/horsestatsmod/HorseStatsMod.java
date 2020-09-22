@@ -136,7 +136,7 @@ public class HorseStatsMod
         this.renderText(
                 String.format("%.2f", health),
                 rx, ry,
-                getColor(health, 15, 30)
+                TheModConfig.coloredStats() ? getColor(health, 15, 30) : 0X444444
         );
 
         if (posInRect(mouseX, mouseY, rx - 4,  ry - 4, rw, rh)) {
@@ -152,7 +152,7 @@ public class HorseStatsMod
         this.renderText(
                 String.format("%.2f", jumpHeight),
                 rx, ry,
-                getColor(jumpHeight, 1.25, 5)
+                TheModConfig.coloredStats() ? getColor(jumpHeight, 1.25, 5) : 0X444444
         );
         if (posInRect(mouseX, mouseY, rx - 4,  ry - 2, rw-12, rh)) { // -12 because max is x.xx and not xx.xx
             drawHoveringText(
@@ -167,7 +167,7 @@ public class HorseStatsMod
         this.renderText(
                 String.format("%.2f", speed),
                 rx, ry,
-                getColor(speed, 4.8, 14.5)
+                TheModConfig.coloredStats() ? getColor(speed, 4.8, 14.5) : 0X444444
         );
         if (posInRect(mouseX, mouseY, rx-4,  ry-4, rw, rh)) {
             drawHoveringText(
