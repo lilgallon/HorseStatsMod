@@ -12,7 +12,9 @@ package dev.nero.horsestatsmod;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.nero.horsestatsmod.config.TheModConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.HorseInventoryScreen;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
@@ -21,6 +23,7 @@ import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
@@ -57,76 +60,123 @@ public class HorseStatsMod
                 ); // convert to blocks
                 speed = speed * 43; // convert to m/s
 
-                // 2.
+                // 2. DISPLAY THE STATS
 
-                double mouseX = Minecraft.getInstance().mouseHelper.getMouseX() - 2*event.getGuiContainer().getGuiLeft();
-                double mouseY = Minecraft.getInstance().mouseHelper.getMouseY() - 2*event.getGuiContainer().getGuiTop();
-
-                double rw = 30;
-                double rh = 11;
-                double ry = 6;
-                double rx;
-
-                // Stats
-                rx = 60;
-                // The skeleton horse name is too big and overrides "Stats:"
-                if (!(Minecraft.getInstance().player.getRidingEntity().getDisplayName().getString().length() > 8))
-                    this.renderText("Stats:", (int) rx, (int) ry, 0X444444);
-
-
-                // Health
-                rx += 30;
-                this.renderText(
-                        String.format("%.2f", health),
-                        (int) rx, (int) ry,
-                        getColor(health, 15, 30)
+                // Mouse position (relative to the top left of the container) to know when to render the hovering text
+                // This - 2*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
+                // Why event.getGuiContainer().getGuiLeft() is not already the left position of the container? I have
+                // no clue lol
+                int mouseX = (
+                        (int) Minecraft.getInstance().mouseHelper.getMouseX()
+                        - 2 * event.getGuiContainer().getGuiLeft()
                 );
-                if (posInRect(mouseX, mouseY, (rx-2)*2,  (ry-2)*2, rw*2, rh*2)) {
-                    drawHoveringText(
+                int mouseY = (
+                        (int) Minecraft.getInstance().mouseHelper.getMouseY()
+                        - 2 * event.getGuiContainer().getGuiTop()
+                );
+
+                if (TheModConfig.displayStats()) {
+                    // Show the stats on the GUI
+                    displayStatsAndHoveringTexts(
                             event.getGuiContainer(),
-                            (int) mouseX/2, (int) mouseY/2,
-                            "Health:", "15.0", "30.0", "player: 20.0"
-                    );
+                            mouseX, mouseY,
+                            health, jumpHeight, speed);
+                } else {
+                    // Show the stats only if the mouse is on the horse's name
+                    displayStatsInHoveringText(event.getGuiContainer(), mouseX, mouseY, health, jumpHeight, speed);
                 }
 
-                // Jump
-                rx += 30;
-                this.renderText(
-                        String.format("%.2f", jumpHeight),
-                        (int) rx, (int) ry,
-                        getColor(jumpHeight, 1.25, 5)
-                );
-                if (posInRect(mouseX, mouseY, (rx-2)*2,  (ry-2)*2, (rw-6)*2, rh*2)) {
-                    drawHoveringText(
-                            event.getGuiContainer(),
-                            (int) mouseX/2, (int) mouseY/2,
-                            "Jump (blocks):", "1.25", "5.0", "player: 1.25"
-                    );
-                }
-
-                // Speed
-                rx += 24;
-                this.renderText(
-                        String.format("%.2f", speed),
-                        (int) rx, (int) ry,
-                        getColor(speed, 4.8, 14.5)
-                );
-                if (posInRect(mouseX, mouseY, (rx-2)*2,  (ry-2)*2, rw*2, rh*2)) {
-                    drawHoveringText(
-                            event.getGuiContainer(),
-                            (int) mouseX/2, (int) mouseY/2,
-                            "Speed (m/s):", "4.8", "14.5",
-                            "player: 4.317 (walk)", "player: 5.612 (sprint)", "player: 7.143 (sprint+jump)"
-                    );
-                }
             } catch (Exception e) {
                 LOGGER.error("The player is looking into an horse inventory without riding it? Is that possible?");
             }
         }
     }
 
-    private void renderStatsWithHoveringText() {
+    private void displayStatsInHoveringText(
+            ContainerScreen guiContainer,
+            double mouseX, double mouseY,
+            double health, double jumpHeight, double speed) {
+        // TODO: inspect 2* everywhere
+        // todo double -> int
+        int rx = 0;
+        int ry = 0;
+        int rw = 300;
+        int rh = 11;
 
+        AbstractGui.func_238467_a_(
+                new MatrixStack(),
+                rx, ry,
+                rx + rw, rx + rh,
+                0x88666666
+        );
+    }
+
+    private void displayStatsAndHoveringTexts(
+            ContainerScreen guiContainer,
+            int mouseX, int mouseY,
+            double health, double jumpHeight, double speed) {
+
+        // The boxes positions (x,y) and dimensions (w,h) defining when to display the hovering text relative to the
+        // top left of the container
+        int rx;
+        int ry = 12;
+        int rw = 59;
+        int rh = 22;
+
+        // Starts at x=120 by displaying "Stats:" (if it fits the GUI)
+        rx = 120;
+
+        // 7 is the maximum number of letters for "Stats" to be displayed, because otherwise it overlaps with
+        // the horse's name
+        if (!(Minecraft.getInstance().player.getRidingEntity().getDisplayName().getString().length() > 8))
+            this.renderText("Stats:", rx, ry, 0X444444);
+
+        // Health (60 units shift to the right)
+        rx += 60;
+        this.renderText(
+                String.format("%.2f", health),
+                rx, ry,
+                getColor(health, 15, 30)
+        );
+
+        if (posInRect(mouseX, mouseY, rx - 4,  ry - 4, rw, rh)) {
+            drawHoveringText(
+                    guiContainer,
+                    mouseX, mouseY,
+                    "Health:", "15.0", "30.0", "player: 20.0"
+            );
+        }
+
+        // Jump (60 units shift to the right as well)
+        rx += 60;
+        this.renderText(
+                String.format("%.2f", jumpHeight),
+                rx, ry,
+                getColor(jumpHeight, 1.25, 5)
+        );
+        if (posInRect(mouseX, mouseY, rx - 4,  ry - 2, rw-12, rh)) { // -12 because max is x.xx and not xx.xx
+            drawHoveringText(
+                    guiContainer,
+                    mouseX, mouseY,
+                    "Jump (blocks):", "1.25", "5.0", "player: 1.25"
+            );
+        }
+
+        // Speed (48 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
+        rx += 48;
+        this.renderText(
+                String.format("%.2f", speed),
+                rx, ry,
+                getColor(speed, 4.8, 14.5)
+        );
+        if (posInRect(mouseX, mouseY, rx-4,  ry-4, rw, rh)) {
+            drawHoveringText(
+                    guiContainer,
+                    mouseX, mouseY,
+                    "Speed (m/s):", "4.8", "14.5",
+                    "player: 4.317 (walk)", "player: 5.612 (sprint)", "player: 7.143 (sprint+jump)"
+            );
+        }
     }
 
     private void drawHoveringText(Screen screen, int x, int y, String title, String min, String max, String... notes) {
@@ -141,7 +191,8 @@ public class HorseStatsMod
         screen.func_243308_b(
                 new MatrixStack(),
                 textLines,
-                x, y
+                // why /2? bc it works that way, I did not inspect the mc code in depth to understand
+                x/2, y/2
         );
     }
 
@@ -180,8 +231,8 @@ public class HorseStatsMod
         Minecraft.getInstance().fontRenderer.func_238421_b_(
                 new MatrixStack(),
                 text,
-                x,
-                y,
+                // same comment as in this#drawHoveringText, sounds like everything is multiplied by two at some point
+                x/2, y/2,
                 color
         );
     }
@@ -195,7 +246,7 @@ public class HorseStatsMod
      * @param rh height of rect
      * @return true if the given position is in the given rectangle
      */
-    private boolean posInRect(double px, double py, double rx, double ry, double rw, double rh) {
+    private boolean posInRect(int px, int py, int rx, int ry, int rw, int rh) {
         return (px >= rx && px <= rx + rw) && (py >= ry && py <= ry + rh);
     }
 }
