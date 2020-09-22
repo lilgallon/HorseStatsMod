@@ -7,7 +7,7 @@ public class ClientConfig {
     public final ForgeConfigSpec.BooleanValue coloredStats;
 
     public ClientConfig(ForgeConfigSpec.Builder builder) {
-        // builder.push("category");
+        builder.push("HorseStatsMod");
 
         displayStats = builder
                 .comment("Shows the stats in the GUI. If turned off, you need to put your mouse on the horse name " +
