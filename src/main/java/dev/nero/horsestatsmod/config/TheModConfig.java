@@ -32,7 +32,7 @@ public class TheModConfig {
         coloredStats = CLIENT.coloredStats.get();
     }
 
-    public static boolean isDisplayStats() {
+    public static boolean displayStats() {
         return displayStats;
     }
 
@@ -40,7 +40,7 @@ public class TheModConfig {
         TheModConfig.displayStats = displayStats;
     }
 
-    public static boolean isColoredStats() {
+    public static boolean coloredStats() {
         return coloredStats;
     }
 
