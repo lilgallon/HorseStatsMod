@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/N3ROO/HorseStatsMod/issues" #optional
 
 [[mods]] #mandatory
 modId="horsestatsmod" #mandatory
-version="1.1.0" #mandatory
+version="1.2.0" #mandatory
 displayName="Horse Stats Mod" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/N3ROO/HorseStatsMod/MC_1.16.3/update.json" #optional
 displayURL="https://github.com/N3ROO/HorseStatsMod" #optional
