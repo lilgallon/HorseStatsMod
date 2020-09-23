@@ -19,6 +19,7 @@ import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
@@ -42,63 +43,109 @@ public class HorseStatsMod
     private final double MIN_SPEED = 4.8;
     private final double MAX_SPEED = 14.5;
 
+    private double health;
+    private double jumpHeight;
+    private double speed;
+
     public HorseStatsMod() {
+        MinecraftForge.EVENT_BUS.addListener(this::onEntityInteractEvent);
         MinecraftForge.EVENT_BUS.addListener(this::onDrawForegroundEvent);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, TheModConfig.CLIENT_SPEC);
     }
 
-    private void onDrawForegroundEvent(final GuiContainerEvent.DrawForeground event) {
-        if (event.getGuiContainer() instanceof HorseInventoryScreen) {
-            try {
-                // 1. GET THE STATISTICS OF THAT RIDDEN HORSE
-                AbstractHorseEntity horse = (AbstractHorseEntity) Minecraft.getInstance().player.getRidingEntity();
+    private void onEntityInteractEvent(final PlayerInteractEvent.EntityInteractSpecific event) {
+        if (event.getTarget() instanceof AbstractHorseEntity) {
+            if (!((AbstractHorseEntity) event.getTarget()).isTame()) {
 
-                double health = horse.getAttribute(Attributes.field_233818_a_).getValue();
-                double jumpHeight = horse.getAttribute(Attributes.field_233830_m_).getValue();
-                double speed = horse.getAttribute(Attributes.field_233821_d_).getValue();
-
-                jumpHeight = (
-                        - 0.1817584952 * Math.pow(jumpHeight, 3) +
-                        3.689713992 * Math.pow(jumpHeight, 2) +
-                        2.128599134 * jumpHeight - 0.343930367
-                ); // convert to blocks
-                speed = speed * 43; // convert to m/s
-
-                // 2. DISPLAY THE STATS
-
-                // Mouse position (relative to the top left of the container) to know when to render the hovering text
-                // This - 2*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
-                // Why event.getGuiContainer().getGuiLeft() is not already the left position of the container? I have
-                // no clue lol
-                int mouseX = (
-                        (int) Minecraft.getInstance().mouseHelper.getMouseX()
-                        - 2 * event.getGuiContainer().getGuiLeft()
+                Minecraft.getInstance().ingameGUI.setOverlayMessage(
+                    new StringTextComponent(
+                    "Health: " +
+                            TextFormatting.RED + MIN_HEALTH +
+                            TextFormatting.RESET + "/" +
+                            getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
+                            TextFormatting.RESET + "/" +
+                            TextFormatting.GREEN + MAX_HEALTH + TextFormatting.RESET + " " +
+                            "Jump: " +
+                            TextFormatting.RED + MIN_JUMP_HEIGHT +
+                            TextFormatting.RESET + "/" +
+                            getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
+                            TextFormatting.RESET + "/" +
+                            TextFormatting.GREEN + MAX_JUMP_HEIGHT + TextFormatting.RESET + " " +
+                            "Speed: " +
+                            TextFormatting.RED + MIN_SPEED +
+                            TextFormatting.RESET + "/" +
+                            getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
+                            TextFormatting.RESET + "/" +
+                            TextFormatting.GREEN + MAX_SPEED
+                    ),
+                    false
                 );
-                int mouseY = (
-                        (int) Minecraft.getInstance().mouseHelper.getMouseY()
-                        - 2 * event.getGuiContainer().getGuiTop()
-                );
-
-                if (TheModConfig.displayStats()) {
-                    // Show the stats on the GUI
-                    displayStatsAndHoveringTexts(
-                            mouseX, mouseY,
-                            health, jumpHeight, speed);
-                } else {
-                    // Show the stats only if the mouse is on the horse's name
-                    displayStatsInHoveringText(event.getGuiContainer(), mouseX, mouseY, health, jumpHeight, speed);
-                }
-
-            } catch (Exception e) {
-                LOGGER.error("The player is looking into an horse inventory without riding it? Is that possible?");
             }
         }
     }
 
-    private void displayStatsInHoveringText(
-            ContainerScreen guiContainer,
-            int mouseX, int mouseY,
-            double health, double jumpHeight, double speed) {
+    private void onDrawForegroundEvent(final GuiContainerEvent.DrawForeground event) {
+        if (event.getGuiContainer() instanceof HorseInventoryScreen) {
+            // 1. GET THE STATISTICS OF THAT RIDDEN HORSE
+
+            // The horse attribute is private in HorseInventoryScreen, and the event does not have the information
+            // either (that's normal because that's a render event). So we need to retrieve it using an other way
+            AbstractHorseEntity horse = null;
+            try {
+                // If the player is riding it
+                horse = (AbstractHorseEntity) Minecraft.getInstance().player.getRidingEntity();
+            } catch (Exception e1) {
+                // If the player is interacting with it by crouching + right clicking it
+                try {
+                    horse = (AbstractHorseEntity) Minecraft.getInstance().pointedEntity;
+                } catch (Exception e2) {
+                    LOGGER.error("Could not get the horse information");
+                }
+            }
+
+            if (horse == null) return;
+
+            getHorseStats(horse);
+
+            // 2. DISPLAY THE STATS
+
+            // Mouse position (relative to the top left of the container) to know when to render the hovering text
+            // This - 2*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
+            // Why event.getGuiContainer().getGuiLeft() is not already the left position of the container? I have
+            // no clue lol
+            int mouseX = (
+                    (int) Minecraft.getInstance().mouseHelper.getMouseX()
+                    - 2 * event.getGuiContainer().getGuiLeft()
+            );
+            int mouseY = (
+                    (int) Minecraft.getInstance().mouseHelper.getMouseY()
+                    - 2 * event.getGuiContainer().getGuiTop()
+            );
+
+            if (TheModConfig.displayStats()) {
+                // Show the stats on the GUI
+                displayStatsAndHoveringTexts(mouseX, mouseY);
+            } else {
+                // Show the stats only if the mouse is on the horse's name
+                displayStatsInHoveringText(event.getGuiContainer(), mouseX, mouseY);
+            }
+        }
+    }
+
+    private void getHorseStats(AbstractHorseEntity horse) {
+        health = horse.getAttribute(Attributes.field_233818_a_).getValue();
+        jumpHeight = horse.getAttribute(Attributes.field_233830_m_).getValue();
+        speed = horse.getAttribute(Attributes.field_233821_d_).getValue();
+
+        jumpHeight = (
+                - 0.1817584952 * Math.pow(jumpHeight, 3) +
+                        3.689713992 * Math.pow(jumpHeight, 2) +
+                        2.128599134 * jumpHeight - 0.343930367
+        ); // convert to blocks
+        speed = speed * 43; // convert to m/s
+    }
+
+    private void displayStatsInHoveringText(ContainerScreen guiContainer, int mouseX, int mouseY) {
 
         // todo double -> int
         // This represents a rectangle that contains all the header of the container (horse name)
@@ -144,9 +191,7 @@ public class HorseStatsMod
         }
     }
 
-    private void displayStatsAndHoveringTexts(
-            int mouseX, int mouseY,
-            double health, double jumpHeight, double speed) {
+    private void displayStatsAndHoveringTexts(int mouseX, int mouseY) {
 
         // The boxes positions (x,y) and dimensions (w,h) defining when to display the hovering text relative to the
         // top left of the container
@@ -231,14 +276,6 @@ public class HorseStatsMod
                 Minecraft.getInstance().getMainWindow().getHeight(),150,
                 Minecraft.getInstance().fontRenderer
         );
-/*
-        screen.renderToolTip(
-                new MatrixStack(),
-                Lists.transform(textLines, ITextComponent::func_241878_f),
-                // why /2? bc it works that way, I did not inspect the mc code in depth to understand
-                x/2, y/2,
-                Minecraft.getInstance().fontRenderer
-        );*/
     }
 
     /**
