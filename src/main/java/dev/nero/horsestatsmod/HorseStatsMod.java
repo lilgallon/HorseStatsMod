@@ -57,6 +57,8 @@ public class HorseStatsMod
         if (event.getTarget() instanceof AbstractHorseEntity) {
             if (!((AbstractHorseEntity) event.getTarget()).isTame()) {
 
+                this.getHorseStats((AbstractHorseEntity) event.getTarget());
+
                 Minecraft.getInstance().ingameGUI.setOverlayMessage(
                     new StringTextComponent(
                     "Health: " +
