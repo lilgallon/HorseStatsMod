@@ -1,3 +1,7 @@
+## Version 1.2.1 for Minecraft 1.16.x
+
+- Fixed issue where right clicking a non tamed horse would show the stats of the latest ridden horse, and not the targeted one
+
 ## Version 1.2.0 for Minecraft 1.16.x
 
 - Fixed the stats not showing when crouching and right clicking a horse
