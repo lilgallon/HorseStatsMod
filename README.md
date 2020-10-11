@@ -13,6 +13,8 @@ A lightweight mod that shows the horses' stats (health, jump height and speed).
 
 ![demo](https://github.com/N3ROO/HorseStatsMod/raw/MC_1.16.3/.github/resources/demo-1.2.0.png)
 
+![demo](https://github.com/N3ROO/HorseStatsMod/raw/MC_1.16.3/.github/resources/demo-1.3.0.png)
+
 ## Contributing
 Don't hesitate to contribute. Even if it's your first time, it's never too late to learn!
 
