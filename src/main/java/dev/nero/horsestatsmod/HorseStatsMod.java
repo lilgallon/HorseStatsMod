@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.HorseInventoryScreen;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
+import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,10 +45,13 @@ public class HorseStatsMod
     private final double MAX_JUMP_HEIGHT = 5;
     private final double MIN_SPEED = 4.8;
     private final double MAX_SPEED = 14.5;
+    private final double MIN_SLOTS = 3;
+    private final double MAX_SLOTS = 15;
 
     private double health;
     private double jumpHeight;
     private double speed;
+    private int slots;
 
     public HorseStatsMod() {
         MinecraftForge.EVENT_BUS.addListener(this::onEntityInteractEvent);
@@ -81,7 +85,15 @@ public class HorseStatsMod
                             TextFormatting.RESET + "/" +
                             getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
                             TextFormatting.RESET + "/" +
-                            TextFormatting.GREEN + MAX_SPEED
+                            TextFormatting.GREEN + MAX_SPEED + TextFormatting.RESET + " " +
+                            (slots == -1 ? "" : (
+                                "Slots: " +
+                                TextFormatting.RED + MIN_SLOTS +
+                                TextFormatting.RESET + "/" +
+                                getColorTextFormat(slots, MIN_SLOTS, MAX_SLOTS) + slots +
+                                TextFormatting.RESET + "/" +
+                                TextFormatting.GREEN + MAX_SLOTS
+                            ))
                     ) :
                     new StringTextComponent(
                             "Health: " +
@@ -92,7 +104,12 @@ public class HorseStatsMod
                                 TextFormatting.RESET + " " +
                                 "Speed: " +
                                 getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
-                                TextFormatting.RESET
+                                TextFormatting.RESET + " " +
+                                (slots == -1 ? "" : (
+                                    "Slots: " +
+                                    getColorTextFormat(slots, MIN_SLOTS, MAX_SLOTS) + slots +
+                                    TextFormatting.RESET
+                                ))
                     ),
                     false
                 );
@@ -152,6 +169,11 @@ public class HorseStatsMod
         health = horse.getAttribute(Attributes.field_233818_a_).getValue();
         jumpHeight = horse.getAttribute(Attributes.field_233830_m_).getValue();
         speed = horse.getAttribute(Attributes.field_233821_d_).getValue();
+
+        if (horse instanceof LlamaEntity)
+            slots = ((LlamaEntity) horse).getInventoryColumns() * 3;
+        else
+            slots = -1;
 
         jumpHeight = (
                 - 0.1817584952 * Math.pow(jumpHeight, 3) +
@@ -224,6 +246,25 @@ public class HorseStatsMod
                         TextFormatting.RESET
                 )
             );
+
+            // Slots
+            if (slots != -1) {
+                textLines.add(
+                    TheModConfig.displayMinMax() ?
+                        new StringTextComponent(
+                            "Slots: " +
+                                TextFormatting.RED + MIN_SLOTS +
+                                TextFormatting.RESET + "/" +
+                                getColorTextFormat(speed, MIN_SLOTS, MAX_SLOTS) + slots +
+                                TextFormatting.RESET + "/" +
+                                TextFormatting.GREEN + MAX_SLOTS)
+                        : new StringTextComponent(
+                        "Slots: " +
+                            getColorTextFormat(speed, MIN_SLOTS, MAX_SLOTS) + slots +
+                            TextFormatting.RESET
+                    )
+                );
+            }
 
             this.drawHoveringText(mouseX, mouseY, textLines);
         }

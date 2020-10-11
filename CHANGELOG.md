@@ -1,6 +1,8 @@
 ## Version 1.3.0 for Minecraft 1.16.x
 
 - Added "displayMinMax" option. When turned off, it won't display the min and max statistics
+    - Set to false by default
+- Added a "slots" statistics for llamas
 
 ## Version 1.2.1 for Minecraft 1.16.x
 

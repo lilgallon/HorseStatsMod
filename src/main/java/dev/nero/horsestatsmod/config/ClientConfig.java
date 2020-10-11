@@ -28,7 +28,7 @@ public class ClientConfig {
                 .comment("Shows the stats with their min and max. If turned off, it will display the stats without " +
                         "any information about their min and max.")
                 .translation(HorseStatsMod.MODID + ".config." + "displayMinMax")
-                .define("displayMinMax", true);
+                .define("displayMinMax", false);
 
         builder.pop();
     }
