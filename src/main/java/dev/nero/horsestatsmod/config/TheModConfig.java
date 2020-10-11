@@ -20,6 +20,7 @@ public class TheModConfig {
 
     private static boolean displayStats;
     private static boolean coloredStats;
+    private static boolean displayMinMax;
 
     @SubscribeEvent
     public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
@@ -31,6 +32,7 @@ public class TheModConfig {
     public static void bakeConfig() {
         displayStats = CLIENT.displayStats.get();
         coloredStats = CLIENT.coloredStats.get();
+        displayMinMax = CLIENT.displayMinMax.get();
     }
 
     public static boolean displayStats() {
@@ -47,5 +49,13 @@ public class TheModConfig {
 
     public static void setColoredStats(boolean coloredStats) {
         TheModConfig.coloredStats = coloredStats;
+    }
+
+    public static boolean displayMinMax() {
+        return displayMinMax;
+    }
+
+    public static void setDisplayMinMax(boolean displayMinMax) {
+        TheModConfig.displayMinMax = displayMinMax;
     }
 }

@@ -62,6 +62,7 @@ public class HorseStatsMod
                 this.getHorseStats((AbstractHorseEntity) event.getTarget());
 
                 Minecraft.getInstance().ingameGUI.setOverlayMessage(
+                    TheModConfig.displayMinMax() ?
                     new StringTextComponent(
                     "Health: " +
                             TextFormatting.RED + MIN_HEALTH +
@@ -81,6 +82,17 @@ public class HorseStatsMod
                             getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
                             TextFormatting.RESET + "/" +
                             TextFormatting.GREEN + MAX_SPEED
+                    ) :
+                    new StringTextComponent(
+                            "Health: " +
+                                getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
+                                TextFormatting.RESET + " " +
+                                "Jump: " +
+                                getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
+                                TextFormatting.RESET + " " +
+                                "Speed: " +
+                                getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
+                                TextFormatting.RESET
                     ),
                     false
                 );
@@ -162,33 +174,55 @@ public class HorseStatsMod
             List<ITextComponent> textLines = new ArrayList<>();
 
             // Health
-            textLines.add(new StringTextComponent(
+            textLines.add(
+                TheModConfig.displayMinMax() ?
+                        new StringTextComponent(
+                        "Health: " +
+                            TextFormatting.RED + MIN_HEALTH +
+                            TextFormatting.RESET + "/" +
+                            getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
+                            TextFormatting.RESET + "/" +
+                            TextFormatting.GREEN + MAX_HEALTH
+                        )
+                : new StringTextComponent(
                 "Health: " +
-                TextFormatting.RED + MIN_HEALTH +
-                TextFormatting.RESET + "/" +
-                getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
-                TextFormatting.RESET + "/" +
-                TextFormatting.GREEN + MAX_HEALTH)
+                    getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
+                    TextFormatting.RESET
+                )
             );
 
             // Jump height
-            textLines.add(new StringTextComponent(
+            textLines.add(
+                TheModConfig.displayMinMax() ?
+                    new StringTextComponent(
+                    "Jump height: " +
+                    TextFormatting.RED + MIN_JUMP_HEIGHT +
+                    TextFormatting.RESET + "/" +
+                    getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
+                    TextFormatting.RESET + "/" +
+                    TextFormatting.GREEN + MAX_JUMP_HEIGHT)
+                : new StringTextComponent(
                 "Jump height: " +
-                TextFormatting.RED + MIN_JUMP_HEIGHT +
-                TextFormatting.RESET + "/" +
-                getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
-                TextFormatting.RESET + "/" +
-                TextFormatting.GREEN + MAX_JUMP_HEIGHT)
+                    getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
+                    TextFormatting.RESET
+                )
             );
 
             // Speed
-            textLines.add(new StringTextComponent(
+            textLines.add(
+                TheModConfig.displayMinMax() ?
+                    new StringTextComponent(
                 "Speed: " +
-                        TextFormatting.RED + MIN_SPEED +
-                        TextFormatting.RESET + "/" +
+                    TextFormatting.RED + MIN_SPEED +
+                    TextFormatting.RESET + "/" +
+                    getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
+                    TextFormatting.RESET + "/" +
+                    TextFormatting.GREEN + MAX_SPEED)
+                : new StringTextComponent(
+                    "Speed: " +
                         getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
-                        TextFormatting.RESET + "/" +
-                        TextFormatting.GREEN + MAX_SPEED)
+                        TextFormatting.RESET
+                )
             );
 
             this.drawHoveringText(mouseX, mouseY, textLines);
