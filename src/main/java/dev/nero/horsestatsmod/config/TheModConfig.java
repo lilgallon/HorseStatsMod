@@ -1,12 +1,13 @@
 package dev.nero.horsestatsmod.config;
 
+import dev.nero.horsestatsmod.HorseStatsMod;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
-@Mod.EventBusSubscriber(modid = "horsestatsmod", bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = HorseStatsMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TheModConfig {
 
     public static final ClientConfig CLIENT;
@@ -19,6 +20,7 @@ public class TheModConfig {
 
     private static boolean displayStats;
     private static boolean coloredStats;
+    private static boolean displayMinMax;
 
     @SubscribeEvent
     public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
@@ -30,6 +32,7 @@ public class TheModConfig {
     public static void bakeConfig() {
         displayStats = CLIENT.displayStats.get();
         coloredStats = CLIENT.coloredStats.get();
+        displayMinMax = CLIENT.displayMinMax.get();
     }
 
     public static boolean displayStats() {
@@ -46,5 +49,13 @@ public class TheModConfig {
 
     public static void setColoredStats(boolean coloredStats) {
         TheModConfig.coloredStats = coloredStats;
+    }
+
+    public static boolean displayMinMax() {
+        return displayMinMax;
+    }
+
+    public static void setDisplayMinMax(boolean displayMinMax) {
+        TheModConfig.displayMinMax = displayMinMax;
     }
 }
