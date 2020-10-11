@@ -30,9 +30,11 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod("horsestatsmod")
+@Mod(HorseStatsMod.MODID)
 public class HorseStatsMod
 {
+    public static final String MODID = "horsestatsmod";
+
     // If you need to log some stuff
     private static final Logger LOGGER = LogManager.getLogger();
 

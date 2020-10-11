@@ -1,12 +1,13 @@
 package dev.nero.horsestatsmod.config;
 
+import dev.nero.horsestatsmod.HorseStatsMod;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
-@Mod.EventBusSubscriber(modid = "horsestatsmod", bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = HorseStatsMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TheModConfig {
 
     public static final ClientConfig CLIENT;
