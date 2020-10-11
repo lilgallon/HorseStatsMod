@@ -7,7 +7,7 @@
 ![release](https://img.shields.io/github/release/n3roo/horsestatsmod.svg)
 ![build](https://img.shields.io/github/workflow/status/N3ROO/horsestatsmod/Build%20MC1.16.3?label=build%201.16.3)
 
-A lightweight mod that shows the horses' stats (health, jump height and speed). 
+A lightweight mod that shows the horses' stats (health, jump height, speed, and slots for Llamas). 
 
 ![demo](https://github.com/N3ROO/HorseStatsMod/raw/MC_1.16.3/.github/resources/demo-1.1.0.png)
 
