@@ -62,7 +62,6 @@ public class HorseStatsMod
     private void onEntityInteractEvent(final PlayerInteractEvent.EntityInteractSpecific event) {
         if (event.getTarget() instanceof AbstractHorseEntity) {
             if (!((AbstractHorseEntity) event.getTarget()).isTame()) {
-
                 this.getHorseStats((AbstractHorseEntity) event.getTarget());
 
                 Minecraft.getInstance().ingameGUI.setOverlayMessage(
@@ -121,27 +120,11 @@ public class HorseStatsMod
         if (event.getGuiContainer() instanceof HorseInventoryScreen) {
             // 1. GET THE STATISTICS OF THAT RIDDEN HORSE
 
-            // The horse attribute is private in HorseInventoryScreen, and the event does not have the information
-            // either (that's normal because that's a render event). So we need to retrieve it using an other way
-            AbstractHorseEntity horse = null;
-            try {
-                // If the player is riding it
-                horse = (AbstractHorseEntity) Minecraft.getInstance().player.getRidingEntity();
-            } catch (Exception e1) {
-                // If the player is interacting with it by crouching + right clicking it
-                try {
-                    horse = (AbstractHorseEntity) Minecraft.getInstance().pointedEntity;
-                } catch (Exception e2) {
-                    LOGGER.error("Could not get the horse information");
-                }
-            }
-
-            if (horse == null) return;
-
+            // The horse attribute is private in HorseInventoryScreen (see accesstransformer.cfg)
+            AbstractHorseEntity horse = ((HorseInventoryScreen) event.getGuiContainer()).horseEntity;
             getHorseStats(horse);
 
             // 2. DISPLAY THE STATS
-
             // Mouse position (relative to the top left of the container) to know when to render the hovering text
             // This - 2*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
             // Why event.getGuiContainer().getGuiLeft() is not already the left position of the container? I have
