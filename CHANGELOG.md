@@ -1,3 +1,8 @@
+## Version 1.3.1 for Minecraft 1.16.x
+
+*Built with forge 1.16.4 35.0.4, compatible with 1.16.1 - 1.16.4*
+- Used an access modifier to get the Horse you're interacting with. It should fix all the issues that you had.
+
 ## Version 1.3.0 for Minecraft 1.16.x
 
 - Added "displayMinMax" option. When turned off, it won't display the min and max statistics
