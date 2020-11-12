@@ -140,7 +140,7 @@ public class HorseStatsMod
 
             if (TheModConfig.displayStats()) {
                 // Show the stats on the GUI
-                displayStatsAndHoveringTexts(mouseX, mouseY);
+                displayStatsAndHoveringTexts(horse, mouseX, mouseY);
             } else {
                 // Show the stats only if the mouse is on the horse's name
                 displayStatsInHoveringText(event.getGuiContainer(), mouseX, mouseY);
@@ -253,7 +253,7 @@ public class HorseStatsMod
         }
     }
 
-    private void displayStatsAndHoveringTexts(int mouseX, int mouseY) {
+    private void displayStatsAndHoveringTexts(AbstractHorseEntity horse, int mouseX, int mouseY) {
 
         // The boxes positions (x,y) and dimensions (w,h) defining when to display the hovering text relative to the
         // top left of the container
@@ -267,7 +267,9 @@ public class HorseStatsMod
 
         // 7 is the maximum number of letters for "Stats" to be displayed, because otherwise it overlaps with
         // the horse's name
-        if (!(Minecraft.getInstance().player.getRidingEntity().getDisplayName().getString().length() > 8))
+
+        // It is possible to open the GUI without riding an horse!
+        if (!(horse.getDisplayName().getString().length() > 8))
             this.renderText("Stats:", rx, ry, 0X444444);
 
         // Health (30 units shift to the right)
