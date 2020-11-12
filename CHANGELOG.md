@@ -1,3 +1,7 @@
+## Version 1.3.2 for Minecaft 1.16.x
+
+- Fixed a crash happening when the player opens the horse screen without being riding a horse - Thanks @ManDeJan
+
 ## Version 1.3.1 for Minecraft 1.16.x
 
 *Built with forge 1.16.4 35.0.4, compatible with 1.16.1 - 1.16.4*
