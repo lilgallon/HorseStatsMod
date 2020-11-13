@@ -1,6 +1,12 @@
-## Version 1.x.y for Minecaft 1.16.x
+## Version 1.3.3 for Minecaft 1.16.x
+
+*Note: you won't be able to see the statistics in the horse's GUI
+with Realistic Horse Genetics loaded. I sent a request for them to
+improve their compatibility ([see that message]()https://github.com/sekelsta/horse-colors/issues/11).
+However, there is an overlay message showing the stats even if that mod is loaded :)*
 
 - Fixed server compatibility issue
+- Stats are now displayed instead of the "press {key} to dismount" message
 
 ## Version 1.3.2 for Minecaft 1.16.x
 

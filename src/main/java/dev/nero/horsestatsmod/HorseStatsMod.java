@@ -10,18 +10,22 @@
 package dev.nero.horsestatsmod;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import dev.nero.horsestatsmod.config.TheModConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.HorseInventoryScreen;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
+import net.minecraft.util.ColorHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.*;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -58,6 +62,11 @@ public class HorseStatsMod
     private double speed;
     private int slots;
 
+    // Used to override the current overlay message if ours is already being displayed
+    // Prevent "mounted" overlay text to override the stats message
+    private ITextComponent overlayMessage;
+    private int overlayMessageTime;
+
     public HorseStatsMod() {
         // Make sure the mod being absent on the other network side does not cause the client to display
         // the server as incompatible
@@ -68,15 +77,32 @@ public class HorseStatsMod
 
         MinecraftForge.EVENT_BUS.addListener(this::onEntityInteractEvent);
         MinecraftForge.EVENT_BUS.addListener(this::onDrawForegroundEvent);
+        MinecraftForge.EVENT_BUS.addListener(this::onRenderTickeEvent);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, TheModConfig.CLIENT_SPEC);
+    }
+
+    private void onRenderTickeEvent(TickEvent.RenderTickEvent event)
+    {
+        if (event.phase == TickEvent.Phase.START)
+        {
+            if (this.overlayMessageTime > 0)
+            {
+                -- this.overlayMessageTime;
+                Minecraft.getInstance().ingameGUI.overlayMessageTime = this.overlayMessageTime;
+                if (!Minecraft.getInstance().ingameGUI.overlayMessage.getString().equals(this.overlayMessage.getString()))
+                {
+                    Minecraft.getInstance().ingameGUI.overlayMessage = this.overlayMessage;
+                }
+            }
+        }
     }
 
     private void onEntityInteractEvent(final PlayerInteractEvent.EntityInteractSpecific event) {
         if (event.getTarget() instanceof AbstractHorseEntity) {
-            if (!((AbstractHorseEntity) event.getTarget()).isTame()) {
+            //if (!((AbstractHorseEntity) event.getTarget()).isTame()) {
                 this.getHorseStats((AbstractHorseEntity) event.getTarget());
 
-                Minecraft.getInstance().ingameGUI.setOverlayMessage(
+                this.setOverlayMessage(
                     TheModConfig.displayMinMax() ?
                     new StringTextComponent(
                     "Health: " +
@@ -121,10 +147,9 @@ public class HorseStatsMod
                                     getColorTextFormat(slots, MIN_SLOTS, MAX_SLOTS) + slots +
                                     TextFormatting.RESET
                                 ))
-                    ),
-                    false
+                    )
                 );
-            }
+            //}
         }
     }
 
@@ -159,6 +184,13 @@ public class HorseStatsMod
             }
         }
     }
+
+    private void setOverlayMessage(ITextComponent message) {
+        this.overlayMessage = message;
+        this.overlayMessageTime = 120;
+        Minecraft.getInstance().ingameGUI.setOverlayMessage(message, false);
+    }
+
 
     private void getHorseStats(AbstractHorseEntity horse) {
         health = horse.getAttribute(Attributes.field_233818_a_).getValue();
