@@ -1,3 +1,7 @@
+## Version 1.x.y for Minecaft 1.16.x
+
+- Fixed server compatibility issue
+
 ## Version 1.3.2 for Minecaft 1.16.x
 
 - Fixed a crash happening when the player opens the horse screen without being riding a horse - Thanks @ManDeJan
