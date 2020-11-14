@@ -1,3 +1,7 @@
+## Version 1.3.3 for Minecaft 1.15.x
+
+Same as 1.16.x but for MC1.15.x
+
 ## Version 1.3.3 for Minecaft 1.16.x
 
 *Note: you won't be able to see the statistics in the horse's GUI

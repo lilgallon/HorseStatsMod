@@ -9,19 +9,13 @@
 
 package dev.nero.horsestatsmod;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.nero.horsestatsmod.config.TheModConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.IngameGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.screen.inventory.HorseInventoryScreen;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
-import net.minecraft.util.ColorHelper;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.*;
 import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -64,7 +58,7 @@ public class HorseStatsMod
 
     // Used to override the current overlay message if ours is already being displayed
     // Prevent "mounted" overlay text to override the stats message
-    private ITextComponent overlayMessage;
+    private String overlayMessage;
     private int overlayMessageTime;
 
     public HorseStatsMod() {
@@ -89,7 +83,7 @@ public class HorseStatsMod
             {
                 -- this.overlayMessageTime;
                 Minecraft.getInstance().ingameGUI.overlayMessageTime = this.overlayMessageTime;
-                if (!Minecraft.getInstance().ingameGUI.overlayMessage.getString().equals(this.overlayMessage.getString()))
+                if (!Minecraft.getInstance().ingameGUI.overlayMessage.equals(this.overlayMessage))
                 {
                     Minecraft.getInstance().ingameGUI.overlayMessage = this.overlayMessage;
                 }
@@ -104,7 +98,7 @@ public class HorseStatsMod
 
                 this.setOverlayMessage(
                     TheModConfig.displayMinMax() ?
-                    new StringTextComponent(
+                            (new StringTextComponent(
                     "Health: " +
                             TextFormatting.RED + MIN_HEALTH +
                             TextFormatting.RESET + "/" +
@@ -130,9 +124,8 @@ public class HorseStatsMod
                                 getColorTextFormat(slots, MIN_SLOTS, MAX_SLOTS) + slots +
                                 TextFormatting.RESET + "/" +
                                 TextFormatting.GREEN + MAX_SLOTS
-                            ))
-                    ) :
-                    new StringTextComponent(
+                            ))).getFormattedText())
+                            : (new StringTextComponent(
                             "Health: " +
                                 getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
                                 TextFormatting.RESET + " " +
@@ -146,8 +139,7 @@ public class HorseStatsMod
                                     "Slots: " +
                                     getColorTextFormat(slots, MIN_SLOTS, MAX_SLOTS) + slots +
                                     TextFormatting.RESET
-                                ))
-                    )
+                                )))).getFormattedText()
                 );
             //}
         }
@@ -185,7 +177,7 @@ public class HorseStatsMod
         }
     }
 
-    private void setOverlayMessage(ITextComponent message) {
+    private void setOverlayMessage(String message) {
         this.overlayMessage = message;
         this.overlayMessageTime = 120;
         Minecraft.getInstance().ingameGUI.setOverlayMessage(message, false);
@@ -193,9 +185,12 @@ public class HorseStatsMod
 
 
     private void getHorseStats(AbstractHorseEntity horse) {
-        health = horse.getAttribute(Attributes.field_233818_a_).getValue();
-        jumpHeight = horse.getAttribute(Attributes.field_233830_m_).getValue();
-        speed = horse.getAttribute(Attributes.field_233821_d_).getValue();
+        health = horse.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getValue();
+        jumpHeight = horse.getHorseJumpStrength();
+        speed = horse.getAttributes().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).getValue();
+        //health = horse.getAttribute(Attributes.field_233818_a_).getValue();
+        //jumpHeight = horse.getAttribute(Attributes.field_233830_m_).getValue();
+        //speed = horse.getAttribute(Attributes.field_233821_d_).getValue();
 
         if (horse instanceof LlamaEntity)
             slots = ((LlamaEntity) horse).getInventoryColumns() * 3;
@@ -220,76 +215,76 @@ public class HorseStatsMod
         final int RH = 14;
 
         if (posInRect(mouseX, mouseY, RX, RY, RW, RH)) {
-            List<ITextComponent> textLines = new ArrayList<>();
+            List<String> textLines = new ArrayList<>();
 
             // Health
             textLines.add(
                 TheModConfig.displayMinMax() ?
-                        new StringTextComponent(
+                        (new StringTextComponent(
                         "Health: " +
                             TextFormatting.RED + MIN_HEALTH +
                             TextFormatting.RESET + "/" +
                             getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
                             TextFormatting.RESET + "/" +
                             TextFormatting.GREEN + MAX_HEALTH
-                        )
-                : new StringTextComponent(
+                        )).getFormattedText()
+                : (new StringTextComponent(
                 "Health: " +
                     getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
                     TextFormatting.RESET
-                )
+                )).getFormattedText()
             );
 
             // Jump height
             textLines.add(
                 TheModConfig.displayMinMax() ?
-                    new StringTextComponent(
+                        (new StringTextComponent(
                     "Jump height: " +
                     TextFormatting.RED + MIN_JUMP_HEIGHT +
                     TextFormatting.RESET + "/" +
                     getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
                     TextFormatting.RESET + "/" +
-                    TextFormatting.GREEN + MAX_JUMP_HEIGHT)
-                : new StringTextComponent(
+                    TextFormatting.GREEN + MAX_JUMP_HEIGHT)).getFormattedText()
+                : (new StringTextComponent(
                 "Jump height: " +
                     getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
                     TextFormatting.RESET
-                )
+                )).getFormattedText()
             );
 
             // Speed
             textLines.add(
                 TheModConfig.displayMinMax() ?
-                    new StringTextComponent(
+                        (new StringTextComponent(
                 "Speed: " +
                     TextFormatting.RED + MIN_SPEED +
                     TextFormatting.RESET + "/" +
                     getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
                     TextFormatting.RESET + "/" +
-                    TextFormatting.GREEN + MAX_SPEED)
-                : new StringTextComponent(
+                    TextFormatting.GREEN + MAX_SPEED)).getFormattedText()
+                : (new StringTextComponent(
                     "Speed: " +
                         getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
                         TextFormatting.RESET
-                )
+                )).getFormattedText()
             );
 
             // Slots
             if (slots != -1) {
                 textLines.add(
                     TheModConfig.displayMinMax() ?
-                        new StringTextComponent(
+                            (new StringTextComponent(
                             "Slots: " +
                                 TextFormatting.RED + MIN_SLOTS +
                                 TextFormatting.RESET + "/" +
                                 getColorTextFormat(speed, MIN_SLOTS, MAX_SLOTS) + slots +
                                 TextFormatting.RESET + "/" +
-                                TextFormatting.GREEN + MAX_SLOTS)
-                        : new StringTextComponent(
+                                TextFormatting.GREEN + MAX_SLOTS)).getFormattedText()
+                        : (new StringTextComponent(
                         "Slots: " +
                             getColorTextFormat(speed, MIN_SLOTS, MAX_SLOTS) + slots +
                             TextFormatting.RESET
-                    )
+                    )).getFormattedText()
                 );
             }
 
@@ -362,21 +357,20 @@ public class HorseStatsMod
     }
 
     private void drawHoveringText(int x, int y, String title, String min, String max, String... notes) {
-        List<ITextComponent> textLines = new ArrayList<>();
-        textLines.add(new StringTextComponent(title));
-        textLines.add(new StringTextComponent(TextFormatting.RED + "min: " + min));
-        textLines.add(new StringTextComponent(TextFormatting.GREEN + "max: " + max));
+        List<String> textLines = new ArrayList<>();
+        textLines.add((new StringTextComponent(title)).getFormattedText());
+        textLines.add((new StringTextComponent(TextFormatting.RED + "min: " + min)).getFormattedText());
+        textLines.add((new StringTextComponent(TextFormatting.GREEN + "max: " + max)).getFormattedText());
         for (String note : notes) {
-            textLines.add(new StringTextComponent(note));
+            textLines.add((new StringTextComponent(note)).getFormattedText());
         }
 
         this.drawHoveringText(x, y, textLines);
     }
 
-    private void drawHoveringText(int x, int y, List<ITextComponent> textLines) {
+    private void drawHoveringText(int x, int y, List<String> textLines) {
 
         GuiUtils.drawHoveringText(
-                new MatrixStack(),
                 textLines,
                 // why /2? bc it works that way, I did not inspect the mc code in depth to understand
                 x/2, y/2,
@@ -446,8 +440,7 @@ public class HorseStatsMod
      * @param color the color in hex (00-FF), following this format: RRGGBB (R:red, G:green, B:blue). Ex: 0xFFFFFF
      */
     private void renderText(String text, int x, int y, int color) {
-        Minecraft.getInstance().fontRenderer.func_238421_b_(
-                new MatrixStack(),
+        Minecraft.getInstance().fontRenderer.drawString(
                 text,
                 x, y,
                 color
