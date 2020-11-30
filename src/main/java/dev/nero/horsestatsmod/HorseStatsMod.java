@@ -446,7 +446,7 @@ public class HorseStatsMod
      * @param color the color in hex (00-FF), following this format: RRGGBB (R:red, G:green, B:blue). Ex: 0xFFFFFF
      */
     private void renderText(String text, int x, int y, int color) {
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow(
+        Minecraft.getInstance().fontRenderer.drawString(
                 new MatrixStack(),
                 text,
                 x, y,
