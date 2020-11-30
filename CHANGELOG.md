@@ -1,3 +1,8 @@
+## Version 1.3.4 for Minecaft 1.16.4
+
+*It is a fix for the 1.16.4 version of Minecraft. For 1.16.3 and less, use the 1.3.3 version if this one doesn't work*
+- Fixed a crash with the 35.1.0-MC1.16.4 Forge version (something was wrong with mappings, forge may have made some breaking changes)
+
 ## Version 1.3.3 for Minecaft 1.16.x
 
 *Note: you won't be able to see the statistics in the horse's GUI

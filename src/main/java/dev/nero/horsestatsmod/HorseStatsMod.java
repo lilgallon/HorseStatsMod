@@ -193,9 +193,9 @@ public class HorseStatsMod
 
 
     private void getHorseStats(AbstractHorseEntity horse) {
-        health = horse.getAttribute(Attributes.field_233818_a_).getValue();
-        jumpHeight = horse.getAttribute(Attributes.field_233830_m_).getValue();
-        speed = horse.getAttribute(Attributes.field_233821_d_).getValue();
+        health = horse.getAttribute(Attributes.MAX_HEALTH).getValue();
+        jumpHeight = horse.getAttribute(Attributes.HORSE_JUMP_STRENGTH).getValue();
+        speed = horse.getAttribute(Attributes.MOVEMENT_SPEED).getValue();
 
         if (horse instanceof LlamaEntity)
             slots = ((LlamaEntity) horse).getInventoryColumns() * 3;
@@ -446,7 +446,7 @@ public class HorseStatsMod
      * @param color the color in hex (00-FF), following this format: RRGGBB (R:red, G:green, B:blue). Ex: 0xFFFFFF
      */
     private void renderText(String text, int x, int y, int color) {
-        Minecraft.getInstance().fontRenderer.func_238421_b_(
+        Minecraft.getInstance().fontRenderer.drawStringWithShadow(
                 new MatrixStack(),
                 text,
                 x, y,
