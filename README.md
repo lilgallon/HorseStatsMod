@@ -5,7 +5,7 @@
 [![curseforge downloads](http://cf.way2muchnoise.eu/full_409126_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/horse-statistics)
 ![issues](https://img.shields.io/github/issues/n3roo/horsestatsmod.svg)
 ![release](https://img.shields.io/github/release/n3roo/horsestatsmod.svg)
-![build](https://img.shields.io/github/workflow/status/N3ROO/horsestatsmod/Build%20MC1.16.3?label=build%201.16.3)
+![build](https://img.shields.io/github/workflow/status/N3ROO/horsestatsmod/Build%20MC1.16.x?label=build%201.16.x)
 
 A lightweight mod that shows the horses' stats (health, jump height, speed, and slots for Llamas). 
 
