@@ -1,3 +1,7 @@
+## Version 1.3.5 for Minecaft 1.16.4 and 1.16.5
+
+- Added support for localization (only en_US and fr_FR are supported at the moment)
+
 ## Version 1.3.4 for Minecaft 1.16.4
 
 *It is a fix for the 1.16.4 version of Minecraft. For 1.16.3 and less, use the 1.3.3 version if this one doesn't work*
