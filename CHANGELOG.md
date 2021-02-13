@@ -1,4 +1,4 @@
-## Version 1.3.5 for Minecaft 1.16.4 and 1.16.5
+## Version 1.4.0 for Minecaft 1.16.4 and 1.16.5
 
 - Added support for localization (only en_US and fr_FR are supported at the moment)
 
