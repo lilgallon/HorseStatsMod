@@ -1,4 +1,4 @@
-![logo](https://github.com/N3ROO/HorseStatsMod/raw/MC_1.16.3/.github/resources/horsestatsmod.png)
+![logo](https://github.com/N3ROO/HorseStatsMod/raw/MC_1.16.x/.github/resources/horsestatsmod.png)
 
 # Horse Stats Mod
 ![github downloads](https://img.shields.io/github/downloads/n3roo/horsestatsmod/total.svg?label=github%20downloads)
