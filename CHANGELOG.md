@@ -1,3 +1,7 @@
+## Version 1.4.1 for Minecaft 1.16.4 and 1.16.5
+
+- Added Polish transation (thanks @Greg-21)
+
 ## Version 1.4.0 for Minecaft 1.16.4 and 1.16.5
 
 - Added support for localization (only en_US and fr_FR are supported at the moment)
