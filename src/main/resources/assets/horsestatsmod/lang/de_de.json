@@ -1,0 +1,14 @@
+{
+  "horsestatsmod.stats": "Werte",
+  "horsestatsmod.health": "Leben",
+  "horsestatsmod.jump": "Sprungkraft",
+  "horsestatsmod.speed": "Geschwindigkeit",
+  "horsestatsmod.slots": "Slots",
+  "horsestatsmod.blocks": "Blöcke",
+  "horsestatsmod.metersperseconds": "m/s",
+  "horsestatsmod.player": "Spieler",
+  "horsestatsmod.walk": "Trab",
+  "horsestatsmod.sprint": "Galopp",
+  "horsestatsmod.min": "min",
+  "horsestatsmod.max": "max"
+}
