@@ -1,3 +1,7 @@
+## Version 1.4.2 for Minecraft 1.16.4 and 1.16.5
+
+- Added German transation (thanks @manuelgrabowski)
+
 ## Version 1.4.1 for Minecaft 1.16.4 and 1.16.5
 
 - Added Polish transation (thanks @Greg-21)
