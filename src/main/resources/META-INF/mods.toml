@@ -1,17 +1,17 @@
 modLoader="javafml" #mandatory
 loaderVersion="[32,)" #mandatory
 license="GNU GPL-3.0"
-issueTrackerURL="https://github.com/N3ROO/HorseStatsMod/issues" #optional
+issueTrackerURL="https://github.com/lilgallon/HorseStatsMod/issues" #optional
 
 [[mods]] #mandatory
 modId="horsestatsmod" #mandatory
 version="1.4.1" #mandatory
 displayName="Horse Stats Mod" #mandatory
-updateJSONURL="https://raw.githubusercontent.com/N3ROO/HorseStatsMod/MC_1.16.4/update.json" #optional
-displayURL="https://github.com/N3ROO/HorseStatsMod" #optional
+updateJSONURL="https://raw.githubusercontent.com/lilgallon/HorseStatsMod/MC_1.16.4/update.json" #optional
+displayURL="https://github.com/lilgallon/HorseStatsMod" #optional
 logoFile="horsestatsmod.png" #optional (jar root)
 # credits="" #optional
-authors="nero (@N3ROO on Github)" #optional
+authors="nero (@lilgallon on Github)" #optional
 description='''
 A lightweight mod that shows the horses' stats (health, jump height and speed)
 
