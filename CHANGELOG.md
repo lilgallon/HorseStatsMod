@@ -1,10 +1,15 @@
+## Version 1.4.2 for Minecraft 1.17.x
+
+- Improved German translation (thanks @Greg-21)
+- Updated mod to 1.17
+
 ## Version 1.4.2 for Minecraft 1.16.4 and 1.16.5
 
-- Added German transation (thanks @manuelgrabowski)
+- Added German translation (thanks @manuelgrabowski)
 
 ## Version 1.4.1 for Minecaft 1.16.4 and 1.16.5
 
-- Added Polish transation (thanks @Greg-21)
+- Added Polish translation (thanks @Greg-21)
 
 ## Version 1.4.0 for Minecaft 1.16.4 and 1.16.5
 
