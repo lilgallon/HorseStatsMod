@@ -20,7 +20,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Llama;
-import net.minecraftforge.client.event.GuiContainerEvent;
+import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -28,13 +28,13 @@ import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
-import net.minecraftforge.fmllegacy.network.FMLNetworkConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static net.minecraftforge.network.NetworkConstants.IGNORESERVERONLY;
 
 @Mod(HorseStatsMod.MODID)
 public class HorseStatsMod
@@ -68,7 +68,7 @@ public class HorseStatsMod
         // the server as incompatible
         ModLoadingContext.get().registerExtensionPoint(
                 IExtensionPoint.DisplayTest.class,
-                () -> new IExtensionPoint.DisplayTest(() -> FMLNetworkConstants.IGNORESERVERONLY, (remote, isServer)-> true)
+                () -> new IExtensionPoint.DisplayTest(() -> IGNORESERVERONLY, (remote, isServer)-> true)
         );
 
         MinecraftForge.EVENT_BUS.addListener(this::onEntityInteractEvent);
@@ -147,12 +147,12 @@ public class HorseStatsMod
         }
     }
 
-    private void onDrawForegroundEvent(final GuiContainerEvent.DrawForeground event) {
-        if (event.getGuiContainer() instanceof HorseInventoryScreen) {
+    private void onDrawForegroundEvent(final ContainerScreenEvent.DrawForeground event) {
+        if (event.getContainerScreen() instanceof HorseInventoryScreen) {
             // 1. GET THE STATISTICS OF THAT RIDDEN HORSE
 
             // The horse attribute is private in HorseInventoryScreen (see accesstransformer.cfg)
-            AbstractHorse horse = ((HorseInventoryScreen) event.getGuiContainer()).horse;
+            AbstractHorse horse = ((HorseInventoryScreen) event.getContainerScreen()).horse;
             getHorseStats(horse);
 
             // 2. DISPLAY THE I18n.get("horsestatsmod.stats")
@@ -162,11 +162,11 @@ public class HorseStatsMod
             // no clue lol
             int mouseX = (
                     (int) Minecraft.getInstance().mouseHandler.xpos()
-                    - 2 * event.getGuiContainer().getGuiLeft()
+                    - 2 * event.getContainerScreen().getGuiLeft()
             );
             int mouseY = (
                     (int) Minecraft.getInstance().mouseHandler.ypos()
-                    - 2 * event.getGuiContainer().getGuiTop()
+                    - 2 * event.getContainerScreen().getGuiTop()
             );
 
             if (TheModConfig.displayStats()) {
@@ -174,7 +174,7 @@ public class HorseStatsMod
                 displayStatsAndHoveringTexts(horse, mouseX, mouseY);
             } else {
                 // Show the stats only if the mouse is on the horse's name
-                displayStatsInHoveringText(((HorseInventoryScreen) event.getGuiContainer()), mouseX, mouseY);
+                displayStatsInHoveringText(((HorseInventoryScreen) event.getContainerScreen()), mouseX, mouseY);
             }
         }
     }
@@ -370,14 +370,14 @@ public class HorseStatsMod
     }
 
     private void drawHoveringText(int x, int y, List<Component> textLines) {
-
-        GuiUtils.drawHoveringText(
+        Minecraft.getInstance().screen.renderTooltip(
                 new PoseStack(),
                 textLines,
+                java.util.Optional.empty(),
                 // why /2? bc it works that way, I did not inspect the mc code in depth to understand
                 x/2, y/2,
-                Minecraft.getInstance().getWindow().getWidth(),
-                Minecraft.getInstance().getWindow().getHeight(),150,
+                // Minecraft.getInstance().getWindow().getWidth(),
+                // Minecraft.getInstance().getWindow().getHeight(),150,
                 Minecraft.getInstance().font
         );
     }

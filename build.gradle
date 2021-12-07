@@ -12,15 +12,15 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = 'MC1.17.x-1.4.2'
+version = 'MC1.18.x-1.4.2'
 group = 'dev.nero.horsestatsmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'horsestatsmod'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
 minecraft {
-    mappings channel: 'official', version: '1.17.1'
+    mappings channel: 'official', version: '1.18'
   
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -42,5 +42,5 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.51'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.15'
 }

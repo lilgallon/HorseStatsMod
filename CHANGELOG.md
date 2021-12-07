@@ -1,3 +1,7 @@
+## Version 1.4.2 for Minecraft 1.18.x
+
+- Updated mod to 1.18
+
 ## Version 1.4.2 for Minecraft 1.17.x
 
 - Improved German translation (thanks @Greg-21)
