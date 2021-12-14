@@ -157,16 +157,14 @@ public class HorseStatsMod
 
             // 2. DISPLAY THE I18n.get("horsestatsmod.stats")
             // Mouse position (relative to the top left of the container) to know when to render the hovering text
-            // This - 2*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
-            // Why event.getGuiContainer().getGuiLeft() is not already the left position of the container? I have
-            // no clue lol
+            // This - scale*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
             int mouseX = (
                     (int) Minecraft.getInstance().mouseHandler.xpos()
-                    - 2 * event.getContainerScreen().getGuiLeft()
+                    - Minecraft.getInstance().options.guiScale * event.getContainerScreen().getGuiLeft()
             );
             int mouseY = (
                     (int) Minecraft.getInstance().mouseHandler.ypos()
-                    - 2 * event.getContainerScreen().getGuiTop()
+                    - Minecraft.getInstance().options.guiScale * event.getContainerScreen().getGuiTop()
             );
 
             if (TheModConfig.displayStats()) {
@@ -184,7 +182,6 @@ public class HorseStatsMod
         this.overlayMessageTime = 120;
         Minecraft.getInstance().gui.setOverlayMessage(message, false);
     }
-
 
     private void getHorseStats(AbstractHorse horse) {
         health = horse.getAttribute(Attributes.MAX_HEALTH).getValue();
@@ -374,8 +371,7 @@ public class HorseStatsMod
                 new PoseStack(),
                 textLines,
                 java.util.Optional.empty(),
-                // why /2? bc it works that way, I did not inspect the mc code in depth to understand
-                x/2, y/2,
+                x/Minecraft.getInstance().options.guiScale, y/Minecraft.getInstance().options.guiScale,
                 // Minecraft.getInstance().getWindow().getWidth(),
                 // Minecraft.getInstance().getWindow().getHeight(),150,
                 Minecraft.getInstance().font
@@ -461,16 +457,15 @@ public class HorseStatsMod
      */
     private boolean posInRect(int px, int py, int rx, int ry, int rw, int rh) {
         // These multiplications are here to match the rectangle drawn by calling AbstractGui.fillRect(a, b, c, d, col)
-        // This method multiplies everything by two (the other drawing methods do the same thing, I don't know why. If
-        // you know, please open an issue and explain that). So the rectangle given will be multiplied by 2 to match
-        // the rectangle that would be drawn with the same parameters.
+        // The rectangle given is multiplied by the gui scale to match the rectangle that would be drawn with the
+        // same parameters.
         // When creating a rectangle, I use the fillRect function to visualize the rectangle. Then I use this function
         // to check if the mouse is inside or not. This multiplication prevents doing a lot more when calling this
         // function. Just ignore that, act like if it worked as intended. It's a little hack.
-        rx *= 2;
-        ry *= 2;
-        rw *= 2;
-        rh *= 2;
+        rx *= Minecraft.getInstance().options.guiScale;
+        ry *= Minecraft.getInstance().options.guiScale;
+        rw *= Minecraft.getInstance().options.guiScale;
+        rh *= Minecraft.getInstance().options.guiScale;
         return (px >= rx && px <= rx + rw) && (py >= ry && py <= ry + rh);
     }
 }
