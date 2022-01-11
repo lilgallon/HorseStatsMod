@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/lilgallon/HorseStatsMod/issues" #optional
 
 [[mods]] #mandatory
 modId="horsestatsmod" #mandatory
-version="1.4.3" #mandatory
+version="1.4.4" #mandatory
 displayName="Horse Stats Mod" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/lilgallon/HorseStatsMod/MC_1.18.x/update.json" #optional
 displayURL="https://github.com/lilgallon/HorseStatsMod" #optional

@@ -1,3 +1,7 @@
+## Version 1.4.4 for Minecraft 1.18.x
+
+- Added owner with the stats
+
 ## Version 1.4.3 for Minecraft 1.18.x
 
 - Fixed issues related to GUI scale (anything other than guiScale=2) - thanks @Braboware
