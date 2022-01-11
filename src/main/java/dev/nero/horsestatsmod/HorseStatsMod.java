@@ -9,6 +9,10 @@
 
 package dev.nero.horsestatsmod;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.nero.horsestatsmod.config.TheModConfig;
 import net.minecraft.ChatFormatting;
@@ -30,9 +34,14 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import static net.minecraftforge.network.NetworkConstants.IGNORESERVERONLY;
 
@@ -57,11 +66,29 @@ public class HorseStatsMod
     private double jumpHeight;
     private double speed;
     private int slots;
+    private String owner;
 
     // Used to override the current overlay message if ours is already being displayed
     // Prevent "mounted" overlay text to override the stats message
     private Component overlayMessage;
     private int overlayMessageTime;
+
+    private static final LoadingCache<UUID, Optional<String>> usernameCache = CacheBuilder
+            .newBuilder()
+            .expireAfterWrite(6, TimeUnit.HOURS)
+            .build(new CacheLoader<>() {
+                @Override
+                public @NotNull Optional<String> load(@NotNull UUID key) {
+                    CompletableFuture.runAsync(() -> {
+                        GameProfile playerProfile = new GameProfile(key, null);
+                        playerProfile = Minecraft.getInstance().getMinecraftSessionService().fillProfileProperties(playerProfile, false);
+                        usernameCache.put(key, Optional.ofNullable(playerProfile.getName()));
+                        System.out.println(key);
+                    });
+
+                    return Optional.of(I18n.get("horsestatsmod.loading"));
+                }
+            });
 
     public HorseStatsMod() {
         // Make sure the mod being absent on the other network side does not cause the client to display
@@ -125,6 +152,9 @@ public class HorseStatsMod
                             getColorTextFormat(slots, MIN_SLOTS, MAX_SLOTS) + slots +
                             ChatFormatting.RESET + "/" +
                             ChatFormatting.GREEN + MAX_SLOTS
+                        )) + ChatFormatting.RESET + " " +
+                        (owner == null ? "" : (
+                                I18n.get("horsestatsmod.owner") + ": " + owner
                         ))
                 ) :
                 new TextComponent(
@@ -141,6 +171,10 @@ public class HorseStatsMod
                                 I18n.get("horsestatsmod.slots") + ": " +
                                 getColorTextFormat(slots, MIN_SLOTS, MAX_SLOTS) + slots +
                                 ChatFormatting.RESET
+                            )) +
+                            ChatFormatting.RESET + " " +
+                            (owner == null ? "" : (
+                                    I18n.get("horsestatsmod.owner") + ": " + owner
                             ))
                 )
             );
@@ -187,6 +221,13 @@ public class HorseStatsMod
         health = horse.getAttribute(Attributes.MAX_HEALTH).getValue();
         jumpHeight = horse.getAttribute(Attributes.JUMP_STRENGTH).getValue();
         speed = horse.getAttribute(Attributes.MOVEMENT_SPEED).getValue();
+
+        final UUID ownerUUID = horse.getOwnerUUID();
+        if (ownerUUID != null) {
+            owner = usernameCache.getUnchecked(ownerUUID).orElse(I18n.get("horsestatsmod.loading"));
+        } else {
+            owner = null;
+        }
 
         if (horse instanceof Llama)
             slots = ((Llama) horse).getInventoryColumns() * 3;
@@ -284,6 +325,16 @@ public class HorseStatsMod
                 );
             }
 
+            // Owner
+            if (owner != null) {
+                textLines.add(
+                        new TextComponent(
+                        I18n.get("horsestatsmod.owner") + ": " + owner +
+                                ChatFormatting.RESET
+                        )
+                );
+            }
+
             this.drawHoveringText(mouseX, mouseY, textLines);
         }
     }
@@ -303,7 +354,7 @@ public class HorseStatsMod
         // 7 is the maximum number of letters for "Stats" to be displayed, because otherwise it overlaps with
         // the horse's name
 
-        // It is possible to open the GUI without riding an horse!
+        // It is possible to open the GUI without riding a horse!
         if (!(horse.getDisplayName().getString().length() > 8))
             this.renderText(I18n.get("horsestatsmod.stats") + ":", rx, ry, 0X444444);
 
@@ -314,7 +365,6 @@ public class HorseStatsMod
                 rx, ry,
                 TheModConfig.coloredStats() ? getColorHex(health, MIN_HEALTH, MAX_HEALTH) : 0X444444
         );
-
         if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw, rh)) {
             drawHoveringText(
                     mouseX, mouseY,
@@ -352,6 +402,14 @@ public class HorseStatsMod
                     I18n.get("horsestatsmod.player") + ": 7.143 (" + I18n.get("horsestatsmod.sprint") + "+" + I18n.get("horsestatsmod.jump") + ")"
             );
         }
+
+        // owner
+        rx += 30;
+        this.renderText(
+                owner,
+                rx, ry,
+                0X444444
+        );
     }
 
     private void drawHoveringText(int x, int y, String title, String min, String max, String... notes) {
