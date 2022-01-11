@@ -10,5 +10,6 @@
   "horsestatsmod.walk": "Trab",
   "horsestatsmod.sprint": "Galopp",
   "horsestatsmod.min": "min",
-  "horsestatsmod.max": "max"
+  "horsestatsmod.max": "max",
+  "horsestatsmod.loading": "Laden..."
 }

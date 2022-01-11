@@ -10,5 +10,6 @@
   "horsestatsmod.walk": "chód",
   "horsestatsmod.sprint": "sprint",
   "horsestatsmod.min": "min.",
-  "horsestatsmod.max": "max."
+  "horsestatsmod.max": "max.",
+  "horsestatsmod.loading": "Załadunek..."
 }
