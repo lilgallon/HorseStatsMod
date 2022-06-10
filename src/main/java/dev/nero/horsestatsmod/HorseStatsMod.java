@@ -20,7 +20,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.animal.horse.Llama;
@@ -126,7 +125,7 @@ public class HorseStatsMod
 
             this.setOverlayMessage(
                 TheModConfig.displayMinMax() ?
-                new TextComponent(
+                Component.literal(
                         I18n.get("horsestatsmod.health") + ": " +
                         ChatFormatting.RED + MIN_HEALTH +
                         ChatFormatting.RESET + "/" +
@@ -157,7 +156,7 @@ public class HorseStatsMod
                                 I18n.get("horsestatsmod.owner") + ": " + owner
                         ))
                 ) :
-                new TextComponent(
+                Component.literal(
                         I18n.get("horsestatsmod.health") + ": " +
                             getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
                             ChatFormatting.RESET + " " +
@@ -194,11 +193,11 @@ public class HorseStatsMod
             // This - scale*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
             int mouseX = (
                     (int) Minecraft.getInstance().mouseHandler.xpos()
-                    - Minecraft.getInstance().options.guiScale * event.getContainerScreen().getGuiLeft()
+                    - (int) Minecraft.getInstance().getWindow().getGuiScale() * event.getContainerScreen().getGuiLeft()
             );
             int mouseY = (
                     (int) Minecraft.getInstance().mouseHandler.ypos()
-                    - Minecraft.getInstance().options.guiScale * event.getContainerScreen().getGuiTop()
+                    - (int) Minecraft.getInstance().getWindow().getGuiScale() * event.getContainerScreen().getGuiTop()
             );
 
             if (TheModConfig.displayStats()) {
@@ -257,7 +256,7 @@ public class HorseStatsMod
             // Health
             textLines.add(
                 TheModConfig.displayMinMax() ?
-                        new TextComponent(
+                        Component.literal(
                         I18n.get("horsestatsmod.health") + ": " +
                             ChatFormatting.RED + MIN_HEALTH +
                             ChatFormatting.RESET + "/" +
@@ -265,7 +264,7 @@ public class HorseStatsMod
                             ChatFormatting.RESET + "/" +
                             ChatFormatting.GREEN + MAX_HEALTH
                         )
-                : new TextComponent(
+                : Component.literal(
                         I18n.get("horsestatsmod.health") + ": " +
                     getColorTextFormat(health, MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", health) +
                     ChatFormatting.RESET
@@ -275,14 +274,14 @@ public class HorseStatsMod
             // Jump height
             textLines.add(
                 TheModConfig.displayMinMax() ?
-                    new TextComponent(
+                    Component.literal(
                     I18n.get("horsestatsmod.jump") + ": " +
                     ChatFormatting.RED + MIN_JUMP_HEIGHT +
                     ChatFormatting.RESET + "/" +
                     getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
                     ChatFormatting.RESET + "/" +
                     ChatFormatting.GREEN + MAX_JUMP_HEIGHT)
-                : new TextComponent(
+                : Component.literal(
                 I18n.get("horsestatsmod.jump") + ": " +
                     getColorTextFormat(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", jumpHeight) +
                     ChatFormatting.RESET
@@ -292,14 +291,14 @@ public class HorseStatsMod
             // Speed
             textLines.add(
                 TheModConfig.displayMinMax() ?
-                    new TextComponent(
+                    Component.literal(
                 I18n.get("horsestatsmod.speed") + ": " +
                     ChatFormatting.RED + MIN_SPEED +
                     ChatFormatting.RESET + "/" +
                     getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
                     ChatFormatting.RESET + "/" +
                     ChatFormatting.GREEN + MAX_SPEED)
-                : new TextComponent(
+                : Component.literal(
                     I18n.get("horsestatsmod.speed") + ": " +
                         getColorTextFormat(speed, MIN_SPEED, MAX_SPEED) + String.format("%,.2f", speed) +
                         ChatFormatting.RESET
@@ -310,14 +309,14 @@ public class HorseStatsMod
             if (slots != -1) {
                 textLines.add(
                     TheModConfig.displayMinMax() ?
-                        new TextComponent(
+                        Component.literal(
                             I18n.get("horsestatsmod.slots") + ": " +
                                 ChatFormatting.RED + MIN_SLOTS +
                                 ChatFormatting.RESET + "/" +
                                 getColorTextFormat(speed, MIN_SLOTS, MAX_SLOTS) + slots +
                                 ChatFormatting.RESET + "/" +
                                 ChatFormatting.GREEN + MAX_SLOTS)
-                        : new TextComponent(
+                        : Component.literal(
                             I18n.get("horsestatsmod.slots") + ": " +
                             getColorTextFormat(speed, MIN_SLOTS, MAX_SLOTS) + slots +
                             ChatFormatting.RESET
@@ -328,7 +327,7 @@ public class HorseStatsMod
             // Owner
             if (owner != null) {
                 textLines.add(
-                        new TextComponent(
+                        Component.literal(
                         I18n.get("horsestatsmod.owner") + ": " + owner +
                                 ChatFormatting.RESET
                         )
@@ -414,11 +413,11 @@ public class HorseStatsMod
 
     private void drawHoveringText(int x, int y, String title, String min, String max, String... notes) {
         List<Component> textLines = new ArrayList<>();
-        textLines.add(new TextComponent(title));
-        textLines.add(new TextComponent(ChatFormatting.RED + I18n.get("horsestatsmod.min") + ": " + min));
-        textLines.add(new TextComponent(ChatFormatting.GREEN + I18n.get("horsestatsmod.max") + ": " + max));
+        textLines.add(Component.literal(title));
+        textLines.add(Component.literal(ChatFormatting.RED + I18n.get("horsestatsmod.min") + ": " + min));
+        textLines.add(Component.literal(ChatFormatting.GREEN + I18n.get("horsestatsmod.max") + ": " + max));
         for (String note : notes) {
-            textLines.add(new TextComponent(note));
+            textLines.add(Component.literal(note));
         }
 
         this.drawHoveringText(x, y, textLines);
@@ -429,7 +428,8 @@ public class HorseStatsMod
                 new PoseStack(),
                 textLines,
                 java.util.Optional.empty(),
-                x/Minecraft.getInstance().options.guiScale, y/Minecraft.getInstance().options.guiScale,
+                x / (int) Minecraft.getInstance().getWindow().getGuiScale(),
+                y / (int) Minecraft.getInstance().getWindow().getGuiScale(),
                 // Minecraft.getInstance().getWindow().getWidth(),
                 // Minecraft.getInstance().getWindow().getHeight(),150,
                 Minecraft.getInstance().font
@@ -520,10 +520,10 @@ public class HorseStatsMod
         // When creating a rectangle, I use the fillRect function to visualize the rectangle. Then I use this function
         // to check if the mouse is inside or not. This multiplication prevents doing a lot more when calling this
         // function. Just ignore that, act like if it worked as intended. It's a little hack.
-        rx *= Minecraft.getInstance().options.guiScale;
-        ry *= Minecraft.getInstance().options.guiScale;
-        rw *= Minecraft.getInstance().options.guiScale;
-        rh *= Minecraft.getInstance().options.guiScale;
+        rx *= Minecraft.getInstance().getWindow().getGuiScale();
+        ry *= Minecraft.getInstance().getWindow().getGuiScale();
+        rw *= Minecraft.getInstance().getWindow().getGuiScale();
+        rh *= Minecraft.getInstance().getWindow().getGuiScale();
         return (px >= rx && px <= rx + rw) && (py >= ry && py <= ry + rh);
     }
 }
