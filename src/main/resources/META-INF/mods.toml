@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[38,)" #mandatory
+loaderVersion="[41,)" #mandatory
 license="GNU GPL-3.0"
 issueTrackerURL="https://github.com/lilgallon/HorseStatsMod/issues" #optional
 
@@ -7,7 +7,7 @@ issueTrackerURL="https://github.com/lilgallon/HorseStatsMod/issues" #optional
 modId="horsestatsmod" #mandatory
 version="1.4.4" #mandatory
 displayName="Horse Stats Mod" #mandatory
-updateJSONURL="https://raw.githubusercontent.com/lilgallon/HorseStatsMod/MC_1.18.x/update.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/lilgallon/HorseStatsMod/versions/update.json" #optional
 displayURL="https://github.com/lilgallon/HorseStatsMod" #optional
 logoFile="horsestatsmod.png" #optional (jar root)
 # credits="" #optional
@@ -23,7 +23,7 @@ modId="forge" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified
 mandatory=true #mandatory
 # The version range of the dependency
-versionRange="[38,)" #mandatory
+versionRange="[41,)" #mandatory
 # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
 ordering="NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER
