@@ -11,5 +11,6 @@
   "horsestatsmod.sprint": "Sprint",
   "horsestatsmod.min": "min",
   "horsestatsmod.max": "max",
-  "horsestatsmod.loading": "Loading..."
+  "horsestatsmod.loading": "Loading...",
+  "horsestatsmod.owner": "Owner"
 }

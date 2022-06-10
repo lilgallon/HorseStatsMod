@@ -11,5 +11,6 @@
   "horsestatsmod.sprint": "Sprint",
   "horsestatsmod.min": "min",
   "horsestatsmod.max": "max",
-  "horsestatsmod.loading": "Chargement ..."
+  "horsestatsmod.loading": "Chargement ...",
+  "horsestatsmod.owner": "Propriétaire"
 }
