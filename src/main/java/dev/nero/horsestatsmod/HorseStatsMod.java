@@ -82,7 +82,6 @@ public class HorseStatsMod
                         GameProfile playerProfile = new GameProfile(key, null);
                         playerProfile = Minecraft.getInstance().getMinecraftSessionService().fillProfileProperties(playerProfile, false);
                         usernameCache.put(key, Optional.ofNullable(playerProfile.getName()));
-                        System.out.println(key);
                     });
 
                     return Optional.of(I18n.get("horsestatsmod.loading"));
