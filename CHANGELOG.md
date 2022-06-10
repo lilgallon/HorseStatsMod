@@ -1,6 +1,8 @@
-## Version 1.4.4 for Minecraft 1.18.x
+## Version 1.4.4 for Minecraft 1.19.x
 
-- Added owner with the stats
+- Added owner (beta)
+- Improved German translation (thanks @Greg-21)
+- Updated mod to 1.19
 
 ## Version 1.4.3 for Minecraft 1.18.x
 
