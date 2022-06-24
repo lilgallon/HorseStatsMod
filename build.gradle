@@ -6,7 +6,7 @@ plugins {
 
 version = 'MC1.19.x-1.4.4'
 group = 'dev.gallon.horsestatsmod'
-archivesBaseName = 'horsestatsmod'
+
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -61,7 +61,7 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.16'
+    minecraft 'net.minecraftforge:forge:1.19-41.0.45'
 }
 
 jar {
