@@ -179,7 +179,7 @@ public class HorseStatsMod
         }
     }
 
-    private void onDrawForegroundEvent(final ContainerScreenEvent.DrawForeground event) {
+    private void onDrawForegroundEvent(final ContainerScreenEvent.Render.Foreground event) {
         if (event.getContainerScreen() instanceof HorseInventoryScreen) {
             // 1. GET THE STATISTICS OF THAT RIDDEN HORSE
 
@@ -222,7 +222,7 @@ public class HorseStatsMod
 
         final UUID ownerUUID = horse.getOwnerUUID();
         if (ownerUUID != null) {
-            owner = usernameCache.getUnchecked(ownerUUID).orElse(I18n.get("horsestatsmod.loading"));
+            owner = usernameCache.getUnchecked(ownerUUID).orElse(null);
         } else {
             owner = null;
         }
@@ -423,14 +423,11 @@ public class HorseStatsMod
     }
 
     private void drawHoveringText(int x, int y, List<Component> textLines) {
-        Minecraft.getInstance().screen.renderTooltip(
+        Minecraft.getInstance().screen.renderComponentTooltip(
                 new PoseStack(),
                 textLines,
-                java.util.Optional.empty(),
                 x / (int) Minecraft.getInstance().getWindow().getGuiScale(),
                 y / (int) Minecraft.getInstance().getWindow().getGuiScale(),
-                // Minecraft.getInstance().getWindow().getWidth(),
-                // Minecraft.getInstance().getWindow().getHeight(),150,
                 Minecraft.getInstance().font
         );
     }
@@ -439,7 +436,7 @@ public class HorseStatsMod
      * @param val the value
      * @param min the min possible value
      * @param max the max possible value
-     * @return an hex color according to the percentage of val in min/max
+     * @return a hex color according to the percentage of val in min/max
      */
     private int getColorHex(double val, double min, double max) {
         double p = this.getPercentage(val, min, max);
