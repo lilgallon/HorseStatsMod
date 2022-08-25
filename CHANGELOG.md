@@ -1,3 +1,8 @@
+## Version 1.4.5 for Minecraft 1.19.2
+
+- Owner is not shown when the user is not yet resolved
+- Support for Forge 1.19.2
+
 ## Version 1.4.4 for Minecraft 1.19.x
 
 - Added owner (beta)
