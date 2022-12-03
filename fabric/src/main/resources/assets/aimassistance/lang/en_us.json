@@ -1,0 +1,17 @@
+{
+  "text.autoconfig.aimassistance.title": "Aim Assistance Configuration",
+  "text.autoconfig.aimassistance.option.config": "Configuration",
+  "text.autoconfig.aimassistance.option.config.fov": "Field of view",
+  "text.autoconfig.aimassistance.option.config.aimBlock": "Assist when mining",
+  "text.autoconfig.aimassistance.option.config.blockRange": "Max block distance",
+  "text.autoconfig.aimassistance.option.config.miningInteractionDuration": "Time before toggling mining assistance",
+  "text.autoconfig.aimassistance.option.config.miningAssistanceDuration": "Duration of mining assistance",
+  "text.autoconfig.aimassistance.option.config.miningAimForce": "Force of mining assistance",
+  "text.autoconfig.aimassistance.option.config.aimEntity": "Assist when attacking",
+  "text.autoconfig.aimassistance.option.config.entityRange": "Max entity distance",
+  "text.autoconfig.aimassistance.option.config.attackInteractionSpeed": "Click per seconds to toggle assistance",
+  "text.autoconfig.aimassistance.option.config.attackInteractionDuration": "Time before toggling attacking assistance",
+  "text.autoconfig.aimassistance.option.config.attackAssistanceDuration": "Duration of attacking assistance",
+  "text.autoconfig.aimassistance.option.config.attackAimForce": "Force of attacking assistance",
+  "text.autoconfig.aimassistance.option.config.stopAttackOnReached": "Stop assistance when the player aims at the entity"
+}
