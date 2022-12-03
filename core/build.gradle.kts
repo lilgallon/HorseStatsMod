@@ -10,6 +10,8 @@ repositories {
 }
 
 dependencies {
+    implementation("com.google.guava:guava:31.1-jre")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
 
 tasks {

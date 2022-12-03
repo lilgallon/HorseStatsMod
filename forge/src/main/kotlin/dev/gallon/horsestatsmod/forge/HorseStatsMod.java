@@ -215,31 +215,6 @@
 //        Minecraft.getInstance().gui.setOverlayMessage(message, false);
 //    }
 //
-//    private void getHorseStats(AbstractHorse horse) {
-//        health = horse.getAttribute(Attributes.MAX_HEALTH).getValue();
-//        jumpHeight = horse.getAttribute(Attributes.JUMP_STRENGTH).getValue();
-//        speed = horse.getAttribute(Attributes.MOVEMENT_SPEED).getValue();
-//
-//        final UUID ownerUUID = horse.getOwnerUUID();
-//        if (ownerUUID != null) {
-//            owner = usernameCache.getUnchecked(ownerUUID).orElse(null);
-//        } else {
-//            owner = null;
-//        }
-//
-//        if (horse instanceof Llama)
-//            slots = ((Llama) horse).getInventoryColumns() * 3;
-//        else
-//            slots = -1;
-//
-//        jumpHeight = (
-//                - 0.1817584952 * Math.pow(jumpHeight, 3) +
-//                        3.689713992 * Math.pow(jumpHeight, 2) +
-//                        2.128599134 * jumpHeight - 0.343930367
-//        ); // convert to blocks
-//        speed = speed * 43; // convert to m/s
-//    }
-//
 //    private void displayStatsInHoveringText(HorseInventoryScreen guiContainer, int mouseX, int mouseY) {
 //
 //        // todo double -> int
