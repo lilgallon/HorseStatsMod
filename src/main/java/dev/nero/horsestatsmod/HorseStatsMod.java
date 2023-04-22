@@ -180,11 +180,11 @@ public class HorseStatsMod
     }
 
     private void onDrawForegroundEvent(final ContainerScreenEvent.Render.Foreground event) {
-        if (event.getContainerScreen() instanceof HorseInventoryScreen) {
+        if (event.getContainerScreen() instanceof HorseInventoryScreen horseInventoryScreen) {
             // 1. GET THE STATISTICS OF THAT RIDDEN HORSE
 
             // The horse attribute is private in HorseInventoryScreen (see accesstransformer.cfg)
-            AbstractHorse horse = ((HorseInventoryScreen) event.getContainerScreen()).horse;
+            AbstractHorse horse = horseInventoryScreen.horse;
             getHorseStats(horse);
 
             // 2. DISPLAY THE I18n.get("horsestatsmod.stats")
@@ -201,7 +201,13 @@ public class HorseStatsMod
 
             if (TheModConfig.displayStats()) {
                 // Show the stats on the GUI
-                displayStatsAndHoveringTexts(horse, mouseX, mouseY);
+                displayStatsAndHoveringTexts(
+                        horse,
+                        horseInventoryScreen.getGuiLeft(),
+                        horseInventoryScreen.getGuiTop(),
+                        mouseX,
+                        mouseY
+                );
             } else {
                 // Show the stats only if the mouse is on the horse's name
                 displayStatsInHoveringText(((HorseInventoryScreen) event.getContainerScreen()), mouseX, mouseY);
@@ -333,11 +339,15 @@ public class HorseStatsMod
                 );
             }
 
-            this.drawHoveringText(mouseX, mouseY, textLines);
+            this.drawHoveringText(
+                    mouseX + guiContainer.getGuiLeft(),
+                    mouseY + guiContainer.getGuiTop(),
+                    textLines
+            );
         }
     }
 
-    private void displayStatsAndHoveringTexts(AbstractHorse horse, int mouseX, int mouseY) {
+    private void displayStatsAndHoveringTexts(AbstractHorse horse, int guiX, int guiY, int mouseX, int mouseY) {
 
         // The boxes positions (x,y) and dimensions (w,h) defining when to display the hovering text relative to the
         // top left of the container
@@ -354,18 +364,23 @@ public class HorseStatsMod
 
         // It is possible to open the GUI without riding a horse!
         if (!(horse.getDisplayName().getString().length() > 8))
-            this.renderText(I18n.get("horsestatsmod.stats") + ":", rx, ry, 0X444444);
+            this.renderText(
+                    I18n.get("horsestatsmod.stats") + ":",
+                    guiX + rx,
+                    guiY + ry,
+                    0X444444
+            );
 
         // Health (30 units shift to the right)
         rx += 30;
         this.renderText(
                 String.format("%.2f", health),
-                rx, ry,
+                guiX + rx, guiY + ry,
                 TheModConfig.coloredStats() ? getColorHex(health, MIN_HEALTH, MAX_HEALTH) : 0X444444
         );
         if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw, rh)) {
             drawHoveringText(
-                    mouseX, mouseY,
+                    guiX + (int) (mouseX / getGuiScale()),  guiY + (int) (mouseY / getGuiScale()),
                     I18n.get("horsestatsmod.health") + ":", "15.0", "30.0", I18n.get("horsestatsmod.player") + ": 20.0"
             );
         }
@@ -374,12 +389,12 @@ public class HorseStatsMod
         rx += 30;
         this.renderText(
                 String.format("%.2f", jumpHeight),
-                rx, ry,
+                guiX + rx, guiY + ry,
                 TheModConfig.coloredStats() ? getColorHex(jumpHeight, MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) : 0X444444
         );
         if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw-6, rh)) { // -12 because max is x.xx and not xx.xx
             drawHoveringText(
-                    mouseX, mouseY,
+                    guiX + (int) (mouseX / getGuiScale()),  guiY + (int) (mouseY / getGuiScale()),
                     I18n.get("horsestatsmod.jump") + " (" + I18n.get("horsestatsmod.blocks") + "):", "1.25", "5.0", I18n.get("horsestatsmod.player") +  ": 1.25"
             );
         }
@@ -388,12 +403,12 @@ public class HorseStatsMod
         rx += 24;
         this.renderText(
                 String.format("%.2f", speed),
-                rx, ry,
+                guiX + rx, guiY + ry,
                 TheModConfig.coloredStats() ? getColorHex(speed, MIN_SPEED, MAX_SPEED) : 0X444444
         );
         if (posInRect(mouseX, mouseY, rx-2,  ry-2, rw, rh)) {
             drawHoveringText(
-                    mouseX, mouseY,
+                    guiX + (int) (mouseX / getGuiScale()),  guiY + (int) (mouseY / getGuiScale()),
                     I18n.get("horsestatsmod.speed") + " (" + I18n.get("horsestatsmod.metersperseconds") + "):", "4.8", "14.5",
                     I18n.get("horsestatsmod.player") + ": 4.317 (" + I18n.get("horsestatsmod.walk") + ")",
                     I18n.get("horsestatsmod.player") + ": 5.612 (" + I18n.get("horsestatsmod.sprint") + ")",
@@ -405,9 +420,13 @@ public class HorseStatsMod
         rx += 30;
         this.renderText(
                 owner,
-                rx, ry,
+                guiX + rx, guiY + ry,
                 0X444444
         );
+    }
+
+    private double getGuiScale() {
+        return Minecraft.getInstance().getWindow().getGuiScale();
     }
 
     private void drawHoveringText(int x, int y, String title, String min, String max, String... notes) {
@@ -426,8 +445,8 @@ public class HorseStatsMod
         Minecraft.getInstance().screen.renderComponentTooltip(
                 new PoseStack(),
                 textLines,
-                x / (int) Minecraft.getInstance().getWindow().getGuiScale(),
-                y / (int) Minecraft.getInstance().getWindow().getGuiScale(),
+                x, //(int) (x / getGuiScale()),
+                y, //(int) (y / getGuiScale()),
                 Minecraft.getInstance().font
         );
     }
@@ -495,7 +514,7 @@ public class HorseStatsMod
         Minecraft.getInstance().font.draw(
                 new PoseStack(),
                 text,
-                x, y,
+                x, y ,
                 color
         );
     }
