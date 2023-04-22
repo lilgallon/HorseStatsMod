@@ -1,3 +1,8 @@
+## Version 1.4.6 for Minecraft 1.19.4
+
+- Updated mod for forge 1.19.4
+- Fixed text not displaying at the right place in GUI
+
 ## Version 1.4.5 for Minecraft 1.19.2
 
 - Owner is not shown when the user is not yet resolved
