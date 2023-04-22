@@ -1,19 +1,18 @@
-![logo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.18.x/.github/resources/horsestatsmod.png)
+![logo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.19.x/.github/resources/horsestatsmod.png)
 
 # Horse Stats Mod
 ![github downloads](https://img.shields.io/github/downloads/lilgallon/horsestatsmod/total.svg?label=github%20downloads)
 [![curseforge downloads](http://cf.way2muchnoise.eu/full_409126_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/horse-statistics)
 ![issues](https://img.shields.io/github/issues/lilgallon/horsestatsmod.svg)
 ![release](https://img.shields.io/github/release/lilgallon/horsestatsmod.svg)
-![build](https://img.shields.io/github/workflow/status/lilgallon/horsestatsmod/Build%20MC1.16.x?label=build%201.16.x)
 
 A lightweight mod that shows the horses' stats (health, jump height, speed, and slots for Llamas). 
 
-![demo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.18.x/.github/resources/demo-1.1.0.png)
+![demo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.19.x/.github/resources/demo-1.1.0.png)
 
-![demo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.18.x/.github/resources/demo-1.2.0.png)
+![demo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.19.x/.github/resources/demo-1.2.0.png)
 
-![demo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.18.x/.github/resources/demo-1.3.0.png)
+![demo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.19.x/.github/resources/demo-1.3.0.png)
 
 ## Contributing
 Don't hesitate to contribute. Even if it's your first time, it's never too late to learn!
