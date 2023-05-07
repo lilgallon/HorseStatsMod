@@ -10,5 +10,7 @@
   "horsestatsmod.walk": "Ходьба",
   "horsestatsmod.sprint": "Бег",
   "horsestatsmod.min": "Минимум",
-  "horsestatsmod.max": "Максимум"
+  "horsestatsmod.max": "Максимум",
+  "horsestatsmod.loading": "Загрузка...",
+  "horsestatsmod.owner": "Владелец"
 }

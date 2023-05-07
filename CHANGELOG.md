@@ -1,5 +1,9 @@
 ## Version 1.4.6 for Minecraft 1.19.4
 
+- Add russian translation
+
+## Version 1.4.6 for Minecraft 1.19.4
+
 - Updated mod for forge 1.19.4
 - Fixed text not displaying at the right place in GUI
 
