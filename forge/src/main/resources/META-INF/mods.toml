@@ -1,29 +1,26 @@
 modLoader="javafml" #mandatory
-loaderVersion="[41,)" #mandatory
-license="GNU GPL-3.0"
+loaderVersion="${loader_version_range}" #mandatory
+license="${mod_license}"
 issueTrackerURL="https://github.com/lilgallon/HorseStatsMod/issues" #optional
 
 [[mods]] #mandatory
-modId="horsestatsmod" #mandatory
-version="1.4.6" #mandatory
-displayName="Horse Stats Mod" #mandatory
+modId="${mod_id}" #mandatory
+version="${mod_version}" #mandatory
+displayName="${mod_name}" #mandatory
 updateJSONURL="https://raw.githubusercontent.com/lilgallon/HorseStatsMod/versions/update.json" #optional
 displayURL="https://github.com/lilgallon/HorseStatsMod" #optional
 logoFile="horsestatsmod.png" #optional (jar root)
 # credits="" #optional
-authors="nero (@lilgallon on Github)" #optional
-description='''
-A lightweight mod that shows the horses' stats (health, jump height and speed)
+authors="${mod_authors}" #optional
+description='''${mod_description}'''
 
-'''
-
-[[dependencies.horsestatsmod]] #optional
+[[dependencies.${mod_id}]] #optional
 # the modid of the dependency
 modId="forge" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified
 mandatory=true #mandatory
 # The version range of the dependency
-versionRange="[41,)" #mandatory
+versionRange="${forge_version_range}" #mandatory
 # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
 ordering="NONE"
 # Side this dependency is applied on - BOTH, CLIENT or SERVER

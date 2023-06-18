@@ -1,3 +1,8 @@
+## Version 1.4.7 for Minecraft 1.20.0
+
+- Updated mod for forge 1.19.4
+- Fixed text not displaying at the right place in GUI
+
 ## Version 1.4.6 for Minecraft 1.19.4
 
 - Updated mod for forge 1.19.4
