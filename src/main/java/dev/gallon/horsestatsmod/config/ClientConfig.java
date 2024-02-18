@@ -1,6 +1,6 @@
-package dev.nero.horsestatsmod.config;
+package dev.gallon.horsestatsmod.config;
 
-import dev.nero.horsestatsmod.HorseStatsMod;
+import dev.gallon.horsestatsmod.HorseStatsMod;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ClientConfig {

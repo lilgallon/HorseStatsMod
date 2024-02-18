@@ -1,10 +1,9 @@
-package dev.nero.horsestatsmod.config;
+package dev.gallon.horsestatsmod.config;
 
-import dev.nero.horsestatsmod.HorseStatsMod;
+import dev.gallon.horsestatsmod.HorseStatsMod;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 

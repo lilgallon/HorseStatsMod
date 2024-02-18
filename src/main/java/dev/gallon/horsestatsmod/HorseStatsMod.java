@@ -7,16 +7,17 @@
 * Public License along with this program.
 */
 
-package dev.nero.horsestatsmod;
+package dev.gallon.horsestatsmod;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.vertex.PoseStack;
-import dev.nero.horsestatsmod.config.TheModConfig;
+import com.mojang.authlib.yggdrasil.ProfileResult;
+import dev.gallon.horsestatsmod.config.TheModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -42,7 +43,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static net.minecraftforge.network.NetworkConstants.IGNORESERVERONLY;
+import static net.minecraftforge.fml.IExtensionPoint.DisplayTest.IGNORESERVERONLY;
 
 @Mod(HorseStatsMod.MODID)
 public class HorseStatsMod
@@ -80,7 +81,14 @@ public class HorseStatsMod
                 public @NotNull Optional<String> load(@NotNull UUID key) {
                     CompletableFuture.runAsync(() -> {
                         GameProfile playerProfile = new GameProfile(key, null);
-                        playerProfile = Minecraft.getInstance().getMinecraftSessionService().fillProfileProperties(playerProfile, false);
+
+                        Optional<ProfileResult> result = Optional.ofNullable(
+                                Minecraft.getInstance()
+                                    .getMinecraftSessionService()
+                                    .fetchProfile(playerProfile.getId(), false)
+                        );
+
+                        playerProfile = result.isPresent() ? result.get().profile() : playerProfile;
                         usernameCache.put(key, Optional.ofNullable(playerProfile.getName()));
                     });
 
@@ -93,7 +101,7 @@ public class HorseStatsMod
         // the server as incompatible
         ModLoadingContext.get().registerExtensionPoint(
                 IExtensionPoint.DisplayTest.class,
-                () -> new IExtensionPoint.DisplayTest(() -> IGNORESERVERONLY, (remote, isServer)-> true)
+                () -> new IExtensionPoint.DisplayTest(() -> IGNORESERVERONLY, (remote, isServer) -> true)
         );
 
         MinecraftForge.EVENT_BUS.addListener(this::onEntityInteractEvent);
@@ -191,12 +199,12 @@ public class HorseStatsMod
             // Mouse position (relative to the top left of the container) to know when to render the hovering text
             // This - scale*blabla shifts the mouse position so that (0, 0) is actually the top left of the container
             int mouseX = (
-                    (int) Minecraft.getInstance().mouseHandler.xpos()
-                    - (int) Minecraft.getInstance().getWindow().getGuiScale() * event.getContainerScreen().getGuiLeft()
+                    (int) horseInventoryScreen.xMouse
+                            - event.getContainerScreen().getGuiLeft()
             );
             int mouseY = (
-                    (int) Minecraft.getInstance().mouseHandler.ypos()
-                    - (int) Minecraft.getInstance().getWindow().getGuiScale() * event.getContainerScreen().getGuiTop()
+                    (int) horseInventoryScreen.yMouse
+                            - event.getContainerScreen().getGuiTop()
             );
 
             if (TheModConfig.displayStats()) {
@@ -378,9 +386,10 @@ public class HorseStatsMod
                 guiX + rx, guiY + ry,
                 TheModConfig.coloredStats() ? getColorHex(health, MIN_HEALTH, MAX_HEALTH) : 0X444444
         );
+
         if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw, rh)) {
             drawHoveringText(
-                    guiX + (int) (mouseX / getGuiScale()),  guiY + (int) (mouseY / getGuiScale()),
+                    guiX + mouseX,  guiY + mouseY,
                     I18n.get("horsestatsmod.health") + ":", "15.0", "30.0", I18n.get("horsestatsmod.player") + ": 20.0"
             );
         }
@@ -394,7 +403,7 @@ public class HorseStatsMod
         );
         if (posInRect(mouseX, mouseY, rx - 2,  ry - 2, rw-6, rh)) { // -12 because max is x.xx and not xx.xx
             drawHoveringText(
-                    guiX + (int) (mouseX / getGuiScale()),  guiY + (int) (mouseY / getGuiScale()),
+                    guiX + mouseX,  guiY + mouseY,
                     I18n.get("horsestatsmod.jump") + " (" + I18n.get("horsestatsmod.blocks") + "):", "1.25", "5.0", I18n.get("horsestatsmod.player") +  ": 1.25"
             );
         }
@@ -408,7 +417,7 @@ public class HorseStatsMod
         );
         if (posInRect(mouseX, mouseY, rx-2,  ry-2, rw, rh)) {
             drawHoveringText(
-                    guiX + (int) (mouseX / getGuiScale()),  guiY + (int) (mouseY / getGuiScale()),
+                    guiX + mouseX,  guiY + mouseY,
                     I18n.get("horsestatsmod.speed") + " (" + I18n.get("horsestatsmod.metersperseconds") + "):", "4.8", "14.5",
                     I18n.get("horsestatsmod.player") + ": 4.317 (" + I18n.get("horsestatsmod.walk") + ")",
                     I18n.get("horsestatsmod.player") + ": 5.612 (" + I18n.get("horsestatsmod.sprint") + ")",
@@ -442,13 +451,14 @@ public class HorseStatsMod
     }
 
     private void drawHoveringText(int x, int y, List<Component> textLines) {
-        Minecraft.getInstance().screen.renderComponentTooltip(
-                new PoseStack(),
-                textLines,
-                x, //(int) (x / getGuiScale()),
-                y, //(int) (y / getGuiScale()),
-                Minecraft.getInstance().font
-        );
+        new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource())
+            .renderTooltip(
+                    Minecraft.getInstance().font,
+                    textLines,
+                    Optional.empty(),
+                    x, //(int) (x / getGuiScale()),
+                    y //(int) (y / getGuiScale())
+            );
     }
 
     /**
@@ -511,12 +521,14 @@ public class HorseStatsMod
      * @param color the color in hex (00-FF), following this format: RRGGBB (R:red, G:green, B:blue). Ex: 0xFFFFFF
      */
     private void renderText(String text, int x, int y, int color) {
-        Minecraft.getInstance().font.draw(
-                new PoseStack(),
-                text,
-                x, y ,
-                color
-        );
+        new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource())
+                .drawString(
+                        Minecraft.getInstance().font,
+                        text,
+                        x, y,
+                        color,
+                        false
+                );
     }
 
     /**
@@ -535,10 +547,6 @@ public class HorseStatsMod
         // When creating a rectangle, I use the fillRect function to visualize the rectangle. Then I use this function
         // to check if the mouse is inside or not. This multiplication prevents doing a lot more when calling this
         // function. Just ignore that, act like if it worked as intended. It's a little hack.
-        rx *= Minecraft.getInstance().getWindow().getGuiScale();
-        ry *= Minecraft.getInstance().getWindow().getGuiScale();
-        rw *= Minecraft.getInstance().getWindow().getGuiScale();
-        rh *= Minecraft.getInstance().getWindow().getGuiScale();
         return (px >= rx && px <= rx + rw) && (py >= ry && py <= ry + rh);
     }
 }
