@@ -1,3 +1,8 @@
+## Version 1.4.7 for Minecraft 1.20.4
+
+- Add japanese traduction
+- Support for Forge 1.20.4
+
 ## Version 1.4.6 for Minecraft 1.19.4
 
 - Add russian translation
