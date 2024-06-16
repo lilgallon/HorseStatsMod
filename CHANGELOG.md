@@ -1,3 +1,7 @@
+## Version 1.4.7 for Minecraft 1.21
+
+- MC 1.21 support
+
 ## Version 1.4.7 for Minecraft 1.20.4
 
 - Add japanese traduction
