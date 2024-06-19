@@ -1,3 +1,8 @@
+## Version 1.4.8 for Minecraft 1.21
+
+- Accurate horse blocks/second speed (thanks @Armakatsu)
+  - factor was updated from 43 to 42.16
+
 ## Version 1.4.7 for Minecraft 1.21
 
 - MC 1.21 support
