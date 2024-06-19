@@ -251,7 +251,7 @@ public class HorseStatsMod
                         3.689713992 * Math.pow(jumpHeight, 2) +
                         2.128599134 * jumpHeight - 0.343930367
         ); // convert to blocks
-        speed = speed * 43; // convert to m/s
+        speed = speed * 42.16; // convert to m/s
     }
 
     private void displayStatsInHoveringText(HorseInventoryScreen guiContainer, int mouseX, int mouseY) {
