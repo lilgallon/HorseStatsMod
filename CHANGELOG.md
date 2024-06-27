@@ -1,3 +1,7 @@
+## Version 1.4.9 for Minecraft 1.21
+
+- Add korean translation (thanks @smoong951)
+
 ## Version 1.4.8 for Minecraft 1.21
 
 - Accurate horse blocks/second speed (thanks @Armakatsu)
