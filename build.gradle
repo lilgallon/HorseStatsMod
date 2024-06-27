@@ -18,6 +18,7 @@ minecraft {
     mappings channel: mapping_channel, version: mapping_version
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     copyIdeResources = true
+    reobf = false
 
     runs {
         configureEach {
@@ -70,9 +71,6 @@ tasks.named('jar', Jar).configure {
                 'Implementation-Vendor'   : mod_authors
         ])
     }
-
-    // This is the preferred method to reobfuscate your jar file
-    finalizedBy 'reobfJar'
 }
 
 tasks.withType(JavaCompile).configureEach {
