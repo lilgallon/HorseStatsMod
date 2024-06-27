@@ -1,0 +1,16 @@
+{
+  "horsestatsmod.stats": "통계",
+  "horsestatsmod.health": "생명력",
+  "horsestatsmod.jump": "점프",
+  "horsestatsmod.speed": "속도",
+  "horsestatsmod.slots": "슬롯",
+  "horsestatsmod.blocks": "블록",
+  "horsestatsmod.metersperseconds": "m/s",
+  "horsestatsmod.player": "플레이어",
+  "horsestatsmod.walk": "걷기",
+  "horsestatsmod.sprint": "달리기",
+  "horsestatsmod.min": "최소",
+  "horsestatsmod.max": "최대",
+  "horsestatsmod.loading": "불러오는 중...",
+  "horsestatsmod.owner": "소유자"
+}
