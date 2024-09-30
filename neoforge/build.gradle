@@ -63,14 +63,6 @@ processResources {
             neoforge_loader_version_range       : neoforge_loader_version_range,
             neoforge_version_range              : neoforge_version_range,
             neoforge_minecraft_version_range    : neoforge_minecraft_version_range,
-            // Fabric Dependencies
-            fabric_loader_version               : fabric_loader_version,
-            fabric_api_version                  : fabric_api_version,
-            // Fabric dependencies requirements
-            fabric_loader_version_requirement   : fabric_loader_version_requirement,
-            fabric_api_version_requirement      : fabric_api_version_requirement,
-            fabric_minecraft_version_requirement: fabric_minecraft_version_requirement,
-            fabric_java_version_requirement     : fabric_java_version_requirement,
     ]
 
     inputs.properties replaceProperties

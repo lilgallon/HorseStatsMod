@@ -15,5 +15,6 @@
   "horsestatsmod.owner": "Owner",
   "horsestatsmod.display_stats": "Display statistics in horse inventory",
   "horsestatsmod.colour_stats": "Display statistics with colors",
-  "horsestatsmod.display_min_max": "Display statistics with min and max"
+  "horsestatsmod.display_min_max": "Display statistics with min and max",
+  "horsestatsmod.configuration.HorseStatsMod": "HorseStatsMod configuration"
 }
