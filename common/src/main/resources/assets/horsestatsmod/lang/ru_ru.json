@@ -1,0 +1,16 @@
+{
+  "horsestatsmod.stats": "Stats",
+  "horsestatsmod.health": "Здоровье",
+  "horsestatsmod.jump_height": "Прыжок",
+  "horsestatsmod.speed": "Скорость",
+  "horsestatsmod.slots": "Слоты",
+  "horsestatsmod.blocks": "Блоки",
+  "horsestatsmod.meters_per_seconds": "м/с",
+  "horsestatsmod.player": "Игрок",
+  "horsestatsmod.walk": "Ходьба",
+  "horsestatsmod.sprint": "Бег",
+  "horsestatsmod.min": "Минимум",
+  "horsestatsmod.max": "Максимум",
+  "horsestatsmod.loading": "Загрузка...",
+  "horsestatsmod.owner": "Владелец"
+}

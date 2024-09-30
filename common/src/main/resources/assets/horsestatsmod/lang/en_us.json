@@ -1,0 +1,19 @@
+{
+  "horsestatsmod.stats": "Stats",
+  "horsestatsmod.health": "Health",
+  "horsestatsmod.jump_height": "Jump",
+  "horsestatsmod.speed": "Speed",
+  "horsestatsmod.slots": "Slots",
+  "horsestatsmod.blocks": "Blocks",
+  "horsestatsmod.meters_per_seconds": "m/s",
+  "horsestatsmod.player": "Player",
+  "horsestatsmod.walk": "Walk",
+  "horsestatsmod.sprint": "Sprint",
+  "horsestatsmod.min": "min",
+  "horsestatsmod.max": "max",
+  "horsestatsmod.loading": "Loading...",
+  "horsestatsmod.owner": "Owner",
+  "horsestatsmod.display_stats": "Display statistics in horse inventory",
+  "horsestatsmod.colour_stats": "Display statistics with colors",
+  "horsestatsmod.display_min_max": "Display statistics with min and max"
+}

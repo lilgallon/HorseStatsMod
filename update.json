@@ -1,0 +1,23 @@
+{
+  "homepage": "https://github.com/lilgallon/HorseStatsMod/releases",
+  "promos": {
+    "1.16.4-latest": "1.4.2",
+    "1.16.4-recommended": "1.4.2",
+    "1.16.5-latest": "1.4.2",
+    "1.16.5-recommended": "1.4.2",
+    "1.17.1-latest": "1.4.2",
+    "1.17.1-recommended": "1.4.2",
+    "1.18-latest": "1.4.3",
+    "1.18-recommended": "1.4.3",
+    "1.19-latest": "1.4.4",
+    "1.19-recommended": "1.4.4",
+    "1.19.2-latest": "1.4.5",
+    "1.19.2-recommended": "1.4.5",
+    "1.19.4-latest": "1.4.7",
+    "1.19.4-recommended": "1.4.7",
+    "1.20.4-latest": "1.4.7",
+    "1.20.4-recommended": "1.4.7",
+    "1.21-latest": "2.0.0",
+    "1.21-recommended": "2.0.0"
+  }
+}

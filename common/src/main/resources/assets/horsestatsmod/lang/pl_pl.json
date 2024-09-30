@@ -1,0 +1,16 @@
+{
+  "horsestatsmod.stats": "Dane",
+  "horsestatsmod.health": "Zdrowie",
+  "horsestatsmod.jump_height": "Skok",
+  "horsestatsmod.speed": "Szybkość",
+  "horsestatsmod.slots": "Sloty",
+  "horsestatsmod.blocks": "bloki",
+  "horsestatsmod.meters_per_seconds": "m/s",
+  "horsestatsmod.player": "Gracz",
+  "horsestatsmod.walk": "chód",
+  "horsestatsmod.sprint": "sprint",
+  "horsestatsmod.min": "min.",
+  "horsestatsmod.max": "max.",
+  "horsestatsmod.loading": "Ładowanie...",
+  "horsestatsmod.owner": "Właściciel"
+}

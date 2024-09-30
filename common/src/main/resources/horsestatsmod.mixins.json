@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "dev.gallon.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+  ],
+  "mixins": [
+    "GuiMixin",
+    "AbstractContainerScreenAccessor",
+    "HorseInventoryScreenAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
