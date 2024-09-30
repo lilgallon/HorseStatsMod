@@ -33,6 +33,10 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
+        mixin {
+            useLegacyMixinAp = true
+            defaultRefmapName.set("horsestatsmod-refmap.json")
+        }
     }
 
     dependencies {
