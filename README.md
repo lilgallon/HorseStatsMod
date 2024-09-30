@@ -6,6 +6,9 @@
 ![issues](https://img.shields.io/github/issues/lilgallon/horsestatsmod.svg)
 ![release](https://img.shields.io/github/release/lilgallon/horsestatsmod.svg)
 
+[![build fabric](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-fabric.yaml/badge.svg)](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-fabric.yaml)
+[![build neoforge](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-neoforge.yaml/badge.svg)](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-neoforge.yaml)
+
 A lightweight mod that shows the horses' stats (health, jump height, speed, and slots for Llamas).
 
 ![demo](https://github.com/lilgallon/HorseStatsMod/raw/MC_1.19.x/.github/resources/demo-1.1.0.png)
