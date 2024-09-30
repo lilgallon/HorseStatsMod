@@ -1,4 +1,4 @@
-name: build fabric
+name: release fabric
 on:
   push:
     tags:
