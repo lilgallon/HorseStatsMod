@@ -7,6 +7,11 @@ architectury {
     fabric()
 }
 
+repositories {
+    maven { url "https://maven.shedaniel.me/" } // cloth config
+    maven { url "https://maven.terraformersmc.com/releases/" } // mod menu
+}
+
 configurations {
     common {
         canBeResolved = true
@@ -32,41 +37,42 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:$rootProject.fabric_cloth_config_version") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    modApi "com.terraformersmc:modmenu:$rootProject.fabric_modmenu_version"
 }
 
 processResources {
     var replaceProperties = [
             // Mod info
-            mod_license                         : mod_license,
-            mod_name                            : mod_name,
-            mod_authors                         : mod_authors,
-            mod_description                     : mod_description,
-            mod_group_id                        : mod_group_id,
-            mod_display_url                     : mod_display_url,
-            mod_issue_tracker                   : mod_issue_tracker,
-            mod_update_json                     : mod_update_json,
+            mod_license                            : mod_license,
+            mod_name                               : mod_name,
+            mod_authors                            : mod_authors,
+            mod_description                        : mod_description,
+            mod_group_id                           : mod_group_id,
+            mod_display_url                        : mod_display_url,
+            mod_issue_tracker                      : mod_issue_tracker,
+            mod_update_json                        : mod_update_json,
             // Mod properties
-            mod_id                              : mod_id,
-            mod_version                         : mod_version,
-            maven_group                         : maven_group,
-            archives_name                       : archives_name,
-            enabled_platforms                   : enabled_platforms,
+            mod_id                                 : mod_id,
+            mod_version                            : mod_version,
+            maven_group                            : maven_group,
+            archives_name                          : archives_name,
+            enabled_platforms                      : enabled_platforms,
             // Minecraft properties
-            minecraft_version                   : minecraft_version,
-            // Neoforge dependencies
-            neoforge_version                    : neoforge_version,
-            // Neoforge dependencies requirements
-            neoforge_loader_version_range       : neoforge_loader_version_range,
-            neoforge_version_range              : neoforge_version_range,
-            neoforge_minecraft_version_range    : neoforge_minecraft_version_range,
+            minecraft_version                      : minecraft_version,
             // Fabric Dependencies
-            fabric_loader_version               : fabric_loader_version,
-            fabric_api_version                  : fabric_api_version,
+            fabric_loader_version                  : fabric_loader_version,
+            fabric_api_version                     : fabric_api_version,
+            fabric_cloth_config_version            : fabric_cloth_config_version,
             // Fabric dependencies requirements
-            fabric_loader_version_requirement   : fabric_loader_version_requirement,
-            fabric_api_version_requirement      : fabric_api_version_requirement,
-            fabric_minecraft_version_requirement: fabric_minecraft_version_requirement,
-            fabric_java_version_requirement     : fabric_java_version_requirement,
+            fabric_loader_version_requirement      : fabric_loader_version_requirement,
+            fabric_api_version_requirement         : fabric_api_version_requirement,
+            fabric_minecraft_version_requirement   : fabric_minecraft_version_requirement,
+            fabric_java_version_requirement        : fabric_java_version_requirement,
+            fabric_cloth_config_version_requirement: fabric_cloth_config_version_requirement
     ]
 
     inputs.properties replaceProperties

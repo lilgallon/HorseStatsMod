@@ -13,8 +13,10 @@
   "horsestatsmod.max": "max",
   "horsestatsmod.loading": "Loading...",
   "horsestatsmod.owner": "Owner",
-  "horsestatsmod.display_stats": "Display statistics in horse inventory",
-  "horsestatsmod.colour_stats": "Display statistics with colors",
-  "horsestatsmod.display_min_max": "Display statistics with min and max",
-  "horsestatsmod.configuration.HorseStatsMod": "HorseStatsMod configuration"
+  "horsestatsmod.configuration.HorseStatsMod": "HorseStatsMod configuration",
+  "text.autoconfig.horsestatsmod.title": "HorseStatsMod configuration",
+  "text.autoconfig.horsestatsmod.option.modConfig": "HorseStatsMod configuration",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStats": "Display statistics in horse inventory",
+  "text.autoconfig.horsestatsmod.option.modConfig.coloredStats": "Display statistics with colors",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax": "Display statistics with min and max"
 }

@@ -18,6 +18,9 @@
   "entrypoints": {
     "client": [
       "dev.gallon.fabric.HorseStatsModFabric"
+    ],
+    "modmenu": [
+      "dev.gallon.fabric.config.ModMenu"
     ]
   },
   "mixins": [
@@ -27,6 +30,7 @@
     "fabricloader": "${fabric_loader_version_requirement}",
     "minecraft": "${fabric_minecraft_version_requirement}",
     "java": "${fabric_java_version_requirement}",
-    "fabric-api": "${fabric_api_version_requirement}"
+    "fabric-api": "${fabric_api_version_requirement}",
+    "cloth-config": "${fabric_cloth_config_version_requirement}"
   }
 }
