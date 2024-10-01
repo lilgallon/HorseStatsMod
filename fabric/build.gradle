@@ -83,7 +83,15 @@ processResources {
     // in mixins.json. AND forge won't work if refmap is specified. So in fabric
     // we specify the refmap, and in forge we don't
     filesMatching("horsestatsmod.mixins.json") {
-        expand refmap_fix: ",\n  \"refmap\": \"horsestatsmod-common-common-refmap.json\""
+        filter { String line ->
+            line.find(" }").each {
+                line = it.replace(
+                        "}",
+                        "  },\n  \"refmap\": \"horsestatsmod-common-common-refmap.json\""
+                )
+            }
+            line
+        }
     }
 
     filesMatching('fabric.mod.json') {
