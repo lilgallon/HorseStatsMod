@@ -69,6 +69,13 @@ processResources {
 
     from(project(":common").sourceSets["main"].resources)
 
+    // For some reason fabric mixins won't work because refmap is not specified
+    // in mixins.json. AND forge won't work if refmap is specified. So in fabric
+    // we specify the refmap, and in forge we don't
+    filesMatching("horsestatsmod.mixins.json") {
+        expand refmap_fix: ""
+    }
+
     filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
         expand replaceProperties + [project: project]
     }
