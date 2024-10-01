@@ -2,9 +2,8 @@
 
 # Horse Stats Mod
 ![github downloads](https://img.shields.io/github/downloads/lilgallon/horsestatsmod/total.svg?label=github%20downloads)
+![Modrinth Downloads](https://img.shields.io/modrinth/dt/horse-statistics?label=modrinth%20downloads)
 [![curseforge downloads](http://cf.way2muchnoise.eu/full_409126_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/horse-statistics)
-![issues](https://img.shields.io/github/issues/lilgallon/horsestatsmod.svg)
-![release](https://img.shields.io/github/release/lilgallon/horsestatsmod.svg)
 
 [![build fabric](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-fabric.yaml/badge.svg)](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-fabric.yaml)
 [![build neoforge](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-neoforge.yaml/badge.svg)](https://github.com/lilgallon/HorseStatsMod/actions/workflows/build-neoforge.yaml)
