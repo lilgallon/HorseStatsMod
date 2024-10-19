@@ -36,6 +36,11 @@ public final class HorseStatsModFabric implements ClientModInitializer {
                             mouseY
                     );
 
+                    guiGraphics.pose().translate(
+                            -((AbstractContainerScreenAccessor) horseScreen).getLeftPos(),
+                            -((AbstractContainerScreenAccessor) horseScreen).getTopPos(),
+                            0
+                    );
                 });
             }
         });
