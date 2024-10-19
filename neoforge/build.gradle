@@ -2,6 +2,8 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
+version = rootProject.neoforge_mod_version
+
 architectury {
     platformSetupLoomIde()
     neoForge()
@@ -51,7 +53,7 @@ processResources {
             mod_update_json                     : mod_update_json,
             // Mod properties
             mod_id                              : mod_id,
-            mod_version                         : mod_version,
+            neoforge_mod_version                : neoforge_mod_version,
             maven_group                         : maven_group,
             archives_name                       : archives_name,
             enabled_platforms                   : enabled_platforms,

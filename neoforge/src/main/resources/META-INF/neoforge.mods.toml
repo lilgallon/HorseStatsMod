@@ -5,7 +5,7 @@ license = "${mod_license}"
 
 [[mods]]
 modId="${mod_id}" #mandatory
-version="${mod_version}" #mandatory
+version="${neoforge_mod_version}" #mandatory
 displayName="${mod_name}" #mandatory
 authors="${mod_authors}"
 description="${mod_description}"
