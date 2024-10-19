@@ -1,6 +1,4 @@
-## Version 2.0.0 Fabric
-
-*The mod is now compatible with fabric!*
+## Version 2.0.1 Fabric
 
 Requirements:
 - Cloth config: `>=15.0.0`
@@ -10,4 +8,4 @@ Suggestion:
 - Modmenu: you will be able to edit the config with an interface
 
 Changes:
-- None, it's brand new on fabric!
+- Fixed incompatibility with other UI mods when horse screen is open (JEI for instance)
