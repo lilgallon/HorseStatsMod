@@ -1,7 +1,7 @@
 ## Version 2.0.1 Fabric
 
 Requirements:
-- Cloth config: `>=15.0.0`
+- Cloth config: `>=16.0.0`
 - Fabric API: `*`
 
 Suggestion:
