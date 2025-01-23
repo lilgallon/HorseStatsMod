@@ -43,7 +43,7 @@ public class HorseStatsService {
     }
 
     static public Double convertJumpToBlocks(Double jump) {
-        Double convertedJump = 0;
+        Double convertedJump = 0.0;
         while (jump > 0) {
             convertedJump += jump;
             jump = (jump - .08) * .98 * .98;
