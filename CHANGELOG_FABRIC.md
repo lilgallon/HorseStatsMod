@@ -9,3 +9,6 @@ Requirements:
 Suggestion:
 - Modmenu: you will be able to edit the config with an interface
 
+Changes:
+- Adjusted horse & speed computations - https://github.com/lilgallon/HorseStatsMod/issues/30
+  - contribution of https://github.com/Kirby703
