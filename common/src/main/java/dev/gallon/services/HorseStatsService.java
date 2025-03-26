@@ -43,12 +43,15 @@ public class HorseStatsService {
     }
 
     static public Double convertJumpToBlocks(Double jump) {
-        return -0.1817584952 * Math.pow(jump, 3) +
-                3.689713992 * Math.pow(jump, 2) +
-                2.128599134 * jump - 0.343930367;
+        Double convertedJump = 0.0;
+        while (jump > 0) {
+            convertedJump += jump;
+            jump = (jump - .08) * .98 * .98;
+        }
+        return convertedJump;
     }
 
     static public Double convertSpeedToBlocksPerSeconds(Double speed) {
-        return speed * 42.16;
+        return speed * 42.157796;
     }
 }
