@@ -169,7 +169,7 @@ public class DisplayService {
         // the horse's name
 
         // It is possible to open the GUI without riding a horse!
-        if ((stats.name().isPresent() ? stats.name().get().length() : 0) <= 8) {
+        if (stats.name().length() <= 8) {
             drawText(guiGraphics, I18n.get(I18nKeys.STATS) + ":", rx, ry, 0X444444);
         }
 

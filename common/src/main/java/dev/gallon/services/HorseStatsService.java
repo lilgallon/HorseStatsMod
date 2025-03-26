@@ -2,6 +2,7 @@ package dev.gallon.services;
 
 import dev.gallon.domain.HorseStats;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -20,20 +21,20 @@ public class HorseStatsService {
         final Optional<AttributeInstance> speedAttr = Optional.ofNullable(horse.getAttribute(Attributes.MOVEMENT_SPEED));
 
         if (healthAttr.isPresent() && jumpAttr.isPresent() && speedAttr.isPresent()) {
-            final Optional<Component> name = Optional.ofNullable(horse.getDisplayName());
+            final Component name = horse.getDisplayName();
             final Double health = healthAttr.get().getValue();
             final Double jump = jumpAttr.get().getValue();
             final Double speed = speedAttr.get().getValue();
-            final UUID ownerUUID = horse.getOwnerUUID();
+            final Optional<UUID> ownerUUID = Optional.ofNullable(horse.getOwner()).map(LivingEntity::getUUID);
 
             return Optional.of(
                     new HorseStats(
-                            name.map(Component::getString),
+                            name.getString(),
                             health,
                             convertJumpToBlocks(jump),
                             convertSpeedToBlocksPerSeconds(speed),
                             Optional.ofNullable(horse instanceof Llama ? horse.getInventoryColumns() * 3 : null),
-                            Optional.ofNullable(ownerUUID != null ? usernameCache.getUnchecked(ownerUUID).orElse(null) : null)
+                            ownerUUID.flatMap(usernameCache::getUnchecked)
                     )
             );
         } else {

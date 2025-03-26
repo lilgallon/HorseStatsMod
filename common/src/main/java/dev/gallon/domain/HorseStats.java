@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public record HorseStats(
-        @NotNull Optional<String> name,
+        @NotNull String name,
         @NotNull Double health,
         @NotNull Double jumpHeight,
         @NotNull Double speed,
