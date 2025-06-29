@@ -5,7 +5,10 @@ import dev.gallon.domain.I18nKeys;
 import dev.gallon.domain.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -139,7 +142,7 @@ public class DisplayService {
                 );
             }
 
-            drawHoveringText(
+            drawHoveringTextFromComponents(
                     guiGraphics,
                     containerMouseX,
                     containerMouseY,
@@ -312,16 +315,21 @@ public class DisplayService {
             textLines.add(Component.literal(note));
         }
 
-        drawHoveringText(guiGraphics, x, y, textLines);
+        drawHoveringTextFromComponents(guiGraphics, x, y, textLines);
     }
 
-    private static void drawHoveringText(GuiGraphics guiGraphics, int x, int y, List<Component> textLines) {
+    private static void drawHoveringTextFromComponents(GuiGraphics guiGraphics, int x, int y, List<Component> textLines) {
+        List<ClientTooltipComponent> tooltipComponents = textLines.stream()
+                .map(component -> ClientTooltipComponent.create(component.getVisualOrderText()))
+                .toList();
+        
         guiGraphics.renderTooltip(
                 Minecraft.getInstance().font,
-                textLines,
-                Optional.empty(),
-                x, //(int) (x / getGuiScale()),
-                y //(int) (y / getGuiScale())
+                tooltipComponents,
+                x,
+                y,
+				(screenWidth, screenHeight, x1, y1, width, height) -> new org.joml.Vector2i(x1, y1),
+                null
         );
     }
 

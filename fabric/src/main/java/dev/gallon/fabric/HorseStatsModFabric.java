@@ -25,9 +25,8 @@ public final class HorseStatsModFabric implements ClientModInitializer {
                 ScreenEvents.afterRender(screen).register((horseScreen, guiGraphics, mouseX, mouseY, tickDelta) -> {
                     guiGraphics.pose().translate(
                             ((AbstractContainerScreenAccessor) horseScreen).getLeftPos(),
-                            ((AbstractContainerScreenAccessor) horseScreen).getTopPos(),
-                            0
-                    );
+                            ((AbstractContainerScreenAccessor) horseScreen).getTopPos()
+					);
 
                     horseStatsMod.onRenderHorseContainerEvent(
                             (HorseInventoryScreen) horseScreen,
@@ -38,9 +37,8 @@ public final class HorseStatsModFabric implements ClientModInitializer {
 
                     guiGraphics.pose().translate(
                             -((AbstractContainerScreenAccessor) horseScreen).getLeftPos(),
-                            -((AbstractContainerScreenAccessor) horseScreen).getTopPos(),
-                            0
-                    );
+                            -((AbstractContainerScreenAccessor) horseScreen).getTopPos()
+					);
                 });
             }
         });
