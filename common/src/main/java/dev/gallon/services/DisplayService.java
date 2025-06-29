@@ -6,13 +6,15 @@ import dev.gallon.domain.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static dev.gallon.domain.HorseStats.*;
 
@@ -318,10 +320,13 @@ public class DisplayService {
     private static void drawHoveringText(GuiGraphics guiGraphics, int x, int y, List<Component> textLines) {
         guiGraphics.renderTooltip(
                 Minecraft.getInstance().font,
-                textLines,
-                Optional.empty(),
+                textLines.stream()
+                        .map(component -> ClientTooltipComponent.create(component.getVisualOrderText()))
+                        .collect(Collectors.toList()),
                 x, //(int) (x / getGuiScale()),
-                y //(int) (y / getGuiScale())
+                y, //(int) (y / getGuiScale())
+                DefaultTooltipPositioner.INSTANCE,
+                null
         );
     }
 
