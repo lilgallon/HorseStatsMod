@@ -164,6 +164,11 @@ public class DisplayService {
         int rw = 29;
         int rh = 11;
 
+        // dirty, should be refactored, but I had to be fast for release
+        boolean drawHealth = false;
+        boolean drawJump = false;
+        boolean drawSpeed = false;
+
         // Starts at x=60 by displaying "Stats:" (if it fits the GUI)
         rx = 60;
 
@@ -172,7 +177,7 @@ public class DisplayService {
 
         // It is possible to open the GUI without riding a horse!
         if (stats.name().length() <= 8) {
-            drawText(guiGraphics, I18n.get(I18nKeys.STATS) + ":", rx, ry, 0X444444);
+            drawText(guiGraphics, I18n.get(I18nKeys.STATS) + ":", rx, ry, 0Xff444444);
         }
 
         // Health (30 units shift to the right)
@@ -180,12 +185,10 @@ public class DisplayService {
         drawText(guiGraphics,
                 String.format("%.2f", stats.health()),
                 rx, ry,
-                config.getColoredStats() ? getColorHex(stats.health(), MIN_HEALTH, MAX_HEALTH) : 0X444444
+                config.getColoredStats() ? getColorHex(stats.health(), MIN_HEALTH, MAX_HEALTH) : 0Xff444444
         );
         if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) { // -12 because max is x.xx and not xx.xx
-            drawHoveringText(guiGraphics, containerMouseX, containerMouseY,
-                    I18n.get(I18nKeys.HEALTH) + " (" + I18n.get(I18nKeys.HEALTH) + "):", MIN_HEALTH.toString(), MAX_HEALTH.toString(), I18n.get("horsestatsmod.player") + ": 20"
-            );
+            drawHealth = true;
         }
 
         // Jump (30 units shift to the right as well)
@@ -193,13 +196,10 @@ public class DisplayService {
         drawText(guiGraphics,
                 String.format("%.2f", stats.jumpHeight()),
                 rx, ry,
-                config.getColoredStats() ? getColorHex(stats.jumpHeight(), MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) : 0X444444
+                config.getColoredStats() ? getColorHex(stats.jumpHeight(), MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) : 0Xff444444
         );
         if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw - 6, rh)) { // -12 because max is x.xx and not xx.xx
-            drawHoveringText(guiGraphics,
-                    containerMouseX, containerMouseY,
-                    I18n.get(I18nKeys.JUMP_HEIGHT) + " (" + I18n.get("horsestatsmod.blocks") + "):", MIN_JUMP_HEIGHT.toString(), MAX_JUMP_HEIGHT.toString(), I18n.get("horsestatsmod.player") + ": 1.25"
-            );
+            drawJump = true;
         }
 
         // Speed (24 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
@@ -207,16 +207,10 @@ public class DisplayService {
         drawText(guiGraphics,
                 String.format("%.2f", stats.speed()),
                 rx, ry,
-                config.getColoredStats() ? getColorHex(stats.speed(), MIN_SPEED, MAX_SPEED) : 0X444444
+                config.getColoredStats() ? getColorHex(stats.speed(), MIN_SPEED, MAX_SPEED) : 0Xff444444
         );
         if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) {
-            drawHoveringText(guiGraphics,
-                    containerMouseX, containerMouseY,
-                    I18n.get(I18nKeys.SPEED) + " (" + I18n.get("horsestatsmod.meters_per_seconds") + "):", MIN_SPEED.toString(), MAX_SPEED.toString(),
-                    I18n.get("horsestatsmod.player") + ": 4.317 (" + I18n.get("horsestatsmod.walk") + ")",
-                    I18n.get("horsestatsmod.player") + ": 5.612 (" + I18n.get("horsestatsmod.sprint") + ")",
-                    I18n.get("horsestatsmod.player") + ": 7.143 (" + I18n.get("horsestatsmod.sprint") + "+" + I18n.get(I18nKeys.JUMP_HEIGHT) + ")"
-            );
+            drawSpeed = true;
         }
 
         // owner
@@ -225,7 +219,26 @@ public class DisplayService {
             drawText(guiGraphics,
                     stats.owner().get(),
                     rx, ry,
-                    0X444444
+                    0Xff444444
+            );
+        }
+
+        if (drawHealth) {
+            drawHoveringText(guiGraphics, containerMouseX, containerMouseY,
+                    I18n.get(I18nKeys.HEALTH) + " (" + I18n.get(I18nKeys.HEALTH) + "):", MIN_HEALTH.toString(), MAX_HEALTH.toString(), I18n.get("horsestatsmod.player") + ": 20"
+            );
+        } else if (drawJump) {
+            drawHoveringText(guiGraphics,
+                    containerMouseX, containerMouseY,
+                    I18n.get(I18nKeys.JUMP_HEIGHT) + " (" + I18n.get("horsestatsmod.blocks") + "):", MIN_JUMP_HEIGHT.toString(), MAX_JUMP_HEIGHT.toString(), I18n.get("horsestatsmod.player") + ": 1.25"
+            );
+        } else if (drawSpeed) {
+            drawHoveringText(guiGraphics,
+                    containerMouseX, containerMouseY,
+                    I18n.get(I18nKeys.SPEED) + " (" + I18n.get("horsestatsmod.meters_per_seconds") + "):", MIN_SPEED.toString(), MAX_SPEED.toString(),
+                    I18n.get("horsestatsmod.player") + ": 4.317 (" + I18n.get("horsestatsmod.walk") + ")",
+                    I18n.get("horsestatsmod.player") + ": 5.612 (" + I18n.get("horsestatsmod.sprint") + ")",
+                    I18n.get("horsestatsmod.player") + ": 7.143 (" + I18n.get("horsestatsmod.sprint") + "+" + I18n.get(I18nKeys.JUMP_HEIGHT) + ")"
             );
         }
     }
@@ -340,13 +353,13 @@ public class DisplayService {
         double p = getPercentage(val, min, max);
 
         if (p <= 25) {
-            return 0xd12300;
+            return 0xffd12300;
         } else if (p > 25 && p <= 50) {
-            return 0xd18800;
+            return 0xffd18800;
         } else if (p > 50 && p <= 75) {
-            return 0xfae314;
+            return 0xfffae314;
         } else {
-            return 0x77bf04;
+            return 0xff77bf04;
         }
     }
 
