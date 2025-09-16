@@ -1,5 +1,6 @@
 package dev.gallon.neoforge.config;
 
+import dev.gallon.domain.DisplayMinMax;
 import dev.gallon.domain.I18nKeys;
 import dev.gallon.domain.InteractionKind;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -8,7 +9,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue displayStatsInInventory;
     public final ModConfigSpec.EnumValue<InteractionKind> displayStatsOnInteraction;
     public final ModConfigSpec.BooleanValue coloredStats;
-    public final ModConfigSpec.BooleanValue displayMinMax;
+    public final ModConfigSpec.EnumValue<DisplayMinMax> displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
@@ -34,10 +35,10 @@ public class ClientConfig {
                 .define("coloredStats", true);
 
         displayMinMax = builder
-                .comment("Shows the stats with their min and max. If turned off, it will display the stats without " +
+                .comment("Shows the stats with their min and/or max. If turned off, it will display the stats without " +
                         "any information about their min and max.")
                 .translation(I18nKeys.DISPLAY_MIN_MAX)
-                .define("displayMinMax", false);
+                .defineEnum("displayMinMax", DisplayMinMax.DISABLED);
 
         statsInPercentage  = builder
                 .comment("Shows the stats in percentage. If turned off, it will display the stats in their respective " +

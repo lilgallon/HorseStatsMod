@@ -26,6 +26,7 @@ public class HorseStatsService {
             final Double jump = jumpAttr.get().getValue();
             final Double speed = speedAttr.get().getValue();
             final Optional<UUID> ownerUUID = Optional.ofNullable(horse.getOwner()).map(LivingEntity::getUUID);
+            final int slots = horse instanceof Llama ? horse.getInventoryColumns() * 3 : 0;
 
             return Optional.of(
                     new HorseStats(
@@ -33,7 +34,7 @@ public class HorseStatsService {
                             health,
                             convertJumpToBlocks(jump),
                             convertSpeedToBlocksPerSeconds(speed),
-                            Optional.ofNullable(horse instanceof Llama ? horse.getInventoryColumns() * 3 : null),
+                            Optional.ofNullable(slots == 0 ? null : slots),
                             ownerUUID.flatMap(usernameCache::getUnchecked)
                     )
             );

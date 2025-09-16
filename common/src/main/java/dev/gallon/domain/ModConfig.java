@@ -6,7 +6,7 @@ public class ModConfig {
     private @NotNull Boolean displayStatsInInventory = true;
     private @NotNull InteractionKind displayStatsOnInteraction = InteractionKind.RIGHT_CLICK;
     private @NotNull Boolean coloredStats = true;
-    private @NotNull Boolean displayMinMax = false;
+    private @NotNull DisplayMinMax displayMinMax = DisplayMinMax.DISABLED;
     private @NotNull Boolean statsInPercentage = true;
 
     public @NotNull Boolean getDisplayStatsInInventory() {
@@ -25,11 +25,11 @@ public class ModConfig {
         this.coloredStats = coloredStats;
     }
 
-    public @NotNull Boolean getDisplayMinMax() {
+    public @NotNull DisplayMinMax getDisplayMinMax() {
         return displayMinMax;
     }
 
-    public void setDisplayMinMax(@NotNull Boolean displayMinMax) {
+    public void setDisplayMinMax(@NotNull DisplayMinMax displayMinMax) {
         this.displayMinMax = displayMinMax;
     }
 

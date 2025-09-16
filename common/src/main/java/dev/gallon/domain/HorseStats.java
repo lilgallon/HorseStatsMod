@@ -33,6 +33,10 @@ public record HorseStats(
         return (int) ((speed - MIN_SPEED) / (MAX_SPEED - MIN_SPEED) * 100);
     }
 
+    private @NotNull Integer getSlotsPercentage() {
+        return (slots.orElse(MIN_SLOTS) - MIN_SLOTS) / (MAX_SLOTS - MIN_SLOTS) * 100;
+    }
+
     public @NotNull String getHealthStr(Boolean percentage) {
         return percentage ? (getHealthPercentage() + "%" ) : String.format("%.2f", health);
     }
@@ -43,5 +47,9 @@ public record HorseStats(
 
     public @NotNull String getSpeedStr(Boolean percentage) {
         return percentage ? (getSpeedPercentage() + "%" ) : String.format("%.2f", speed);
+    }
+
+    public @NotNull String getSlotsStr(Boolean percentage) {
+        return percentage ? (getSlotsPercentage() + "%" ) : slots.orElse(0).toString();
     }
 }
