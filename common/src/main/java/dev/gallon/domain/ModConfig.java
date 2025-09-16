@@ -3,17 +3,17 @@ package dev.gallon.domain;
 import org.jetbrains.annotations.NotNull;
 
 public class ModConfig {
-    private @NotNull Boolean displayStats = false;
+    private @NotNull Boolean displayStatsInInventory = true;
     private @NotNull Boolean coloredStats = true;
     private @NotNull Boolean displayMinMax = false;
     private @NotNull Boolean statsInPercentage = true;
 
-    public @NotNull Boolean getDisplayStats() {
-        return displayStats;
+    public @NotNull Boolean getDisplayStatsInInventory() {
+        return displayStatsInInventory;
     }
 
-    public void setDisplayStats(@NotNull Boolean displayStats) {
-        this.displayStats = displayStats;
+    public void setDisplayStatsInInventory(@NotNull Boolean displayStatsInInventory) {
+        this.displayStatsInInventory = displayStatsInInventory;
     }
 
     public @NotNull Boolean getColoredStats() {

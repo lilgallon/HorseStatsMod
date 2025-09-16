@@ -4,7 +4,7 @@ import dev.gallon.domain.I18nKeys;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
-    public final ModConfigSpec.BooleanValue displayStats;
+    public final ModConfigSpec.BooleanValue displayStatsInInventory;
     public final ModConfigSpec.BooleanValue coloredStats;
     public final ModConfigSpec.BooleanValue displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
@@ -12,12 +12,12 @@ public class ClientConfig {
     public ClientConfig(ModConfigSpec.Builder builder) {
         builder.push("HorseStatsMod");
 
-        displayStats = builder
+        displayStatsInInventory = builder
                 .comment("Shows the stats in the GUI. If turned off, you need to put your mouse on the horse name " +
                         "(in the GUI) to show a tooltip with its stats. Can be useful with some resource packs or " +
                         "mods that change the GUI of horses")
-                .translation(I18nKeys.DISPLAY_STATS)
-                .define("displayStats", false);
+                .translation(I18nKeys.DISPLAY_STATS_IN_INVENTORY)
+                .define("displayStatsInInventory", true);
 
         coloredStats = builder
                 .comment("Shows the stats with colors (only when displayStats is true). If turned on, it will " +

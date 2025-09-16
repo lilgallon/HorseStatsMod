@@ -32,7 +32,7 @@ public class DisplayService {
             int containerMouseX,
             int containerMouseY
     ) {
-        if (config.getDisplayStats()) {
+        if (config.getDisplayStatsInInventory()) {
             displayStatsAndHoveringTexts(
                     guiGraphics, config, stats, containerMouseX, containerMouseY
             );

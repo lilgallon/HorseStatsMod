@@ -16,7 +16,7 @@
   "horsestatsmod.configuration.HorseStatsMod": "configuration HorseStatsMod",
   "text.autoconfig.horsestatsmod.title": "configuration HorseStatsMod",
   "text.autoconfig.horsestatsmod.option.modConfig": "configuration HorseStatsMod",
-  "text.autoconfig.horsestatsmod.option.modConfig.displayStats": "Afficher les stats dans l'inventaire de la monture",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsInInventory": "Afficher les stats dans l'inventaire de la monture",
   "text.autoconfig.horsestatsmod.option.modConfig.coloredStats": "Afficher les stats avec des couleurs",
   "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax": "Afficher les stats avec le min et le max",
   "text.autoconfig.horsestatsmod.option.modConfig.statsInPercentage": "Afficher les stats en pourcentage"

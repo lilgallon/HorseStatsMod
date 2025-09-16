@@ -18,7 +18,7 @@ public final class I18nKeys {
     public static final @NotNull String MIN = ModMetadata.MOD_ID + ".min";
     public static final @NotNull String MAX = ModMetadata.MOD_ID + ".max";
     public static final @NotNull String OWNER = ModMetadata.MOD_ID + ".owner";
-    public static final @NotNull String DISPLAY_STATS = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayStats";
+    public static final @NotNull String DISPLAY_STATS_IN_INVENTORY = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayStatsInInventory";
     public static final @NotNull String COLORED_STATS = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.coloredStats";
     public static final @NotNull String DISPLAY_MIN_MAX = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayMinMax";
     public static final @NotNull String STATS_IN_PERCENTAGE = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.statsInPercentage";
