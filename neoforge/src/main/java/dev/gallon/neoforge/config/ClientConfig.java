@@ -7,6 +7,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue displayStats;
     public final ModConfigSpec.BooleanValue coloredStats;
     public final ModConfigSpec.BooleanValue displayMinMax;
+    public final ModConfigSpec.BooleanValue statsInPercentage;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
         builder.push("HorseStatsMod");
@@ -29,6 +30,12 @@ public class ClientConfig {
                         "any information about their min and max.")
                 .translation(I18nKeys.DISPLAY_MIN_MAX)
                 .define("displayMinMax", false);
+
+        statsInPercentage  = builder
+                .comment("Shows the stats in percentage. If turned off, it will display the stats in their respective " +
+                        "units (blocks/seconds for speed for instance).")
+                .translation(I18nKeys.STATS_IN_PERCENTAGE)
+                .define("statsInPercentage", true);
 
         builder.pop();
     }
