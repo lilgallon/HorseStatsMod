@@ -5,6 +5,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
     public final ModConfigSpec.BooleanValue displayStatsInInventory;
+    public final ModConfigSpec.BooleanValue displayStatsOnRightClick;
     public final ModConfigSpec.BooleanValue coloredStats;
     public final ModConfigSpec.BooleanValue displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
@@ -18,6 +19,12 @@ public class ClientConfig {
                         "mods that change the GUI of horses")
                 .translation(I18nKeys.DISPLAY_STATS_IN_INVENTORY)
                 .define("displayStatsInInventory", true);
+
+        displayStatsOnRightClick = builder
+                .comment("Shows the stats when right clicking a compatible entity (horse, llama). If turned off, you " +
+                        "can still see the stats in the inventory of the entity")
+                .translation(I18nKeys.DISPLAY_STATS_ON_RIGHT_CLICK)
+                .define("displayStatsOnRightClick", true);
 
         coloredStats = builder
                 .comment("Shows the stats with colors (only when displayStats is true). If turned on, it will " +

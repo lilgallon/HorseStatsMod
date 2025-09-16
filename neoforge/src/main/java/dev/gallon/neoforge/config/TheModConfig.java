@@ -29,6 +29,7 @@ public class TheModConfig {
 
     public static void bakeConfig() {
         config.setDisplayStatsInInventory(CLIENT.displayStatsInInventory.get());
+        config.setDisplayStatsOnRightClick(CLIENT.displayStatsOnRightClick.get());
         config.setColoredStats(CLIENT.coloredStats.get());
         config.setDisplayMinMax(CLIENT.displayMinMax.get());
         config.setStatsInPercentage(CLIENT.statsInPercentage.get());
