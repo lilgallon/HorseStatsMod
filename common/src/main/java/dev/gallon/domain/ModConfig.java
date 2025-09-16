@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ModConfig {
     private @NotNull Boolean displayStatsInInventory = true;
-    private @NotNull Boolean displayStatsOnRightClick = true;
+    private @NotNull InteractionKind displayStatsOnInteraction = InteractionKind.RIGHT_CLICK;
     private @NotNull Boolean coloredStats = true;
     private @NotNull Boolean displayMinMax = false;
     private @NotNull Boolean statsInPercentage = true;
@@ -41,11 +41,11 @@ public class ModConfig {
         this.statsInPercentage = statsInPercentage;
     }
 
-    public @NotNull Boolean getDisplayStatsOnRightClick() {
-        return displayStatsOnRightClick;
+    public @NotNull InteractionKind getDisplayStatsOnInteraction() {
+        return displayStatsOnInteraction;
     }
 
-    public void setDisplayStatsOnRightClick(@NotNull Boolean displayStatsOnRightClick) {
-        this.displayStatsOnRightClick = displayStatsOnRightClick;
+    public void setDisplayStatsOnInteraction(@NotNull InteractionKind displayStatsOnInteraction) {
+        this.displayStatsOnInteraction = displayStatsOnInteraction;
     }
 }

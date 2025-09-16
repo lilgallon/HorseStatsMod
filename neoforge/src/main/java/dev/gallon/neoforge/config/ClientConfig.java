@@ -1,11 +1,12 @@
 package dev.gallon.neoforge.config;
 
 import dev.gallon.domain.I18nKeys;
+import dev.gallon.domain.InteractionKind;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig {
     public final ModConfigSpec.BooleanValue displayStatsInInventory;
-    public final ModConfigSpec.BooleanValue displayStatsOnRightClick;
+    public final ModConfigSpec.EnumValue<InteractionKind> displayStatsOnInteraction;
     public final ModConfigSpec.BooleanValue coloredStats;
     public final ModConfigSpec.BooleanValue displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
@@ -20,11 +21,11 @@ public class ClientConfig {
                 .translation(I18nKeys.DISPLAY_STATS_IN_INVENTORY)
                 .define("displayStatsInInventory", true);
 
-        displayStatsOnRightClick = builder
-                .comment("Shows the stats when right clicking a compatible entity (horse, llama). If turned off, you " +
-                        "can still see the stats in the inventory of the entity")
-                .translation(I18nKeys.DISPLAY_STATS_ON_RIGHT_CLICK)
-                .define("displayStatsOnRightClick", true);
+        displayStatsOnInteraction = builder
+                .comment("Shows the stats when right clicking or shift right clicking a compatible entity " +
+                        "(horse, llama). If turned off, you can still see the stats in the inventory of the entity")
+                .translation(I18nKeys.DISPLAY_STATS_ON_INTERACTION)
+                .defineEnum("displayStatsOnInteraction", InteractionKind.RIGHT_OR_SHIFT_RIGHT_CLICK);
 
         coloredStats = builder
                 .comment("Shows the stats with colors (only when displayStats is true). If turned on, it will " +

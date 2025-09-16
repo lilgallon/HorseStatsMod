@@ -1,8 +1,10 @@
 package dev.gallon;
 
 import dev.gallon.domain.HorseStats;
+import dev.gallon.domain.InteractionKind;
 import dev.gallon.domain.ModConfig;
 import dev.gallon.mixins.HorseInventoryScreenAccessor;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -24,7 +26,13 @@ public final class HorseStatsMod {
     }
 
     public void onHorseInteractEvent(@NotNull AbstractHorse horse) {
-        if (config.getDisplayStatsOnRightClick()) {
+        boolean rightOrShiftClickConfigured = config.getDisplayStatsOnInteraction() == InteractionKind.RIGHT_OR_SHIFT_RIGHT_CLICK;
+        boolean shiftRightClickConfiguredAndDown = config.getDisplayStatsOnInteraction() == InteractionKind.SHIFT_RIGHT_CLICK &&
+                (Minecraft.getInstance().player != null && Minecraft.getInstance().player.isShiftKeyDown());
+        boolean rightClickConfiguredAndShiftNotDown = config.getDisplayStatsOnInteraction() == InteractionKind.RIGHT_CLICK  &&
+                (Minecraft.getInstance().player == null || !Minecraft.getInstance().player.isShiftKeyDown());
+
+        if (rightOrShiftClickConfigured || shiftRightClickConfiguredAndDown || rightClickConfiguredAndShiftNotDown) {
             horseStats = getHorseStats(horse);
             horseStats.ifPresent(stats -> displayOverlayStats(config, stats));
         }
