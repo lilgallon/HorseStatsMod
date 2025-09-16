@@ -62,7 +62,7 @@ public class DisplayService {
 
             // Health
             textLines.add(
-                    config.getDisplayMinMax() ?
+                    (config.getDisplayMinMax() && !config.getStatsInPercentage()) ?
                             Component.literal(
                                     I18n.get(I18nKeys.HEALTH) + ": " +
                                             ChatFormatting.RED + MIN_HEALTH +
@@ -73,14 +73,14 @@ public class DisplayService {
                             )
                             : Component.literal(
                             I18n.get(I18nKeys.HEALTH) + ": " +
-                                    getColorTextFormat(stats.health(), MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", stats.health()) +
+                                    getColorTextFormat(stats.health(), MIN_HEALTH, MAX_HEALTH) + stats.getHealthStr(config.getStatsInPercentage()) +
                                     ChatFormatting.RESET
                     )
             );
 
             // Jump height
             textLines.add(
-                    config.getDisplayMinMax() ?
+                    (config.getDisplayMinMax() && !config.getStatsInPercentage()) ?
                             Component.literal(
                                     I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
                                             ChatFormatting.RED + MIN_JUMP_HEIGHT +
@@ -90,14 +90,14 @@ public class DisplayService {
                                             ChatFormatting.GREEN + MAX_JUMP_HEIGHT)
                             : Component.literal(
                             I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
-                                    getColorTextFormat(stats.jumpHeight(), MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", stats.jumpHeight()) +
+                                    getColorTextFormat(stats.jumpHeight(), MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + stats.getJumpHeightStr(config.getStatsInPercentage()) +
                                     ChatFormatting.RESET
                     )
             );
 
             // Speed
             textLines.add(
-                    config.getDisplayMinMax() ?
+                    (config.getDisplayMinMax() && !config.getStatsInPercentage()) ?
                             Component.literal(
                                     I18n.get(I18nKeys.SPEED) + ": " +
                                             ChatFormatting.RED + MIN_SPEED +
@@ -107,7 +107,7 @@ public class DisplayService {
                                             ChatFormatting.GREEN + MAX_SPEED)
                             : Component.literal(
                             I18n.get(I18nKeys.SPEED) + ": " +
-                                    getColorTextFormat(stats.speed(), MIN_SPEED, MAX_SPEED) + String.format("%,.2f", stats.speed()) +
+                                    getColorTextFormat(stats.speed(), MIN_SPEED, MAX_SPEED) + stats.getSpeedStr(config.getStatsInPercentage()) +
                                     ChatFormatting.RESET
                     )
             );
@@ -181,9 +181,9 @@ public class DisplayService {
         }
 
         // Health (30 units shift to the right)
-        rx += 30;
+        rx += (config.getStatsInPercentage() ? 33 : 30);
         drawText(guiGraphics,
-                String.format("%.2f", stats.health()),
+                stats.getHealthStr(config.getStatsInPercentage()),
                 rx, ry,
                 config.getColoredStats() ? getColorHex(stats.health(), MIN_HEALTH, MAX_HEALTH) : 0Xff444444
         );
@@ -192,9 +192,9 @@ public class DisplayService {
         }
 
         // Jump (30 units shift to the right as well)
-        rx += 30;
+        rx += (config.getStatsInPercentage() ? 24 : 30);
         drawText(guiGraphics,
-                String.format("%.2f", stats.jumpHeight()),
+                stats.getJumpHeightStr(config.getStatsInPercentage()),
                 rx, ry,
                 config.getColoredStats() ? getColorHex(stats.jumpHeight(), MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) : 0Xff444444
         );
@@ -205,7 +205,7 @@ public class DisplayService {
         // Speed (24 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
         rx += 24;
         drawText(guiGraphics,
-                String.format("%.2f", stats.speed()),
+                stats.getSpeedStr(config.getStatsInPercentage()),
                 rx, ry,
                 config.getColoredStats() ? getColorHex(stats.speed(), MIN_SPEED, MAX_SPEED) : 0Xff444444
         );
@@ -215,7 +215,7 @@ public class DisplayService {
 
         // owner
         if (stats.owner().isPresent()) {
-            rx += 30;
+            rx += (config.getStatsInPercentage() ? 24 : 30);
             drawText(guiGraphics,
                     stats.owner().get(),
                     rx, ry,
@@ -223,28 +223,38 @@ public class DisplayService {
             );
         }
 
-        if (drawHealth) {
-            drawHoveringText(guiGraphics, containerMouseX, containerMouseY,
-                    I18n.get(I18nKeys.HEALTH) + " (" + I18n.get(I18nKeys.HEALTH) + "):", MIN_HEALTH.toString(), MAX_HEALTH.toString(), I18n.get("horsestatsmod.player") + ": 20"
-            );
-        } else if (drawJump) {
-            drawHoveringText(guiGraphics,
-                    containerMouseX, containerMouseY,
-                    I18n.get(I18nKeys.JUMP_HEIGHT) + " (" + I18n.get("horsestatsmod.blocks") + "):", MIN_JUMP_HEIGHT.toString(), MAX_JUMP_HEIGHT.toString(), I18n.get("horsestatsmod.player") + ": 1.25"
-            );
-        } else if (drawSpeed) {
-            drawHoveringText(guiGraphics,
-                    containerMouseX, containerMouseY,
-                    I18n.get(I18nKeys.SPEED) + " (" + I18n.get("horsestatsmod.meters_per_seconds") + "):", MIN_SPEED.toString(), MAX_SPEED.toString(),
-                    I18n.get("horsestatsmod.player") + ": 4.317 (" + I18n.get("horsestatsmod.walk") + ")",
-                    I18n.get("horsestatsmod.player") + ": 5.612 (" + I18n.get("horsestatsmod.sprint") + ")",
-                    I18n.get("horsestatsmod.player") + ": 7.143 (" + I18n.get("horsestatsmod.sprint") + "+" + I18n.get(I18nKeys.JUMP_HEIGHT) + ")"
-            );
+        if (config.getStatsInPercentage()) {
+            if (drawHealth) {
+                drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(I18nKeys.HEALTH));
+            } else if (drawJump) {
+                drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(I18nKeys.JUMP_HEIGHT));
+            } else if (drawSpeed) {
+                drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(I18nKeys.SPEED));
+            }
+        } else {
+            if (drawHealth) {
+                drawHoveringText(guiGraphics, containerMouseX, containerMouseY,
+                        I18n.get(I18nKeys.HEALTH) + " (" + I18n.get(I18nKeys.HEALTH) + "):", MIN_HEALTH.toString(), MAX_HEALTH.toString(), I18n.get("horsestatsmod.player") + ": 20"
+                );
+            } else if (drawJump) {
+                drawHoveringText(guiGraphics,
+                        containerMouseX, containerMouseY,
+                        I18n.get(I18nKeys.JUMP_HEIGHT) + " (" + I18n.get("horsestatsmod.blocks") + "):", MIN_JUMP_HEIGHT.toString(), MAX_JUMP_HEIGHT.toString(), I18n.get("horsestatsmod.player") + ": 1.25"
+                );
+            } else if (drawSpeed) {
+                drawHoveringText(guiGraphics,
+                        containerMouseX, containerMouseY,
+                        I18n.get(I18nKeys.SPEED) + " (" + I18n.get("horsestatsmod.meters_per_seconds") + "):", MIN_SPEED.toString(), MAX_SPEED.toString(),
+                        I18n.get("horsestatsmod.player") + ": 4.317 (" + I18n.get("horsestatsmod.walk") + ")",
+                        I18n.get("horsestatsmod.player") + ": 5.612 (" + I18n.get("horsestatsmod.sprint") + ")",
+                        I18n.get("horsestatsmod.player") + ": 7.143 (" + I18n.get("horsestatsmod.sprint") + "+" + I18n.get(I18nKeys.JUMP_HEIGHT) + ")"
+                );
+            }
         }
     }
 
     private static Component buildOverlayMessage(@NotNull ModConfig config, @NotNull HorseStats stats) {
-        return config.getDisplayMinMax() ?
+        return (config.getDisplayMinMax() && !config.getStatsInPercentage()) ?
                 Component.literal(
                         I18n.get(I18nKeys.HEALTH) + ": " +
                                 ChatFormatting.RED + MIN_HEALTH +
@@ -278,13 +288,13 @@ public class DisplayService {
                 ) :
                 Component.literal(
                         I18n.get(I18nKeys.HEALTH) + ": " +
-                                getColorTextFormat(stats.health(), MIN_HEALTH, MAX_HEALTH) + String.format("%,.2f", stats.health()) +
+                                getColorTextFormat(stats.health(), MIN_HEALTH, MAX_HEALTH) + stats.getHealthStr(config.getStatsInPercentage()) +
                                 ChatFormatting.RESET + " " +
                                 I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
-                                getColorTextFormat(stats.jumpHeight(), MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + String.format("%,.2f", stats.jumpHeight()) +
+                                getColorTextFormat(stats.jumpHeight(), MIN_JUMP_HEIGHT, MAX_JUMP_HEIGHT) + stats.getJumpHeightStr(config.getStatsInPercentage()) +
                                 ChatFormatting.RESET + " " +
                                 I18n.get(I18nKeys.SPEED) + ": " +
-                                getColorTextFormat(stats.speed(), MIN_SPEED, MAX_SPEED) + String.format("%,.2f", stats.speed()) +
+                                getColorTextFormat(stats.speed(), MIN_SPEED, MAX_SPEED) + stats.getSpeedStr(config.getStatsInPercentage()) +
                                 ChatFormatting.RESET + " " +
                                 (stats.slots().isEmpty() ? "" : (
                                         I18n.get(I18nKeys.SLOTS) + ": " +
@@ -327,6 +337,12 @@ public class DisplayService {
             textLines.add(Component.literal(note));
         }
 
+        drawHoveringText(guiGraphics, x, y, textLines);
+    }
+
+    private static void drawHoveringText(GuiGraphics guiGraphics, int x, int y, String title) {
+        List<Component> textLines = new ArrayList<>();
+        textLines.add(Component.literal(title));
         drawHoveringText(guiGraphics, x, y, textLines);
     }
 
