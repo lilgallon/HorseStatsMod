@@ -24,8 +24,10 @@ public final class HorseStatsMod {
     }
 
     public void onHorseInteractEvent(@NotNull AbstractHorse horse) {
-        horseStats = getHorseStats(horse);
-        horseStats.ifPresent(stats -> displayOverlayStats(config, stats));
+        if (config.getDisplayStatsOnRightClick()) {
+            horseStats = getHorseStats(horse);
+            horseStats.ifPresent(stats -> displayOverlayStats(config, stats));
+        }
     }
 
     public void onRenderHorseContainerEvent(
