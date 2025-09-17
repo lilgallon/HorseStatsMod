@@ -1,12 +1,13 @@
 package dev.gallon.services;
 
 import dev.gallon.domain.HorseStats;
+import dev.gallon.domain.MountType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
-import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.camel.Camel;
+import net.minecraft.world.entity.animal.horse.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class HorseStatsService {
             final Double jump = jumpAttr.get().getValue();
             final Double speed = speedAttr.get().getValue();
             final Optional<UUID> ownerUUID = Optional.ofNullable(horse.getOwner()).map(LivingEntity::getUUID);
-            final int slots = horse instanceof Llama ? horse.getInventoryColumns() * 3 : 0;
+            final int slots = horse.getInventoryColumns() * 3;
 
             return Optional.of(
                     new HorseStats(
@@ -35,7 +36,18 @@ public class HorseStatsService {
                             convertJumpToBlocks(jump),
                             convertSpeedToBlocksPerSeconds(speed),
                             Optional.ofNullable(slots == 0 ? null : slots),
-                            ownerUUID.flatMap(usernameCache::getUnchecked)
+                            ownerUUID.flatMap(usernameCache::getUnchecked),
+                            switch (horse) {
+                                case Horse ignored -> MountType.HORSE;
+                                case Camel ignored -> MountType.CAMEL;
+                                case ZombieHorse ignored -> MountType.ZOMBIE_HORSE;
+                                case Mule ignored -> MountType.MULE;
+                                case TraderLlama ignored -> MountType.TRADER_LLAMA;
+                                case Llama ignored -> MountType.LLAMA;
+                                case Donkey ignored -> MountType.DONKEY;
+                                case SkeletonHorse ignored -> MountType.SKELETON_HORSE;
+                                default -> MountType.HORSE;
+                            }
                     )
             );
         } else {

@@ -10,31 +10,127 @@ public record HorseStats(
         @NotNull Double jumpHeight,
         @NotNull Double speed,
         @NotNull Optional<Integer> slots,
-        @NotNull Optional<String> owner
+        @NotNull Optional<String> owner,
+        @NotNull MountType mountType
 ) {
-    public static final @NotNull Integer MIN_HEALTH = 15;
-    public static final @NotNull Integer MAX_HEALTH = 30;
-    public static final @NotNull Double MIN_JUMP_HEIGHT = 1.11;
-    public static final @NotNull Double MAX_JUMP_HEIGHT = 5.3;
-    public static final @NotNull Double MIN_SPEED = 4.74;
-    public static final @NotNull Double MAX_SPEED = 14.23;
-    public static final @NotNull Integer MIN_SLOTS = 3;
-    public static final @NotNull Integer MAX_SLOTS = 15;
+    public @NotNull Integer minHealth() {
+        return switch (mountType) {
+            case HORSE -> 15;
+            case SKELETON_HORSE -> 15;
+            case ZOMBIE_HORSE -> 15;
+            case DONKEY -> 15;
+            case MULE -> 15;
+            case LLAMA -> 15;
+            case TRADER_LLAMA -> 20;
+            case CAMEL -> 32;
+        };
+    }
+
+    public @NotNull Integer maxHealth() {
+        return switch (mountType) {
+            case HORSE -> 30;
+            case SKELETON_HORSE -> 15;
+            case ZOMBIE_HORSE -> 30;
+            case DONKEY -> 30;
+            case MULE -> 30;
+            case LLAMA -> 30;
+            case TRADER_LLAMA -> 20;
+            case CAMEL -> 32;
+        };
+    }
+
+    public @NotNull Double minJumpHeight() {
+        return switch (mountType) {
+            case HORSE -> 1.25;
+            case SKELETON_HORSE -> 1.875;
+            case ZOMBIE_HORSE -> 1.25;
+            case DONKEY -> 1.5625;
+            case MULE -> 1.5625;
+            case LLAMA -> 1.25;
+            case TRADER_LLAMA -> 1.25;
+            case CAMEL -> 1.875;
+        };
+    }
+
+    public @NotNull Double maxJumpHeight() {
+        return switch (mountType) {
+            case HORSE -> 5.25;
+            case SKELETON_HORSE -> 1.875;
+            case ZOMBIE_HORSE -> 5.25;
+            case DONKEY -> 1.5625;
+            case MULE -> 5.25;
+            case LLAMA -> 1.25;
+            case TRADER_LLAMA -> 1.25;
+            case CAMEL -> 1.875;
+        };
+    }
+
+    public @NotNull Double minSpeed() {
+        return switch (mountType) {
+            case HORSE -> 4.74;
+            case SKELETON_HORSE -> 8.5;
+            case ZOMBIE_HORSE -> 4.74;
+            case DONKEY -> 5.625;
+            case MULE -> 5.625;
+            case LLAMA -> 4.31;
+            case TRADER_LLAMA -> 4.31;
+            case CAMEL -> 4.84;
+        };
+    }
+
+    public @NotNull Double maxSpeed() {
+        return switch (mountType) {
+            case HORSE -> 14.23;
+            case SKELETON_HORSE -> 8.5;
+            case ZOMBIE_HORSE -> 14.23;
+            case DONKEY -> 5.625;
+            case MULE -> 14.23;
+            case LLAMA -> 4.31;
+            case TRADER_LLAMA -> 4.31;
+            case CAMEL -> 4.84;
+        };
+    }
+
+    public @NotNull Integer minSlots() {
+        return switch (mountType) {
+            case HORSE -> 0;
+            case SKELETON_HORSE -> 0;
+            case ZOMBIE_HORSE -> 8;
+            case DONKEY -> 15;
+            case MULE -> 15;
+            case LLAMA -> 3;
+            case TRADER_LLAMA -> 0;
+            case CAMEL -> 0;
+        };
+    }
+
+    public @NotNull Integer maxSlots() {
+        return switch (mountType) {
+            case HORSE -> 0;
+            case SKELETON_HORSE -> 0;
+            case ZOMBIE_HORSE -> 8;
+            case DONKEY -> 15;
+            case MULE -> 15;
+            case LLAMA -> 15;
+            case TRADER_LLAMA -> 0;
+            case CAMEL -> 0;
+        };
+    }
 
     private @NotNull Integer getHealthPercentage() {
-        return (int) ((health - MIN_HEALTH) / (MAX_HEALTH - MIN_HEALTH) * 100);
+        return (int) ((health - minHealth()) / (maxHealth() - minHealth()) * 100);
     }
 
     private @NotNull Integer getJumpHeightPercentage() {
-        return (int) ((jumpHeight - MIN_JUMP_HEIGHT) / (MAX_JUMP_HEIGHT - MIN_JUMP_HEIGHT) * 100);
+        return (int) ((jumpHeight - minJumpHeight()) / (maxJumpHeight() - minJumpHeight()) * 100);
     }
 
     private @NotNull Integer getSpeedPercentage() {
-        return (int) ((speed - MIN_SPEED) / (MAX_SPEED - MIN_SPEED) * 100);
+        return (int) ((speed - minSpeed()) / (maxSpeed() - minSpeed()) * 100);
     }
 
     private @NotNull Integer getSlotsPercentage() {
-        return (slots.orElse(MIN_SLOTS) - MIN_SLOTS) / (MAX_SLOTS - MIN_SLOTS) * 100;
+        return (slots.orElse(minSlots()) - minSlots()) / (maxSlots() - minSlots()) * 100;
     }
 
     public @NotNull String getHealthStr(Boolean percentage) {
