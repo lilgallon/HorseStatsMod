@@ -363,6 +363,9 @@ public class DisplayService {
      * @return the percentage (0<=x<=100)
      */
     private static double getPercentage(double val, double min, double max) {
+        if (min == max) {
+            return 100;
+        }
         return 100d * (val - min) / (max - min);
     }
 

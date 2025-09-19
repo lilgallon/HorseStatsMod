@@ -29,7 +29,7 @@ public record HorseStats(
     public @NotNull Integer maxHealth() {
         return switch (mountType) {
             case HORSE -> 30;
-            case SKELETON_HORSE -> 15;
+            case SKELETON_HORSE -> 30;
             case ZOMBIE_HORSE -> 30;
             case DONKEY -> 30;
             case MULE -> 30;
@@ -42,10 +42,10 @@ public record HorseStats(
     public @NotNull Double minJumpHeight() {
         return switch (mountType) {
             case HORSE -> 1.25;
-            case SKELETON_HORSE -> 1.875;
+            case SKELETON_HORSE -> 1.25;
             case ZOMBIE_HORSE -> 1.25;
-            case DONKEY -> 1.5625;
-            case MULE -> 1.5625;
+            case DONKEY -> 1.25;
+            case MULE -> 1.25;
             case LLAMA -> 1.25;
             case TRADER_LLAMA -> 1.25;
             case CAMEL -> 1.875;
@@ -55,9 +55,9 @@ public record HorseStats(
     public @NotNull Double maxJumpHeight() {
         return switch (mountType) {
             case HORSE -> 5.25;
-            case SKELETON_HORSE -> 1.875;
+            case SKELETON_HORSE -> 5.25;
             case ZOMBIE_HORSE -> 5.25;
-            case DONKEY -> 1.5625;
+            case DONKEY -> 5.25;
             case MULE -> 5.25;
             case LLAMA -> 1.25;
             case TRADER_LLAMA -> 1.25;
@@ -68,10 +68,10 @@ public record HorseStats(
     public @NotNull Double minSpeed() {
         return switch (mountType) {
             case HORSE -> 4.74;
-            case SKELETON_HORSE -> 8.5;
+            case SKELETON_HORSE -> 4.74;
             case ZOMBIE_HORSE -> 4.74;
-            case DONKEY -> 5.625;
-            case MULE -> 5.625;
+            case DONKEY -> 4.74;
+            case MULE -> 4.74;
             case LLAMA -> 4.31;
             case TRADER_LLAMA -> 4.31;
             case CAMEL -> 4.84;
@@ -81,9 +81,9 @@ public record HorseStats(
     public @NotNull Double maxSpeed() {
         return switch (mountType) {
             case HORSE -> 14.23;
-            case SKELETON_HORSE -> 8.5;
+            case SKELETON_HORSE -> 14.23;
             case ZOMBIE_HORSE -> 14.23;
-            case DONKEY -> 5.625;
+            case DONKEY -> 14.23;
             case MULE -> 14.23;
             case LLAMA -> 4.31;
             case TRADER_LLAMA -> 4.31;
@@ -117,20 +117,28 @@ public record HorseStats(
         };
     }
 
+    private @NotNull Integer computePercentage(double value, double min, double max) {
+        if (max == min) {
+            return max == 0 ? 0 : 100;
+        } else {
+            return (int) ((value - min) / (max - min) * 100);
+        }
+    }
+
     private @NotNull Integer getHealthPercentage() {
-        return (int) ((health - minHealth()) / (maxHealth() - minHealth()) * 100);
+        return computePercentage(health, minHealth(), maxHealth());
     }
 
     private @NotNull Integer getJumpHeightPercentage() {
-        return (int) ((jumpHeight - minJumpHeight()) / (maxJumpHeight() - minJumpHeight()) * 100);
+        return computePercentage(jumpHeight, minJumpHeight(), maxJumpHeight());
     }
 
     private @NotNull Integer getSpeedPercentage() {
-        return (int) ((speed - minSpeed()) / (maxSpeed() - minSpeed()) * 100);
+        return computePercentage(speed, minSpeed(), maxSpeed());
     }
 
     private @NotNull Integer getSlotsPercentage() {
-        return (slots.orElse(minSlots()) - minSlots()) / (maxSlots() - minSlots()) * 100;
+        return computePercentage(slots.orElse(minSlots()), minSlots(), maxSlots());
     }
 
     public @NotNull String getHealthStr(Boolean percentage) {
