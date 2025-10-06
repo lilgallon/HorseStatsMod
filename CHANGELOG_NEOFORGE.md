@@ -1,6 +1,6 @@
 ## Version 3.0.0 NeoForge
 
-_supports mc 1.21.6+_
+_supports mc 1.21.9+_
 
 Changes:
 - [#32](https://github.com/lilgallon/HorseStatsMod/issues/32): config - display stats in percentage (activated by default)

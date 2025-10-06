@@ -1,9 +1,9 @@
 ## Version 3.0.0 Fabric
 
-_supports mc 1.21.6+_
+_supports mc 1.21.9+_
 
 Requirements:
-- Cloth config: `>=19.0.0`
+- Cloth config: `>=20.0.0`
 - Fabric API: `*`
 
 Suggestion:
