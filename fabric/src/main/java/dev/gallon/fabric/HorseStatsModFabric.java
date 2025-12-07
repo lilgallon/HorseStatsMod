@@ -10,6 +10,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 
@@ -44,8 +45,11 @@ public final class HorseStatsModFabric implements ClientModInitializer {
         });
 
         UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            if (hitResult != null && hitResult.getEntity() instanceof AbstractHorse) {
-                horseStatsMod.onHorseInteractEvent((AbstractHorse) hitResult.getEntity());
+            if (world.isClientSide()
+                    && hand == InteractionHand.MAIN_HAND
+                    && entity instanceof AbstractHorse horse) {
+
+                horseStatsMod.onHorseInteractEvent(player, horse);
             }
             return InteractionResult.PASS;
         });

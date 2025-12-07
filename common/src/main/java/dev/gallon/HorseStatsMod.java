@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -25,7 +26,11 @@ public final class HorseStatsMod {
         this.horseStats = Optional.empty();
     }
 
-    public void onHorseInteractEvent(@NotNull AbstractHorse horse) {
+    public void onHorseInteractEvent(@NotNull Player interactor, @NotNull AbstractHorse horse) {
+        if (!interactor.equals(Minecraft.getInstance().player)) {
+            return;
+        }
+
         boolean rightOrShiftClickConfigured = config.getDisplayStatsOnInteraction() == InteractionKind.RIGHT_OR_SHIFT_RIGHT_CLICK;
         boolean shiftRightClickConfiguredAndDown = config.getDisplayStatsOnInteraction() == InteractionKind.SHIFT_RIGHT_CLICK &&
                 (Minecraft.getInstance().player != null && Minecraft.getInstance().player.isShiftKeyDown());
