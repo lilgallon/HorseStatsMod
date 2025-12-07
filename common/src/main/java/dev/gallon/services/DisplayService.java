@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static dev.gallon.domain.HorseStats.*;
-
 public class DisplayService {
 
     public static void displayOverlayStats(@NotNull ModConfig config, @NotNull HorseStats stats) {
@@ -59,7 +57,7 @@ public class DisplayService {
         final int RH = 14;
 
         // no min max when using percentage, it makes no sense
-        final DisplayMinMax displayMinMax = config.getStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
+        final DisplayMinMax displayMinMax = config.getDisplayStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
         final boolean displayMin = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MIN_ONLY;
         final boolean displayMax = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MAX_ONLY;
 
@@ -71,7 +69,7 @@ public class DisplayService {
                 Component.literal(
                 I18n.get(I18nKeys.HEALTH) + ": " +
                         (displayMin ? ("" + ChatFormatting.RED + stats.minHealth() + ChatFormatting.RESET + "/") : "") +
-                        getColorTextFormat(stats.health(), stats.minHealth(), stats.maxHealth()) + stats.getHealthStr(config.getStatsInPercentage()) +
+                        getColorTextFormat(stats.health(), stats.minHealth(), stats.maxHealth()) + stats.getHealthStr(config.getDisplayStatsInPercentage()) +
                         (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxHealth()) : "")
                 )
             );
@@ -81,7 +79,7 @@ public class DisplayService {
                 Component.literal(
                 I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
                         (displayMin ? ("" + ChatFormatting.RED + stats.minJumpHeight() + ChatFormatting.RESET + "/") : "") +
-                        getColorTextFormat(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) + stats.getJumpHeightStr(config.getStatsInPercentage()) +
+                        getColorTextFormat(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) + stats.getJumpHeightStr(config.getDisplayStatsInPercentage()) +
                         (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxJumpHeight()) : "")
                 )
             );
@@ -91,7 +89,7 @@ public class DisplayService {
                 Component.literal(
                 I18n.get(I18nKeys.SPEED) + ": " +
                         (displayMin ? ("" + ChatFormatting.RED + stats.minSpeed() + ChatFormatting.RESET + "/") : "") +
-                        getColorTextFormat(stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getStatsInPercentage()) +
+                        getColorTextFormat(stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getDisplayStatsInPercentage()) +
                         (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxSpeed()) : "")
                 )
             );
@@ -102,7 +100,7 @@ public class DisplayService {
                     Component.literal(
                     I18n.get(I18nKeys.SLOTS) + ": " +
                             (displayMin ? ("" + ChatFormatting.RED + stats.minSlots() + ChatFormatting.RESET + "/") : "") +
-                            getColorTextFormat(stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getStatsInPercentage()) +
+                            getColorTextFormat(stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getDisplayStatsInPercentage()) +
                             (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxSlots()) : "")
                     )
                 );
@@ -158,9 +156,9 @@ public class DisplayService {
         }
 
         // Health (30 units shift to the right)
-        rx += (config.getStatsInPercentage() ? 33 : 30);
+        rx += (config.getDisplayStatsInPercentage() ? 33 : 30);
         drawText(guiGraphics,
-                stats.getHealthStr(config.getStatsInPercentage()),
+                stats.getHealthStr(config.getDisplayStatsInPercentage()),
                 rx, ry,
                 config.getColoredStats() ? getColorHex(stats.health(), stats.minHealth(), stats.maxHealth()) : 0Xff444444
         );
@@ -169,9 +167,9 @@ public class DisplayService {
         }
 
         // Jump (30 units shift to the right as well)
-        rx += (config.getStatsInPercentage() ? 24 : 30);
+        rx += (config.getDisplayStatsInPercentage() ? 24 : 30);
         drawText(guiGraphics,
-                stats.getJumpHeightStr(config.getStatsInPercentage()),
+                stats.getJumpHeightStr(config.getDisplayStatsInPercentage()),
                 rx, ry,
                 config.getColoredStats() ? getColorHex(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) : 0Xff444444
         );
@@ -182,7 +180,7 @@ public class DisplayService {
         // Speed (24 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
         rx += 24;
         drawText(guiGraphics,
-                stats.getSpeedStr(config.getStatsInPercentage()),
+                stats.getSpeedStr(config.getDisplayStatsInPercentage()),
                 rx, ry,
                 config.getColoredStats() ? getColorHex(stats.speed(), stats.minSpeed(), stats.maxSpeed()) : 0Xff444444
         );
@@ -192,7 +190,7 @@ public class DisplayService {
 
         // owner
         if (stats.owner().isPresent()) {
-            rx += (config.getStatsInPercentage() ? 24 : 30);
+            rx += (config.getDisplayStatsInPercentage() ? 24 : 30);
             drawText(guiGraphics,
                     stats.owner().get(),
                     rx, ry,
@@ -200,7 +198,7 @@ public class DisplayService {
             );
         }
 
-        if (config.getStatsInPercentage()) {
+        if (config.getDisplayStatsInPercentage()) {
             if (drawHealth) {
                 drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(I18nKeys.HEALTH));
             } else if (drawJump) {
@@ -231,30 +229,30 @@ public class DisplayService {
     }
 
     private static Component buildOverlayMessage(@NotNull ModConfig config, @NotNull HorseStats stats) {
-        final DisplayMinMax displayMinMax = config.getStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
+        final DisplayMinMax displayMinMax = config.getDisplayStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
         final boolean displayMin = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MIN_ONLY;
         final boolean displayMax = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MAX_ONLY;
 
         return Component.literal(
         I18n.get(I18nKeys.HEALTH) + ": " +
                 (displayMin ? ("" + ChatFormatting.RED + stats.minHealth() + ChatFormatting.RESET + "/") : "") +
-                getColorTextFormat(stats.health(), stats.minHealth(), stats.maxHealth()) + stats.getHealthStr(config.getStatsInPercentage()) +
+                getColorTextFormat(stats.health(), stats.minHealth(), stats.maxHealth()) + stats.getHealthStr(config.getDisplayStatsInPercentage()) +
                 (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxHealth()) : "") +
                 ChatFormatting.RESET + " " +
                 I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
                 (displayMin ? ("" + ChatFormatting.RED + stats.minJumpHeight() + ChatFormatting.RESET + "/") : "") +
-                getColorTextFormat(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) + stats.getJumpHeightStr(config.getStatsInPercentage()) +
+                getColorTextFormat(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) + stats.getJumpHeightStr(config.getDisplayStatsInPercentage()) +
                 (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxJumpHeight()) : "") +
                 ChatFormatting.RESET + " " +
                 I18n.get(I18nKeys.SPEED) + ": " +
                 (displayMin ? ("" + ChatFormatting.RED + stats.minSpeed() + ChatFormatting.RESET + "/") : "") +
-                getColorTextFormat(stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getStatsInPercentage()) +
+                getColorTextFormat(stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getDisplayStatsInPercentage()) +
                 (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxSpeed()) : "") +
                 ChatFormatting.RESET + " " +
                 (stats.slots().isEmpty() ? "" : (
                         I18n.get(I18nKeys.SLOTS) + ": " +
                                 (displayMin ? ("" + ChatFormatting.RED + stats.minSlots() + ChatFormatting.RESET + "/") : "") +
-                                getColorTextFormat(stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getStatsInPercentage()) +
+                                getColorTextFormat(stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getDisplayStatsInPercentage()) +
                                 (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxSlots() ) : "")
                 )) + ChatFormatting.RESET + " " +
                 (stats.owner().isEmpty() ? "" : (
