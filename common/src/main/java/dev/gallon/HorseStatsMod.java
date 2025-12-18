@@ -7,7 +7,8 @@ import dev.gallon.mixins.HorseInventoryScreenAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +51,13 @@ public final class HorseStatsMod {
             int mouseY
     ) {
         HorseInventoryScreenAccessor horseInventoryScreenAccessor = (HorseInventoryScreenAccessor) horseInventoryScreen;
-        Optional<HorseStats> containerHorseStats = getHorseStats(horseInventoryScreenAccessor.getHorse());
+
+        LivingEntity mount = horseInventoryScreenAccessor.getMount();
+        if (!(mount instanceof AbstractHorse)) {
+            return;
+        }
+
+        Optional<HorseStats> containerHorseStats = getHorseStats((AbstractHorse) horseInventoryScreenAccessor.getMount());
 
         if (containerHorseStats.isPresent()) {
             int relativeMouseX = (mouseX - horseInventoryScreenAccessor.getLeftPos());

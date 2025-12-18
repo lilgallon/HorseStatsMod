@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
 
 public final class HorseStatsModFabric implements ClientModInitializer {
     @Override
