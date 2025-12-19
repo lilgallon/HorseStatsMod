@@ -116,4 +116,16 @@ public record HorseStats(
     public @NotNull String getSlotsStr(Boolean percentage) {
         return percentage ? (getSlotsPercentage() + "%" ) : slots.orElse(0).toString();
     }
+
+    public @NotNull Integer getGroupedStats() {
+        return computePercentage(
+                health + speed + jumpHeight,
+                minHealth() + minSpeed() + minJumpHeight(),
+                maxHealth() + maxSpeed() + maxJumpHeight()
+        );
+    }
+
+    public @NotNull String getGroupedStatsStr() {
+        return getGroupedStats() + "%";
+    }
 }

@@ -34,5 +34,6 @@ public class TheModConfig {
         config.setColoredStats(CLIENT.coloredStats.get());
         config.setDisplayMinMax(CLIENT.displayMinMax.get());
         config.setDisplayStatsInPercentage(CLIENT.statsInPercentage.get());
+        config.setGroupedStats(CLIENT.groupedStats.get());
     }
 }

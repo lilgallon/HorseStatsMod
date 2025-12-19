@@ -11,6 +11,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue coloredStats;
     public final ModConfigSpec.EnumValue<DisplayMinMax> displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
+    public final ModConfigSpec.BooleanValue groupedStats;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
         builder.push("HorseStatsMod");
@@ -45,6 +46,11 @@ public class ClientConfig {
                         "units (blocks/seconds for speed for instance).")
                 .translation(I18nKeys.STATS_IN_PERCENTAGE)
                 .define("statsInPercentage", false);
+
+        groupedStats  = builder
+                .comment("Groups all the stats into one in percentage")
+                .translation(I18nKeys.GROUPED_STATS)
+                .define("groupedStats", false);
 
         builder.pop();
     }

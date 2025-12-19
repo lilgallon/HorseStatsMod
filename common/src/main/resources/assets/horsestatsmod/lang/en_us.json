@@ -20,5 +20,6 @@
   "text.autoconfig.horsestatsmod.option.modConfig.displayStatsOnInteraction": "Display statistics when right clicking a horse",
   "text.autoconfig.horsestatsmod.option.modConfig.coloredStats": "Display statistics with colors",
   "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax": "Display statistics with min and max",
-  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsInPercentage": "Display statistics in percentage"
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsInPercentage": "Display statistics in percentage",
+  "text.autoconfig.horsestatsmod.option.modConfig.groupedStats": "Group all statistics into one percentage"
 }
