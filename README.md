@@ -9,6 +9,15 @@
 
 **Horse Stats Mod** is a lightweight and essential tool for Minecraft breeders. It allows you to instantly visualize the precise capabilities of your mounts (speed, jump height, health) without any guesswork.
 
+Discord: https://discord.gg/yxMhpgUGjf
+
+Supported versions:
+- Forge: 1.15 to 1.21.1
+- NeoForge: 1.21.1 and future versions
+- Fabric: 1.21.1 and future versions
+- Supported Languages: 🇫🇷 🇺🇸 🇵🇱 🇩🇪 🇯🇵 🇰🇷 🇷🇺
+- Supported Mods: all horse mods are supported
+
 ---
 
 ## ✨ Features
@@ -26,10 +35,10 @@ Display detailed statistics for **Horses, Donkeys, Mules, and Llamas**:
 
 ## 📸 Screenshots
 
-|                 Live HUD Stats                  | Grouped Inventory Stats |                           Detailed Min/Max View                           |
-|:-----------------------------------------------:| :---: |:-------------------------------------------------------------------------:|
-| ![Live Stats](.github/resources/live-stats.png) | ![Inventory Grouped](.github/resources/inventory-grouped-stats.png) | ![Inventory Individual](.github/resources/inventory-individual-stats.png) |
-|        *Real-time stats while mounting*         | *Global score and quick overview* |                  *Detailed comparison with player speed*                  |
+|                                           Live HUD Stats                                            |                                                 Grouped Inventory Stats                                                 |                                                     Detailed Min/Max View                                                     |
+|:---------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------:|
+| ![Live Stats](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/live-stats.png) | ![Inventory Grouped](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/inventory-grouped-stats.png) | ![Inventory Individual](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/inventory-individual-stats.png) |
+|                                  *Real-time stats while mounting*                                   |                                            *Global score and quick overview*                                            |                                            *Detailed comparison with player speed*                                            |
 
 ---
 
@@ -43,9 +52,9 @@ The mod is highly customizable. You can toggle features via the **Mod Menu** (Fa
 * Enable/Disable color indicators and percentage calculations.
 * Show/Hide Min/Max reference values.
 
-|                      NeoForge Config                      |                     Fabric Config                     |
-|:---------------------------------------------------------:|:-----------------------------------------------------:|
-| ![Config NeoForge](.github/resources/config-neoforge.png) | ![Config Fabric](.github/resources/config-fabric.png) |
+|                                                NeoForge Config                                                |                                               Fabric Config                                               |
+|:-------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|
+| ![Config NeoForge](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/config-neoforge.png) | ![Config Fabric](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/config-fabric.png) |
 
 ---
 
