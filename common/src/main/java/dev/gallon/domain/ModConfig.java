@@ -7,7 +7,8 @@ public class ModConfig {
     private @NotNull InteractionKind displayStatsOnInteraction = InteractionKind.RIGHT_CLICK;
     private @NotNull Boolean coloredStats = true;
     private @NotNull DisplayMinMax displayMinMax = DisplayMinMax.DISABLED;
-    private @NotNull Boolean statsInPercentage = true;
+    private @NotNull Boolean displayStatsInPercentage = false;
+    private @NotNull Boolean groupedStats = false;
 
     public @NotNull Boolean getDisplayStatsInInventory() {
         return displayStatsInInventory;
@@ -33,12 +34,12 @@ public class ModConfig {
         this.displayMinMax = displayMinMax;
     }
 
-    public @NotNull Boolean getStatsInPercentage() {
-        return statsInPercentage;
+    public @NotNull Boolean getDisplayStatsInPercentage() {
+        return displayStatsInPercentage;
     }
 
-    public void setStatsInPercentage(@NotNull Boolean statsInPercentage) {
-        this.statsInPercentage = statsInPercentage;
+    public void setDisplayStatsInPercentage(@NotNull Boolean displayStatsInPercentage) {
+        this.displayStatsInPercentage = displayStatsInPercentage;
     }
 
     public @NotNull InteractionKind getDisplayStatsOnInteraction() {
@@ -47,5 +48,13 @@ public class ModConfig {
 
     public void setDisplayStatsOnInteraction(@NotNull InteractionKind displayStatsOnInteraction) {
         this.displayStatsOnInteraction = displayStatsOnInteraction;
+    }
+    
+    public @NotNull Boolean getGroupedStats() {
+        return groupedStats;
+    }
+
+    public void setGroupedStats(@NotNull Boolean groupedStats) {
+        this.groupedStats = groupedStats;
     }
 }
