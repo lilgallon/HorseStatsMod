@@ -22,5 +22,6 @@ public final class I18nKeys {
     public static final @NotNull String DISPLAY_STATS_ON_INTERACTION = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayStatsOnRightClick";
     public static final @NotNull String COLORED_STATS = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.coloredStats";
     public static final @NotNull String DISPLAY_MIN_MAX = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayMinMax";
-    public static final @NotNull String STATS_IN_PERCENTAGE = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.statsInPercentage";
+    public static final @NotNull String STATS_IN_PERCENTAGE = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayStatsInPercentage";
+    public static final @NotNull String GROUPED_STATS = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.groupedStats";
 }
