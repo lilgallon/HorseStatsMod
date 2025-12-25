@@ -44,7 +44,12 @@ public class ClientConfig {
                 .comment("Shows the stats in percentage. If turned off, it will display the stats in their respective " +
                         "units (blocks/seconds for speed for instance).")
                 .translation(I18nKeys.STATS_IN_PERCENTAGE)
-                .define("statsInPercentage", true);
+                .define("statsInPercentage", false);
+
+        groupedStats  = builder
+                .comment("Groups all the stats into one in percentage")
+                .translation(I18nKeys.GROUPED_STATS)
+                .define("groupedStats", false);
 
         builder.pop();
     }
