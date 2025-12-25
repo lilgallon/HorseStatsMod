@@ -1,6 +1,7 @@
 package dev.gallon.domain;
 
 import org.jetbrains.annotations.NotNull;
+
 import java.util.Optional;
 
 public record HorseStats(
@@ -12,68 +13,107 @@ public record HorseStats(
         @NotNull Optional<String> owner,
         @NotNull MountType mountType
 ) {
-
     public @NotNull Integer minHealth() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, LLAMA, TRADER_LLAMA, DONKEY -> 15;
+            case HORSE -> 15;
+            case SKELETON_HORSE -> 15;
+            case ZOMBIE_HORSE -> 15;
+            case DONKEY -> 15;
+            case MULE -> 15;
+            case LLAMA -> 15;
+            case TRADER_LLAMA -> 20;
             case CAMEL -> 32;
         };
     }
 
     public @NotNull Integer maxHealth() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, LLAMA, TRADER_LLAMA, DONKEY -> 30;
+            case HORSE -> 30;
+            case SKELETON_HORSE -> 30;
+            case ZOMBIE_HORSE -> 30;
+            case DONKEY -> 30;
+            case MULE -> 30;
+            case LLAMA -> 30;
+            case TRADER_LLAMA -> 20;
             case CAMEL -> 32;
         };
     }
 
     public @NotNull Double minJumpHeight() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE -> 1.08;
-            case DONKEY -> 1.62;
-            case LLAMA, TRADER_LLAMA, CAMEL -> 0.0;
+            case HORSE -> 1.25;
+            case SKELETON_HORSE -> 1.25;
+            case ZOMBIE_HORSE -> 1.25;
+            case DONKEY -> 1.25;
+            case MULE -> 1.25;
+            case LLAMA -> 1.25;
+            case TRADER_LLAMA -> 1.25;
+            case CAMEL -> 1.875;
         };
     }
 
     public @NotNull Double maxJumpHeight() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE -> 5.29;
-            case DONKEY -> 1.62;
-            case LLAMA, TRADER_LLAMA -> 0.6;
-            case CAMEL -> 0.0;
+            case HORSE -> 5.25;
+            case SKELETON_HORSE -> 5.25;
+            case ZOMBIE_HORSE -> 5.25;
+            case DONKEY -> 5.25;
+            case MULE -> 5.25;
+            case LLAMA -> 1.25;
+            case TRADER_LLAMA -> 1.25;
+            case CAMEL -> 1.875;
         };
     }
 
     public @NotNull Double minSpeed() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE -> 4.74;
-            case DONKEY -> 7.55;
-            case LLAMA, TRADER_LLAMA -> 3.0;
-            case CAMEL -> 3.88;
+            case HORSE -> 4.74;
+            case SKELETON_HORSE -> 4.74;
+            case ZOMBIE_HORSE -> 4.74;
+            case DONKEY -> 4.74;
+            case MULE -> 4.74;
+            case LLAMA -> 4.31;
+            case TRADER_LLAMA -> 4.31;
+            case CAMEL -> 4.84;
         };
     }
 
     public @NotNull Double maxSpeed() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE -> 14.22;
-            case DONKEY -> 7.55;
-            case LLAMA, TRADER_LLAMA -> 4.0;
-            case CAMEL -> 3.88;
+            case HORSE -> 14.23;
+            case SKELETON_HORSE -> 14.23;
+            case ZOMBIE_HORSE -> 14.23;
+            case DONKEY -> 14.23;
+            case MULE -> 14.23;
+            case LLAMA -> 4.31;
+            case TRADER_LLAMA -> 4.31;
+            case CAMEL -> 4.84;
         };
     }
 
     public @NotNull Integer minSlots() {
         return switch (mountType) {
-            case DONKEY, MULE -> 15;
-            case LLAMA, TRADER_LLAMA -> 3;
-            default -> 0;
+            case HORSE -> 0;
+            case SKELETON_HORSE -> 0;
+            case ZOMBIE_HORSE -> 8;
+            case DONKEY -> 15;
+            case MULE -> 15;
+            case LLAMA -> 3;
+            case TRADER_LLAMA -> 0;
+            case CAMEL -> 0;
         };
     }
 
     public @NotNull Integer maxSlots() {
         return switch (mountType) {
-            case DONKEY, MULE,  LLAMA, TRADER_LLAMA -> 15;
-            case ZOMBIE_HORSE, SKELETON_HORSE, HORSE, CAMEL -> 0;
+            case HORSE -> 0;
+            case SKELETON_HORSE -> 0;
+            case ZOMBIE_HORSE -> 8;
+            case DONKEY -> 15;
+            case MULE -> 15;
+            case LLAMA -> 15;
+            case TRADER_LLAMA -> 0;
+            case CAMEL -> 0;
         };
     }
 
@@ -115,17 +155,5 @@ public record HorseStats(
 
     public @NotNull String getSlotsStr(Boolean percentage) {
         return percentage ? (getSlotsPercentage() + "%" ) : slots.orElse(0).toString();
-    }
-
-    public @NotNull Integer getGroupedStats() {
-        return computePercentage(
-                health + speed + jumpHeight,
-                minHealth() + minSpeed() + minJumpHeight(),
-                maxHealth() + maxSpeed() + maxJumpHeight()
-        );
-    }
-
-    public @NotNull String getGroupedStatsStr() {
-        return getGroupedStats() + "%";
     }
 }

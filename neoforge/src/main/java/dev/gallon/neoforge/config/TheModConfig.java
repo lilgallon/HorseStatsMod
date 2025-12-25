@@ -2,13 +2,12 @@ package dev.gallon.neoforge.config;
 
 import dev.gallon.domain.ModConfig;
 import dev.gallon.domain.ModMetadata;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
-@EventBusSubscriber(modid = ModMetadata.MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = ModMetadata.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class TheModConfig {
 
     public static final ClientConfig CLIENT;
@@ -33,7 +32,6 @@ public class TheModConfig {
         config.setDisplayStatsOnInteraction(CLIENT.displayStatsOnInteraction.get());
         config.setColoredStats(CLIENT.coloredStats.get());
         config.setDisplayMinMax(CLIENT.displayMinMax.get());
-        config.setDisplayStatsInPercentage(CLIENT.statsInPercentage.get());
-        config.setGroupedStats(CLIENT.groupedStats.get());
+        config.setStatsInPercentage(CLIENT.statsInPercentage.get());
     }
 }
