@@ -15,7 +15,7 @@ public record HorseStats(
 ) {
     public @NotNull Integer minHealth() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, LLAMA, TRADER_LLAMA, DONKEY -> 15;;
+            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, LLAMA, TRADER_LLAMA, DONKEY -> 15;
             case CAMEL -> 32;
         };
     }
@@ -53,7 +53,7 @@ public record HorseStats(
 
     public @NotNull Double maxSpeed() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, DONKEY -> 14,57;
+            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, DONKEY -> 14.57;
             case LLAMA, TRADER_LLAMA -> 4.0;
             case CAMEL -> 3.88;
         };
