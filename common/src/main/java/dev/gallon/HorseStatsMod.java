@@ -7,9 +7,7 @@ import dev.gallon.mixins.HorseInventoryScreenAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.equine.AbstractHorse;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -27,11 +25,7 @@ public final class HorseStatsMod {
         this.horseStats = Optional.empty();
     }
 
-    public void onHorseInteractEvent(@NotNull Player interactor, @NotNull AbstractHorse horse) {
-        if (!interactor.equals(Minecraft.getInstance().player)) {
-            return;
-        }
-
+    public void onHorseInteractEvent(@NotNull AbstractHorse horse) {
         boolean rightOrShiftClickConfigured = config.getDisplayStatsOnInteraction() == InteractionKind.RIGHT_OR_SHIFT_RIGHT_CLICK;
         boolean shiftRightClickConfiguredAndDown = config.getDisplayStatsOnInteraction() == InteractionKind.SHIFT_RIGHT_CLICK &&
                 (Minecraft.getInstance().player != null && Minecraft.getInstance().player.isShiftKeyDown());
@@ -51,13 +45,7 @@ public final class HorseStatsMod {
             int mouseY
     ) {
         HorseInventoryScreenAccessor horseInventoryScreenAccessor = (HorseInventoryScreenAccessor) horseInventoryScreen;
-
-        LivingEntity mount = horseInventoryScreenAccessor.getMount();
-        if (!(mount instanceof AbstractHorse)) {
-            return;
-        }
-
-        Optional<HorseStats> containerHorseStats = getHorseStats((AbstractHorse) horseInventoryScreenAccessor.getMount());
+        Optional<HorseStats> containerHorseStats = getHorseStats(horseInventoryScreenAccessor.getHorse());
 
         if (containerHorseStats.isPresent()) {
             int relativeMouseX = (mouseX - horseInventoryScreenAccessor.getLeftPos());

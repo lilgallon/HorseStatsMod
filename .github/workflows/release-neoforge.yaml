@@ -1,4 +1,4 @@
-name: release neoforge
+name: release fabric
 on:
   push:
     tags:

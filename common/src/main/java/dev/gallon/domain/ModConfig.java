@@ -49,7 +49,7 @@ public class ModConfig {
     public void setDisplayStatsOnInteraction(@NotNull InteractionKind displayStatsOnInteraction) {
         this.displayStatsOnInteraction = displayStatsOnInteraction;
     }
-
+    
     public @NotNull Boolean getGroupedStats() {
         return groupedStats;
     }

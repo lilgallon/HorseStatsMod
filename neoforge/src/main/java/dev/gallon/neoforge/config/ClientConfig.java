@@ -11,7 +11,6 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue coloredStats;
     public final ModConfigSpec.EnumValue<DisplayMinMax> displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
-    public final ModConfigSpec.BooleanValue groupedStats;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
         builder.push("HorseStatsMod");

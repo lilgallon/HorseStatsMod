@@ -1,7 +1,6 @@
 package dev.gallon.domain;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Optional;
 
 public record HorseStats(
@@ -31,7 +30,6 @@ public record HorseStats(
         return switch (mountType) {
             case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, DONKEY -> 1.153;
             case LLAMA, TRADER_LLAMA, CAMEL -> 0.0;
-            case CAMEL -> 1.875;
         };
     }
 
@@ -39,13 +37,12 @@ public record HorseStats(
         return switch (mountType) {
             case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, DONKEY -> 5.9196;
             case LLAMA, TRADER_LLAMA, CAMEL -> 0.0;
-            case CAMEL -> 1.875;
         };
     }
 
     public @NotNull Double minSpeed() {
         return switch (mountType) {
-            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, DONKEY -> 4.86;
+            case HORSE, SKELETON_HORSE, ZOMBIE_HORSE, MULE, DONKEY -> 4.856;
             case LLAMA, TRADER_LLAMA -> 3.0;
             case CAMEL -> 3.88;
         };
@@ -74,28 +71,28 @@ public record HorseStats(
         };
     }
 
-    private @NotNull Integer computePercentage(double value, double min, double max) {
+    private @NotNull Double computePercentage(double value, double min, double max) {
         if (max == min) {
-            return max == 0 ? 0 : 100;
+            return max == 0 ? 0.0 : 100.0;
         } else {
-            return (int) ((value - min) / (max - min) * 100);
+            return ((value - min) / (max - min) * 100.0);
         }
     }
 
     private @NotNull Integer getHealthPercentage() {
-        return computePercentage(health, minHealth(), maxHealth());
+        return (int) Math.round(computePercentage(health, minHealth(), maxHealth()));
     }
 
-    private @NotNull Integer getJumpHeightPercentage() {
+    private @NotNull Double getJumpHeightPercentage() {
         return computePercentage(jumpHeight, minJumpHeight(), maxJumpHeight());
     }
 
-    private @NotNull Integer getSpeedPercentage() {
+    private @NotNull Double getSpeedPercentage() {
         return computePercentage(speed, minSpeed(), maxSpeed());
     }
 
     private @NotNull Integer getSlotsPercentage() {
-        return computePercentage(slots.orElse(minSlots()), minSlots(), maxSlots());
+        return (int) Math.round(computePercentage(slots.orElse(minSlots()), minSlots(), maxSlots()));
     }
 
     public @NotNull String getHealthStr(Boolean percentage) {
@@ -103,26 +100,27 @@ public record HorseStats(
     }
 
     public @NotNull String getJumpHeightStr(Boolean percentage) {
-        return percentage ? (getJumpHeightPercentage() + "%" ) : String.format("%.2f", jumpHeight);
+        return percentage ? String.format("%.3f%%", getJumpHeightPercentage()) : String.format("%.2f", jumpHeight);
     }
 
     public @NotNull String getSpeedStr(Boolean percentage) {
-        return percentage ? (getSpeedPercentage() + "%" ) : String.format("%.2f", speed);
+        return percentage ? String.format("%.3f%%", getSpeedPercentage()) : String.format("%.2f", speed);
     }
 
     public @NotNull String getSlotsStr(Boolean percentage) {
         return percentage ? (getSlotsPercentage() + "%" ) : slots.orElse(0).toString();
     }
 
-    public @NotNull Integer getGroupedStats() {
-        return computePercentage(
-                health + speed + jumpHeight,
-                minHealth() + minSpeed() + minJumpHeight(),
-                maxHealth() + maxSpeed() + maxJumpHeight()
+    public double getGroupedStats() {
+        double rawValue = computePercentage(
+            health + speed + jumpHeight,
+            (double) minHealth() + minSpeed() + minJumpHeight(),
+            (double) maxHealth() + maxSpeed() + maxJumpHeight()
         );
+        return Math.round(rawValue * 1000.0) / 1000.0;
     }
 
     public @NotNull String getGroupedStatsStr() {
-        return getGroupedStats() + "%";
+        return String.format("%.3f%%", getGroupedStats());
     }
 }

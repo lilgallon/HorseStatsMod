@@ -23,17 +23,16 @@ public class UserCacheService {
                 @Override
                 public @NotNull Optional<String> load(@NotNull UUID key) {
                     CompletableFuture.runAsync(() -> {
-                        GameProfile playerProfile = new GameProfile(key, "owner");
+                        GameProfile playerProfile = new GameProfile(key, null);
 
                         Optional<ProfileResult> result = Optional.ofNullable(
                                 Minecraft.getInstance()
-                                        .services()
-                                        .sessionService()
-                                        .fetchProfile(playerProfile.id(), false)
+                                        .getMinecraftSessionService()
+                                        .fetchProfile(playerProfile.getId(), false)
                         );
 
                         playerProfile = result.isPresent() ? result.get().profile() : playerProfile;
-                        usernameCache.put(key, Optional.ofNullable(playerProfile.name()));
+                        usernameCache.put(key, Optional.ofNullable(playerProfile.getName()));
                     });
 
                     return Optional.of(I18n.get(I18nKeys.LOADING));
