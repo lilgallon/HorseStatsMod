@@ -106,16 +106,19 @@ public record HorseStats(
             // A jump strength of 0.5 is enough to clear 1 19/32 blocks, while 1.0 is enough to clear 5 9/32 blocks.
             case SKELETON_HORSE -> 1.59375;
 
-            // https://minecraft.wiki/w/Llama: No mention of jump height
-            case LLAMA -> 0.0;
+            // https://minecraft.wiki/w/Llama: No mention of jump height -> use the internal value even though the
+            // user can't jump with it
+            case LLAMA -> 1.67;
 
-            // https://minecraft.wiki/w/Trader_Llama: No mention of jump height
-            case TRADER_LLAMA -> 0.0;
+            // https://minecraft.wiki/w/Trader_Llama: No mention of jump height -> use the internal value even though the
+            // user can't jump with it
+            case TRADER_LLAMA -> 1.67;
 
             // https://minecraft.wiki/w/Camel: Camels have the unique ability to step up 1.5 blocks, allowing them to
             // surmount fences and walls with ease. This is in contrast to horses, donkeys and mules, which can't
-            // automatically step up more than one block without jumping. => no jump
-            case CAMEL -> 0.0;
+            // automatically step up more than one block without jumping. => no jump => use internal value even though
+            // the user can't jump with it
+            case CAMEL -> 1.25;
         };
     }
 
@@ -146,16 +149,19 @@ public record HorseStats(
             // A jump strength of 0.5 is enough to clear 1 19/32 blocks, while 1.0 is enough to clear 5 9/32 blocks.
             case SKELETON_HORSE -> 5.28125;
 
-            // https://minecraft.wiki/w/Llama: No mention of jump height
-            case LLAMA -> 0.0;
+            // https://minecraft.wiki/w/Llama: No mention of jump height -> use the internal value even though the
+            // user can't jump with it
+            case LLAMA -> 1.67;
 
-            // https://minecraft.wiki/w/Trader_Llama: No mention of jump height
-            case TRADER_LLAMA -> 0.0;
+            // https://minecraft.wiki/w/Trader_Llama: No mention of jump height -> use the internal value even though the
+            // user can't jump with it
+            case TRADER_LLAMA -> 1.67;
 
             // https://minecraft.wiki/w/Camel: Camels have the unique ability to step up 1.5 blocks, allowing them to
             // surmount fences and walls with ease. This is in contrast to horses, donkeys and mules, which can't
-            // automatically step up more than one block without jumping. => no jump
-            case CAMEL -> 0.0;
+            // automatically step up more than one block without jumping. => no jump => use internal value even though
+            // the user can't jump with it
+            case CAMEL -> 1.25;
         };
     }
 
@@ -202,8 +208,9 @@ public record HorseStats(
             // https://minecraft.wiki/w/Camel: Camels are less maneuverable than other mounts, with their turning and
             // strafing speed being slower. They gradually gain speed while moving in a straight line, up to a walking
             // speed of 3.885 blocks/s, and can also manually sprint at a speed of 8.203 blocks/s by double tapping
-            // forward or by holding the sprint control while moving forward.
-            case CAMEL -> 8.203;
+            // forward or by holding the sprint control while moving forward => use 3.885 as speed because it's the
+            // internal value used
+            case CAMEL -> 3.885;
         };
     }
 
@@ -250,8 +257,9 @@ public record HorseStats(
             // https://minecraft.wiki/w/Camel: Camels are less maneuverable than other mounts, with their turning and
             // strafing speed being slower. They gradually gain speed while moving in a straight line, up to a walking
             // speed of 3.885 blocks/s, and can also manually sprint at a speed of 8.203 blocks/s by double tapping
-            // forward or by holding the sprint control while moving forward.
-            case CAMEL -> 8.203;
+            // forward or by holding the sprint control while moving forward => use 3.885 as speed because it's the
+            // internal value used
+            case CAMEL -> 3.885;
         };
     }
 
@@ -326,7 +334,7 @@ public record HorseStats(
     }
 
     public @NotNull String getHealthStr(Boolean percentage) {
-        return percentage ? (getHealthPercentage() + "%") : String.format("%.2f", health);
+        return percentage ? (getHealthPercentage() + "%") : String.format("%.0f", health);
     }
 
     public @NotNull String getJumpHeightStr(Boolean percentage) {
