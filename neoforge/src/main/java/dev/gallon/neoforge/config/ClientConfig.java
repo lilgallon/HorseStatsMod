@@ -1,6 +1,7 @@
 package dev.gallon.neoforge.config;
 
 import dev.gallon.domain.DisplayMinMax;
+import dev.gallon.domain.GroupedKind;
 import dev.gallon.domain.I18nKeys;
 import dev.gallon.domain.InteractionKind;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -11,7 +12,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue coloredStats;
     public final ModConfigSpec.EnumValue<DisplayMinMax> displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
-    public final ModConfigSpec.BooleanValue groupedStats;
+    public final ModConfigSpec.EnumValue<GroupedKind> groupedStats;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
         builder.push("HorseStatsMod");
@@ -47,10 +48,11 @@ public class ClientConfig {
                 .translation(I18nKeys.STATS_IN_PERCENTAGE)
                 .define("statsInPercentage", false);
 
-        groupedStats  = builder
+        groupedStats = builder
                 .comment("Groups all the stats into one in percentage")
                 .translation(I18nKeys.GROUPED_STATS)
-                .define("groupedStats", false);
+                .defineEnum("groupedStats", GroupedKind.INDIVIDUAL);
+
 
         builder.pop();
     }
