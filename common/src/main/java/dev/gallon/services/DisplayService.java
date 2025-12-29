@@ -160,7 +160,7 @@ public class DisplayService {
             rx = 44;
             // 6 is the maximum number of letters for "Stats" to be displayed, because otherwise it overlaps with
             // the horse's name
-    
+
             // It is possible to open the GUI without riding a horse!
             if (stats.name().length() <= 6) {
                 drawText(guiGraphics, I18n.get(I18nKeys.STATS) + ":", rx, ry, 0Xff444444);
@@ -169,12 +169,12 @@ public class DisplayService {
             rx = 60;
             // 7 is the maximum number of letters for "Stats" to be displayed, because otherwise it overlaps with
             // the horse's name
-    
+
             // It is possible to open the GUI without riding a horse!
             if (stats.name().length() <= 8) {
                 drawText(guiGraphics, I18n.get(I18nKeys.STATS) + ":", rx, ry, 0Xff444444);
             }
-        } 
+        }
 
 
         switch (config.getGroupedStats()) {
@@ -194,18 +194,18 @@ public class DisplayService {
                         rx, ry,
                         config.getColoredStats() ? getColorHex(stats.health(), stats.minHealth(), stats.maxHealth()) : 0Xff444444
                 );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) { // -12 because max is x.xx and not xx.xx
+                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw-8, rh)) { // -8 because max is xx and not xx.xx
                     drawHealth = true;
                 }
 
                 // Jump (30 units shift to the right as well)
-                rx += (config.getDisplayStatsInPercentage() ? 24 : 30);
+                rx += (config.getDisplayStatsInPercentage() ? 22 : 16);
                 drawText(guiGraphics,
                         stats.getJumpHeightStr(config.getDisplayStatsInPercentage()),
                         rx, ry,
                         config.getColoredStats() ? getColorHex(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) : 0Xff444444
                 );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw - 6, rh)) { // -12 because max is x.xx and not xx.xx
+                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) {
                     drawJump = true;
                 }
 
@@ -229,23 +229,23 @@ public class DisplayService {
                         rx, ry,
                         config.getColoredStats() ? getColorHex(stats.health(), stats.minHealth(), stats.maxHealth()) : 0Xff444444
                 );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) { // -12 because max is x.xx and not xx.xx
+                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw-8, rh)) { // -8 because max is xx and not xx.xx
                     drawHealth = true;
                 }
 
                 // Jump (27 units shift to the right as well)
-                rx += (config.getDisplayStatsInPercentage() ? 21 : 27);
+                rx += (config.getDisplayStatsInPercentage() ? 22 : 16);
                 drawText(guiGraphics,
                         stats.getJumpHeightStr(config.getDisplayStatsInPercentage()),
                         rx, ry,
                         config.getColoredStats() ? getColorHex(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) : 0Xff444444
                 );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw - 6, rh)) { // -12 because max is x.xx and not xx.xx
+                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw - 6, rh)) {
                     drawJump = true;
                 }
 
                 // Speed (21 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
-                rx += 21;
+                rx += (config.getDisplayStatsInPercentage() ? 22 : 24);
                 drawText(guiGraphics,
                         stats.getSpeedStr(config.getDisplayStatsInPercentage()),
                         rx, ry,
@@ -257,7 +257,7 @@ public class DisplayService {
 
                 // Grouped part
                 // Overall (shift 26 units to the right)
-                rx += (config.getDisplayStatsInPercentage() ? 20 : 26);
+                rx += (config.getDisplayStatsInPercentage() ? 28 : 34);
                 drawText(guiGraphics,
                     stats.getGroupedStatsStr(),
                     rx, ry,
@@ -265,7 +265,7 @@ public class DisplayService {
                 );
             break;
             default:
-            break;         
+            break;
         }
 
         // owner
@@ -366,16 +366,16 @@ public class DisplayService {
                             (displayMin ? ("" + ChatFormatting.RED + stats.minSpeed() + ChatFormatting.RESET + "/") : "") +
                             getColorTextFormat(stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getDisplayStatsInPercentage()) +
                             (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxSpeed()) : "") +
-                            ChatFormatting.RESET + " " +
+                            ChatFormatting.RESET +
                             (stats.slots().isEmpty() ? "" : (
-                                    I18n.get(I18nKeys.SLOTS) + ": " +
+                                    " " + I18n.get(I18nKeys.SLOTS) + ": " +
                                             (displayMin ? ("" + ChatFormatting.RED + stats.minSlots() + ChatFormatting.RESET + "/") : "") +
                                             getColorTextFormat(stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getDisplayStatsInPercentage()) +
                                             (displayMax ? (ChatFormatting.RESET + "/" + ChatFormatting.GREEN + stats.maxSlots()) : "")
                             )) + ChatFormatting.RESET + " " +
                             (stats.owner().isEmpty() ? "" : (
                                     I18n.get(I18nKeys.OWNER) + ": " + stats.owner().get()
-                            )) + 
+                            )) +
                             ChatFormatting.RESET + " " +
                             I18n.get(I18nKeys.OVERALL) + ": " +
                             getColorTextFormat(stats.getGroupedStats(),0, 100) + stats.getGroupedStatsStr() +
