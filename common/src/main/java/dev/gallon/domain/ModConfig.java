@@ -8,7 +8,7 @@ public class ModConfig {
     private @NotNull Boolean coloredStats = true;
     private @NotNull DisplayMinMax displayMinMax = DisplayMinMax.DISABLED;
     private @NotNull Boolean displayStatsInPercentage = false;
-    private @NotNull Boolean groupedStats = false;
+    private @NotNull GroupedKind groupedStats = GroupedKind.INDIVIDUAL;
 
     public @NotNull Boolean getDisplayStatsInInventory() {
         return displayStatsInInventory;
@@ -49,12 +49,12 @@ public class ModConfig {
     public void setDisplayStatsOnInteraction(@NotNull InteractionKind displayStatsOnInteraction) {
         this.displayStatsOnInteraction = displayStatsOnInteraction;
     }
-
-    public @NotNull Boolean getGroupedStats() {
+    
+    public @NotNull GroupedKind getGroupedStats() {
         return groupedStats;
     }
 
-    public void setGroupedStats(@NotNull Boolean groupedStats) {
+    public void setGroupedStats(@NotNull GroupedKind groupedStats) {
         this.groupedStats = groupedStats;
     }
 }

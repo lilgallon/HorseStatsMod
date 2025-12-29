@@ -1,6 +1,6 @@
-## Version 3.2.0 NeoForge
+## Version 3.2.1 NeoForge
 
 _supports mc 1.21.11+_
 
 Changes:
-- #43: new feature: grouped stats in one percentage
+- #44: new feature: stats can now be grouped and individual at the same time

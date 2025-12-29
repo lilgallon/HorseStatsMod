@@ -11,6 +11,7 @@ public final class I18nKeys {
     public static final @NotNull String SPEED = ModMetadata.MOD_ID + ".speed";
     public static final @NotNull String SLOTS = ModMetadata.MOD_ID + ".slots";
     public static final @NotNull String BLOCKS = ModMetadata.MOD_ID + ".blocks";
+    public static final @NotNull String OVERALL = ModMetadata.MOD_ID + ".overall";
     public static final @NotNull String METERS_PER_SECONDS = ModMetadata.MOD_ID + ".meters_per_seconds";
     public static final @NotNull String PLAYER = ModMetadata.MOD_ID + ".player";
     public static final @NotNull String WALK = ModMetadata.MOD_ID + ".walk";
