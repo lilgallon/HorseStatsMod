@@ -33,7 +33,7 @@ public class HorseStatsService {
                     new HorseStats(
                             name.getString(),
                             health,
-                            convertJumpToBlocks(jump),
+                            JumpHeightConverter.getJumpHeight(jump),
                             convertSpeedToBlocksPerSeconds(speed),
                             Optional.ofNullable(slots == 0 ? null : slots),
                             ownerUUID.flatMap(usernameCache::getUnchecked),
@@ -55,14 +55,12 @@ public class HorseStatsService {
         }
     }
 
-    static public Double convertJumpToBlocks(Double jump) {
-        return - 0.1817584952 * (Math.pow(jump, 3))
-                + 3.689713992 * (Math.pow(jump, 2))
-                + 2.128599134 * jump
-                - 0.343930367;
-    }
-
     static public Double convertSpeedToBlocksPerSeconds(Double speed) {
-        return speed * 42.157796;
+        // https://minecraft.wiki/w/Horse#Movement_speed: The conversion factor between internal units and blocks/sec is
+        // roughly 43.17, putting the best horse's maximum speed at about 14.57 blocks/second, and the average horse's
+        // speed at about 9.71 blocks/sec.
+        // PERSONAL NOTE: This can change according to the TPS (ticks per seconds). But since all min / max are computed
+        // according to this 43.17 value, we keep it to stay coherent
+        return speed * 43.17;
     }
 }

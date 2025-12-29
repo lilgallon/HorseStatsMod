@@ -1,4 +1,4 @@
-## Version 3.2.1 NeoForge
+## Version 3.3.0 NeoForge
 
 _supports mc 1.21.11+_
 
