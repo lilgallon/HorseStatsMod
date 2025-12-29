@@ -1,5 +1,11 @@
 logs/
 
+# vscode
+.vscode/
+
+# architectury
+.architectury-transformer/
+
 # eclipse
 bin
 *.launch
