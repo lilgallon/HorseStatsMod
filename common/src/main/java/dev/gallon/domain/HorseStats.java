@@ -144,7 +144,7 @@ public record HorseStats(
 
             // https://minecraft.wiki/w/Skeleton_Horse#Jump_strength: Jump strength ranges from 0.4–1.0, averaging 0.7.
             // A jump strength of 0.5 is enough to clear 1 19/32 blocks, while 1.0 is enough to clear 5 9/32 blocks.
-            case SKELETON_HORSE -> 1.59375;
+            case SKELETON_HORSE -> 5.28125;
 
             // https://minecraft.wiki/w/Llama: No mention of jump height
             case LLAMA -> 0.0;
