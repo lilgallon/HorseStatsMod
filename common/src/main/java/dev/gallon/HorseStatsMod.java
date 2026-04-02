@@ -5,7 +5,7 @@ import dev.gallon.domain.InteractionKind;
 import dev.gallon.domain.ModConfig;
 import dev.gallon.mixins.HorseInventoryScreenAccessor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
@@ -46,7 +46,7 @@ public final class HorseStatsMod {
 
     public void onRenderHorseContainerEvent(
             HorseInventoryScreen horseInventoryScreen,
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             int mouseX,
             int mouseY
     ) {

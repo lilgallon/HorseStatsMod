@@ -7,7 +7,7 @@ import dev.gallon.domain.I18nKeys;
 import dev.gallon.domain.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
@@ -25,7 +25,7 @@ public class DisplayService {
     }
 
     public static void displayContainerStats(
-            @NotNull GuiGraphics guiGraphics,
+            @NotNull GuiGraphicsExtractor guiGraphics,
             @NotNull ModConfig config,
             @NotNull HorseStats stats,
             int containerWidth,
@@ -54,7 +54,7 @@ public class DisplayService {
     }
 
     private static void displayStatsInHoveringText(
-            @NotNull GuiGraphics guiGraphics,
+            @NotNull GuiGraphicsExtractor guiGraphics,
             @NotNull ModConfig config,
             @NotNull HorseStats stats,
             int containerWidth,
@@ -137,7 +137,7 @@ public class DisplayService {
     }
 
     private static void displayStatsAndHoveringTexts(
-            @NotNull GuiGraphics guiGraphics,
+            @NotNull GuiGraphicsExtractor guiGraphics,
             @NotNull ModConfig config,
             @NotNull HorseStats stats,
             int containerMouseX,
@@ -396,8 +396,8 @@ public class DisplayService {
      * @param y           the y position (from top to bottom),
      * @param color       the color in hex (00-FF), following this format: RRGGBB (R:red, G:green, B:blue). Ex: 0xFFFFFF
      */
-    private static void drawText(GuiGraphics guiGraphics, String text, int x, int y, int color) {
-        guiGraphics.drawString(
+    private static void drawText(GuiGraphicsExtractor guiGraphics, String text, int x, int y, int color) {
+        guiGraphics.text(
                 Minecraft.getInstance().font,
                 text,
                 x, y,
@@ -406,7 +406,7 @@ public class DisplayService {
         );
     }
 
-    private static void drawHoveringText(GuiGraphics guiGraphics, int x, int y, String title, String min, String max, String... notes) {
+    private static void drawHoveringText(GuiGraphicsExtractor guiGraphics, int x, int y, String title, String min, String max, String... notes) {
         List<Component> textLines = new ArrayList<>();
         textLines.add(Component.literal(title));
         textLines.add(Component.literal(ChatFormatting.RED + I18n.get("horsestatsmod.min") + ": " + min));
@@ -418,14 +418,14 @@ public class DisplayService {
         drawHoveringText(guiGraphics, x, y, textLines);
     }
 
-    private static void drawHoveringText(GuiGraphics guiGraphics, int x, int y, String title) {
+    private static void drawHoveringText(GuiGraphicsExtractor guiGraphics, int x, int y, String title) {
         List<Component> textLines = new ArrayList<>();
         textLines.add(Component.literal(title));
         drawHoveringText(guiGraphics, x, y, textLines);
     }
 
-    private static void drawHoveringText(GuiGraphics guiGraphics, int x, int y, List<Component> textLines) {
-        guiGraphics.renderTooltip(
+    private static void drawHoveringText(GuiGraphicsExtractor guiGraphics, int x, int y, List<Component> textLines) {
+        guiGraphics.tooltip(
                 Minecraft.getInstance().font,
                 textLines.stream()
                         .map(component -> ClientTooltipComponent.create(component.getVisualOrderText()))

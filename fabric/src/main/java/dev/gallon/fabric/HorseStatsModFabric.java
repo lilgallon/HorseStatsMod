@@ -23,7 +23,7 @@ public final class HorseStatsModFabric implements ClientModInitializer {
 
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof HorseInventoryScreen) {
-                ScreenEvents.afterRender(screen).register((horseScreen, guiGraphics, mouseX, mouseY, tickDelta) -> {
+                ScreenEvents.afterExtract(screen).register((horseScreen, guiGraphics, mouseX, mouseY, tickDelta) -> {
                     guiGraphics.pose().translate(
                             ((AbstractContainerScreenAccessor) horseScreen).getLeftPos(),
                             ((AbstractContainerScreenAccessor) horseScreen).getTopPos()

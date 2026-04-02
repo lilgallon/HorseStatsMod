@@ -1,6 +1,6 @@
 ## Version 3.4.0 Fabric
 
-_supports mc 1.21.11+_
+_supports mc 26.1+_
 
 Requirements:
 - Cloth config: `>=21.0.0`
