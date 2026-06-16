@@ -8,6 +8,7 @@ import dev.gallon.domain.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 public class DisplayService {
 
     public static void displayOverlayStats(@NotNull ModConfig config, @NotNull HorseStats stats) {
-        Minecraft.getInstance().gui.setOverlayMessage(buildOverlayMessage(config, stats), false);
+        Minecraft.getInstance().gui.hud.setOverlayMessage(buildOverlayMessage(config, stats), false);
     }
 
     public static void displayContainerStats(
