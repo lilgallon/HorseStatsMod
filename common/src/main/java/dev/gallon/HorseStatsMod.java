@@ -39,7 +39,7 @@ public final class HorseStatsMod {
                 (Minecraft.getInstance().player == null || !Minecraft.getInstance().player.isShiftKeyDown());
 
         if (rightOrShiftClickConfigured || shiftRightClickConfiguredAndDown || rightClickConfiguredAndShiftNotDown) {
-            horseStats = getHorseStats(horse);
+            horseStats = getHorseStats(horse, config.getIncludeAttributeModifiers());
             horseStats.ifPresent(stats -> displayOverlayStats(config, stats));
         }
     }
@@ -57,7 +57,10 @@ public final class HorseStatsMod {
             return;
         }
 
-        Optional<HorseStats> containerHorseStats = getHorseStats((AbstractHorse) horseInventoryScreenAccessor.getMount());
+        Optional<HorseStats> containerHorseStats = getHorseStats(
+                (AbstractHorse) horseInventoryScreenAccessor.getMount(),
+                config.getIncludeAttributeModifiers()
+        );
 
         if (containerHorseStats.isPresent()) {
             int relativeMouseX = (mouseX - horseInventoryScreenAccessor.getLeftPos());

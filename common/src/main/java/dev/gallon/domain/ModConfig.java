@@ -9,6 +9,7 @@ public class ModConfig {
     private @NotNull DisplayMinMax displayMinMax = DisplayMinMax.DISABLED;
     private @NotNull Boolean displayStatsInPercentage = false;
     private @NotNull GroupedKind groupedStats = GroupedKind.INDIVIDUAL;
+    private @NotNull Boolean includeAttributeModifiers = true;
 
     public @NotNull Boolean getDisplayStatsInInventory() {
         return displayStatsInInventory;
@@ -56,5 +57,13 @@ public class ModConfig {
 
     public void setGroupedStats(@NotNull GroupedKind groupedStats) {
         this.groupedStats = groupedStats;
+    }
+
+    public @NotNull Boolean getIncludeAttributeModifiers() {
+        return includeAttributeModifiers;
+    }
+
+    public void setIncludeAttributeModifiers(@NotNull Boolean includeAttributeModifiers) {
+        this.includeAttributeModifiers = includeAttributeModifiers;
     }
 }

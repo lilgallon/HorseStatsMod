@@ -22,5 +22,6 @@
   "text.autoconfig.horsestatsmod.option.modConfig.coloredStats": "Afficher les stats avec des couleurs",
   "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax": "Afficher les stats avec le min et le max",
   "text.autoconfig.horsestatsmod.option.modConfig.displayStatsInPercentage": "Afficher les stats en pourcentage",
-  "text.autoconfig.horsestatsmod.option.modConfig.groupedStats": "Grouper toutes les statistiques en un seul pourcentage"
+  "text.autoconfig.horsestatsmod.option.modConfig.groupedStats": "Grouper toutes les statistiques en un seul pourcentage",
+  "text.autoconfig.horsestatsmod.option.modConfig.includeAttributeModifiers": "Inclure les modificateurs d'attribut"
 }

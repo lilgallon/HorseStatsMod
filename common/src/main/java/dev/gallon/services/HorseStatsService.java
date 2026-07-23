@@ -16,16 +16,28 @@ import java.util.UUID;
 import static dev.gallon.services.UserCacheService.usernameCache;
 
 public class HorseStatsService {
-    static public Optional<HorseStats> getHorseStats(@NotNull AbstractHorse horse) {
+    static public Optional<HorseStats> getHorseStats(@NotNull AbstractHorse horse, boolean includeAttributeModifiers) {
         final Optional<AttributeInstance> healthAttr = Optional.ofNullable(horse.getAttribute(Attributes.MAX_HEALTH));
         final Optional<AttributeInstance> jumpAttr = Optional.ofNullable(horse.getAttribute(Attributes.JUMP_STRENGTH));
         final Optional<AttributeInstance> speedAttr = Optional.ofNullable(horse.getAttribute(Attributes.MOVEMENT_SPEED));
 
         if (healthAttr.isPresent() && jumpAttr.isPresent() && speedAttr.isPresent()) {
             final Component name = horse.getDisplayName();
-            final Double health = healthAttr.get().getValue();
-            final Double jump = jumpAttr.get().getValue();
-            final Double speed = speedAttr.get().getValue();
+            final Double health = selectAttributeValue(
+                    healthAttr.get().getBaseValue(),
+                    healthAttr.get().getValue(),
+                    includeAttributeModifiers
+            );
+            final Double jump = selectAttributeValue(
+                    jumpAttr.get().getBaseValue(),
+                    jumpAttr.get().getValue(),
+                    includeAttributeModifiers
+            );
+            final Double speed = selectAttributeValue(
+                    speedAttr.get().getBaseValue(),
+                    speedAttr.get().getValue(),
+                    includeAttributeModifiers
+            );
             final Optional<UUID> ownerUUID = Optional.ofNullable(horse.getOwner()).map(LivingEntity::getUUID);
             final int slots = horse.getInventoryColumns() * 3;
 
@@ -53,6 +65,10 @@ public class HorseStatsService {
         } else {
             return Optional.empty();
         }
+    }
+
+    static double selectAttributeValue(double baseValue, double modifiedValue, boolean includeAttributeModifiers) {
+        return includeAttributeModifiers ? modifiedValue : baseValue;
     }
 
     static public Double convertSpeedToBlocksPerSeconds(Double speed) {

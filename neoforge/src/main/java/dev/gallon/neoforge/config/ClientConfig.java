@@ -13,6 +13,7 @@ public class ClientConfig {
     public final ModConfigSpec.EnumValue<DisplayMinMax> displayMinMax;
     public final ModConfigSpec.BooleanValue statsInPercentage;
     public final ModConfigSpec.EnumValue<GroupedKind> groupedStats;
+    public final ModConfigSpec.BooleanValue includeAttributeModifiers;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
         builder.push("HorseStatsMod");
@@ -53,6 +54,11 @@ public class ClientConfig {
                 .translation(I18nKeys.GROUPED_STATS)
                 .defineEnum("groupedStats", GroupedKind.INDIVIDUAL);
 
+        includeAttributeModifiers = builder
+                .comment("Includes attribute modifiers in the displayed statistics. Disable this option to display " +
+                        "only the mount's intrinsic base statistics.")
+                .translation(I18nKeys.INCLUDE_ATTRIBUTE_MODIFIERS)
+                .define("includeAttributeModifiers", true);
 
         builder.pop();
     }
