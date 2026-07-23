@@ -10,7 +10,9 @@ import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -19,12 +21,15 @@ import static dev.gallon.services.DisplayService.displayOverlayStats;
 import static dev.gallon.services.HorseStatsService.getHorseStats;
 
 public final class HorseStatsMod {
+    private static @Nullable HorseStatsMod instance;
+
     private final @NotNull ModConfig config;
     private @NotNull Optional<HorseStats> horseStats;
 
     public HorseStatsMod(@NotNull ModConfig config) {
         this.config = config;
         this.horseStats = Optional.empty();
+        instance = this;
     }
 
     public void onHorseInteractEvent(@NotNull Player interactor, @NotNull AbstractHorse horse) {
@@ -32,16 +37,28 @@ public final class HorseStatsMod {
             return;
         }
 
-        boolean rightOrShiftClickConfigured = config.getDisplayStatsOnInteraction() == InteractionKind.RIGHT_OR_SHIFT_RIGHT_CLICK;
-        boolean shiftRightClickConfiguredAndDown = config.getDisplayStatsOnInteraction() == InteractionKind.SHIFT_RIGHT_CLICK &&
-                (Minecraft.getInstance().player != null && Minecraft.getInstance().player.isShiftKeyDown());
-        boolean rightClickConfiguredAndShiftNotDown = config.getDisplayStatsOnInteraction() == InteractionKind.RIGHT_CLICK  &&
-                (Minecraft.getInstance().player == null || !Minecraft.getInstance().player.isShiftKeyDown());
+        boolean shiftKeyDown = Minecraft.getInstance().player != null && Minecraft.getInstance().player.isShiftKeyDown();
 
-        if (rightOrShiftClickConfigured || shiftRightClickConfiguredAndDown || rightClickConfiguredAndShiftNotDown) {
-            horseStats = getHorseStats(horse, config.getIncludeAttributeModifiers());
-            horseStats.ifPresent(stats -> displayOverlayStats(config, stats));
+        if (config.getDisplayStatsOnInteraction().matchesRightClick(shiftKeyDown)) {
+            displayHorseStats(horse);
         }
+    }
+
+    public static void onMiddleClickEvent(@NotNull Minecraft minecraft) {
+        if (instance == null || instance.config.getDisplayStatsOnInteraction() != InteractionKind.MIDDLE_CLICK) {
+            return;
+        }
+
+        if (minecraft.player != null
+                && minecraft.hitResult instanceof EntityHitResult entityHitResult
+                && entityHitResult.getEntity() instanceof AbstractHorse horse) {
+            instance.displayHorseStats(horse);
+        }
+    }
+
+    private void displayHorseStats(@NotNull AbstractHorse horse) {
+        horseStats = getHorseStats(horse, config.getIncludeAttributeModifiers());
+        horseStats.ifPresent(stats -> displayOverlayStats(config, stats));
     }
 
     public void onRenderHorseContainerEvent(

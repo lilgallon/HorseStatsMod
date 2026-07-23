@@ -3,11 +3,13 @@
 _supports mc 26.2+_
 
 Requirements:
-- Cloth config: `>=26.1.0`
-- Fabric API: `*`
+- Fabric API
+- Cloth Config API `>=26.2.155`
 
 Suggestion:
 - Modmenu: you will be able to edit the config with an interface
 
 Changes:
-- updated to MC 26.2
+- Fixed the overall percentage by normalizing each stat before averaging them.
+- Added an option to display base stats or values including attribute modifiers.
+- Added middle click as an option to display mount stats.

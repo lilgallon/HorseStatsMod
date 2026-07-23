@@ -2,6 +2,7 @@ package dev.gallon.fabric;
 
 import dev.gallon.HorseStatsMod;
 import dev.gallon.domain.ModConfig;
+import dev.gallon.fabric.config.ConfigScreenRegistry;
 import dev.gallon.fabric.config.TheModConfig;
 import dev.gallon.mixins.AbstractContainerScreenAccessor;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -18,6 +19,7 @@ public final class HorseStatsModFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         AutoConfig.register(TheModConfig.class, JanksonConfigSerializer::new);
+        ConfigScreenRegistry.register();
         ModConfig config = AutoConfig.getConfigHolder(TheModConfig.class).get().modConfig;
         HorseStatsMod horseStatsMod = new HorseStatsMod(config);
 

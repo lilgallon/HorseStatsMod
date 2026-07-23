@@ -48,7 +48,7 @@ The mod is highly customizable. You can toggle features via the **Mod Menu** (Fa
 
 **Customizable options include:**
 * Toggle display in the horse inventory.
-* Change interaction triggers (Right-click vs Shift+Right-click).
+* Change interaction triggers (right-click, shift+right-click, or middle-click).
 * Enable/Disable color indicators and percentage calculations.
 * Show/Hide Min/Max reference values.
 

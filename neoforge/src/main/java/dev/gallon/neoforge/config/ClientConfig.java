@@ -26,8 +26,8 @@ public class ClientConfig {
                 .define("displayStatsInInventory", true);
 
         displayStatsOnInteraction = builder
-                .comment("Shows the stats when right clicking or shift right clicking a compatible entity " +
-                        "(horse, llama). If turned off, you can still see the stats in the inventory of the entity")
+                .comment("Shows the stats when using the configured interaction on a compatible entity " +
+                        "(horse, llama). If disabled, you can still see the stats in the entity's inventory")
                 .translation(I18nKeys.DISPLAY_STATS_ON_INTERACTION)
                 .defineEnum("displayStatsOnInteraction", InteractionKind.RIGHT_OR_SHIFT_RIGHT_CLICK);
 
