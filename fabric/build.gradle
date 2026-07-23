@@ -7,7 +7,7 @@ version = rootProject.version
 
 repositories {
     maven { url 'https://maven.shedaniel.me/' }       // cloth config
-    maven { url 'https://maven.terraformersmc.com/' }  // mod menu
+    maven { url 'https://maven.terraformersmc.com/releases/' }  // mod menu
 }
 
 dependencies {
