@@ -3,7 +3,8 @@ on:
   push:
     tags:
       # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
-      # Example: 2.0.0-MC1.21.x-fabric
+      # Examples: 3.5.0-MC26.2-fabric, 3.4.0-MC1.21.11-fabric
+      - "[0-9]+.[0-9]+.[0-9]+-MC[0-9]+.[0-9x]+-fabric"
       - "[0-9]+.[0-9]+.[0-9]+-MC[0-9]+.[0-9]+.[0-9x]+-fabric"
 
 permissions:
