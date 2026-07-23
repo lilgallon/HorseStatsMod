@@ -1,6 +1,10 @@
 # ai
 .claude/
 
+# mc
+fabric/runs
+neoforge/runs
+
 logs/
 
 # vscode
