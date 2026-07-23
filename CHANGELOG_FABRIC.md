@@ -1,13 +1,13 @@
-## Version 3.4.0 Fabric
+## Version 3.5.0 Fabric
 
-_supports mc 26.2+_
+_supports Minecraft 26.2+_
 
 Requirements:
 - Fabric API
 - Cloth Config API `>=26.2.155`
 
-Suggestion:
-- Modmenu: you will be able to edit the config with an interface
+Optional:
+- Mod Menu, to edit the configuration from the Mods screen
 
 Changes:
 - Fixed the overall percentage by normalizing each stat before averaging them.

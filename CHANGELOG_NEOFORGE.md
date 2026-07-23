@@ -1,6 +1,8 @@
-## Version 3.4.0 NeoForge
+## Version 3.5.0 NeoForge
 
-_supports mc 26.2+_
+_supports Minecraft 26.2+_
 
 Changes:
-- updated to MC 26.2
+- Fixed the overall percentage by normalizing each stat before averaging them.
+- Added an option to display base stats or values including attribute modifiers.
+- Added middle click as an option to display mount stats.
