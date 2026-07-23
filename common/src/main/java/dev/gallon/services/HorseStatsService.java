@@ -3,7 +3,7 @@ package dev.gallon.services;
 import dev.gallon.domain.HorseStats;
 import dev.gallon.domain.MountType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.camel.Camel;
@@ -38,7 +38,7 @@ public class HorseStatsService {
                     speedAttr.get().getValue(),
                     includeAttributeModifiers
             );
-            final Optional<UUID> ownerUUID = Optional.ofNullable(horse.getOwner()).map(LivingEntity::getUUID);
+            final Optional<UUID> ownerUUID = Optional.ofNullable(horse.getOwnerReference()).map(EntityReference::getUUID);
             final int slots = horse.getInventoryColumns() * 3;
 
             return Optional.of(
