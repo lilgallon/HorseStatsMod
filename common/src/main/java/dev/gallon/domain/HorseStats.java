@@ -309,12 +309,16 @@ public record HorseStats(
         };
     }
 
-    private @NotNull Integer computePercentage(double value, double min, double max) {
+    private double normalize(double value, double min, double max) {
         if (max == min) {
-            return max == 0 ? 0 : 100;
+            return max == 0 ? 0 : 1;
         } else {
-            return (int) ((value - min) / (max - min) * 100);
+            return (value - min) / (max - min);
         }
+    }
+
+    private @NotNull Integer computePercentage(double value, double min, double max) {
+        return (int) (normalize(value, min, max) * 100);
     }
 
     private @NotNull Integer getHealthPercentage() {
@@ -350,11 +354,13 @@ public record HorseStats(
     }
 
     public @NotNull Integer getGroupedStats() {
-        return computePercentage(
-                health + speed + jumpHeight,
-                minHealth() + minSpeed() + minJumpHeight(),
-                maxHealth() + maxSpeed() + maxJumpHeight()
-        );
+        double average = (
+                normalize(health, minHealth(), maxHealth()) +
+                normalize(jumpHeight, minJumpHeight(), maxJumpHeight()) +
+                normalize(speed, minSpeed(), maxSpeed())
+        ) / 3;
+
+        return (int) (average * 100);
     }
 
     public @NotNull String getGroupedStatsStr() {
