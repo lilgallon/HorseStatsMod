@@ -1,6 +1,7 @@
-## Version 3.6.0 NeoForge
+## Version 3.5.1 NeoForge
 
 _supports Minecraft 26.2+_
 
 Changes:
-- Owner was not displayed under certain conditions
+- Fixed owner not being displayed under certain conditions (remainder - it only works on single player worlds or LAN).
+- Invalid or outdated configuration entries are now reset to their default values instead of crashing the game.

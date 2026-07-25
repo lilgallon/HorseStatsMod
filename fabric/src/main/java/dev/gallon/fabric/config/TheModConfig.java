@@ -11,5 +11,14 @@ public class TheModConfig implements ConfigData {
     // documentation: https://shedaniel.gitbook.io/cloth-config/auto-config/creating-a-config-class
 
     @ConfigEntry.Gui.CollapsibleObject
-    public final ModConfig modConfig = new ModConfig();
+    public ModConfig modConfig = new ModConfig();
+
+    @Override
+    public void validatePostLoad() {
+        if (modConfig == null) {
+            modConfig = new ModConfig();
+        } else {
+            modConfig.resetInvalidValues();
+        }
+    }
 }
