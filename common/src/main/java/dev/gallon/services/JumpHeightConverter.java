@@ -149,6 +149,10 @@ public class JumpHeightConverter {
      * @return The jump height in blocks (e.g., 2.5)
      */
     public static double getJumpHeight(double jumpStrength) {
+        if (Double.isNaN(jumpStrength)) {
+            return JUMP_DATA.firstEntry().getValue();
+        }
+
         // Boundary check: value lower than minimum
         if (jumpStrength <= JUMP_DATA.firstKey()) {
             return JUMP_DATA.firstEntry().getValue();

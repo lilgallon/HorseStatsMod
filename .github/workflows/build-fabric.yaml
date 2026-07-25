@@ -4,18 +4,24 @@ on:
     branches: [ "**" ]
     paths:
       - .github/workflows/build-fabric.yaml
+      - .github/scripts/**
       - build.gradle
+      - settings.gradle
       - gradle.properties
       - gradle/**
+      - buildSrc/**
       - common/**
       - fabric/**
   push:
     branches: [ "main" ]
     paths:
       - .github/workflows/build-fabric.yaml
+      - .github/scripts/**
       - build.gradle
+      - settings.gradle
       - gradle.properties
       - gradle/**
+      - buildSrc/**
       - common/**
       - fabric/**
 
@@ -37,6 +43,15 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
       - name: Gradle Build
         run: ./gradlew :fabric:build
+      - name: Install virtual display
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+      - name: Fabric client smoke test
+        if: ${{ runner.os == 'Linux' }}
+        run: bash .github/scripts/smoke-run.sh fabric client
+      - name: Fabric server smoke test
+        if: ${{ runner.os == 'Linux' }}
+        run: bash .github/scripts/smoke-run.sh fabric server
       - name: capture build artifacts
         if: ${{ runner.os == 'Linux' }}
         uses: actions/upload-artifact@v4

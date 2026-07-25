@@ -28,6 +28,10 @@ neoForge {
             client()
             gameDirectory = mkdir(file('runs/client'))
         }
+        server {
+            server()
+            gameDirectory = mkdir(file('runs/server'))
+        }
     }
 
     mods {

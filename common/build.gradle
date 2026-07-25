@@ -19,7 +19,13 @@ dependencies {
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     testImplementation platform('org.junit:junit-bom:5.13.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation "net.neoforged:minecraft-dependencies:${minecraft_version}"
+    testImplementation files(layout.buildDirectory.file("moddev/artifacts/vanilla-${neo_form_version}.jar"))
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('compileTestJava') {
+    dependsOn tasks.named('createMinecraftArtifacts')
 }
 
 test {

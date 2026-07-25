@@ -13,31 +13,28 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.UUID;
 
-import static dev.gallon.services.UserCacheService.usernameCache;
-
 public class HorseStatsService {
     static public Optional<HorseStats> getHorseStats(@NotNull AbstractHorse horse, boolean includeAttributeModifiers) {
         final Optional<AttributeInstance> healthAttr = Optional.ofNullable(horse.getAttribute(Attributes.MAX_HEALTH));
         final Optional<AttributeInstance> jumpAttr = Optional.ofNullable(horse.getAttribute(Attributes.JUMP_STRENGTH));
         final Optional<AttributeInstance> speedAttr = Optional.ofNullable(horse.getAttribute(Attributes.MOVEMENT_SPEED));
 
-        if (healthAttr.isPresent() && jumpAttr.isPresent() && speedAttr.isPresent()) {
+        if (hasRequiredAttributes(healthAttr, jumpAttr, speedAttr)) {
             final Component name = horse.getDisplayName();
-            final Double health = selectAttributeValue(
-                    healthAttr.get().getBaseValue(),
-                    healthAttr.get().getValue(),
-                    includeAttributeModifiers
-            );
-            final Double jump = selectAttributeValue(
-                    jumpAttr.get().getBaseValue(),
-                    jumpAttr.get().getValue(),
-                    includeAttributeModifiers
-            );
-            final Double speed = selectAttributeValue(
-                    speedAttr.get().getBaseValue(),
-                    speedAttr.get().getValue(),
-                    includeAttributeModifiers
-            );
+            final double health = selectAttributeValue(healthAttr.get(), includeAttributeModifiers);
+            final double jump = selectAttributeValue(jumpAttr.get(), includeAttributeModifiers);
+            final double speed = selectAttributeValue(speedAttr.get(), includeAttributeModifiers);
+
+            if (!Double.isFinite(health) || !Double.isFinite(jump) || !Double.isFinite(speed)) {
+                return Optional.empty();
+            }
+
+            final double jumpHeight = JumpHeightConverter.getJumpHeight(jump);
+            final double speedInBlocksPerSecond = convertSpeedToBlocksPerSeconds(speed);
+            if (!Double.isFinite(jumpHeight) || !Double.isFinite(speedInBlocksPerSecond)) {
+                return Optional.empty();
+            }
+
             final Optional<UUID> ownerUUID = Optional.ofNullable(horse.getOwnerReference()).map(EntityReference::getUUID);
             final int slots = horse.getInventoryColumns() * 3;
 
@@ -45,10 +42,10 @@ public class HorseStatsService {
                     new HorseStats(
                             name.getString(),
                             health,
-                            JumpHeightConverter.getJumpHeight(jump),
-                            convertSpeedToBlocksPerSeconds(speed),
+                            jumpHeight,
+                            speedInBlocksPerSecond,
                             Optional.ofNullable(slots == 0 ? null : slots),
-                            ownerUUID.flatMap(usernameCache::getUnchecked),
+                            ownerUUID.flatMap(UserCacheService::getUsername),
                             switch (horse) {
                                 case Horse ignored -> MountType.HORSE;
                                 case Camel ignored -> MountType.CAMEL;
@@ -67,8 +64,27 @@ public class HorseStatsService {
         }
     }
 
+    static boolean hasRequiredAttributes(
+            @NotNull Optional<AttributeInstance> health,
+            @NotNull Optional<AttributeInstance> jump,
+            @NotNull Optional<AttributeInstance> speed
+    ) {
+        return health.isPresent() && jump.isPresent() && speed.isPresent();
+    }
+
     static double selectAttributeValue(double baseValue, double modifiedValue, boolean includeAttributeModifiers) {
         return includeAttributeModifiers ? modifiedValue : baseValue;
+    }
+
+    static double selectAttributeValue(
+            @NotNull AttributeInstance attribute,
+            boolean includeAttributeModifiers
+    ) {
+        if (includeAttributeModifiers) {
+            return attribute.getValue();
+        }
+
+        return attribute.getAttribute().value().sanitizeValue(attribute.getBaseValue());
     }
 
     static public Double convertSpeedToBlocksPerSeconds(Double speed) {

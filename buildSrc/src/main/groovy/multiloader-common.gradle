@@ -75,7 +75,6 @@ processResources {
             'java_version'                     : java_version,
             'mod_display_url'                  : mod_display_url,
             'mod_issue_tracker'                : mod_issue_tracker,
-            'mod_update_json'                  : mod_update_json,
     ]
 
     var jsonExpandProps = expandProps.collectEntries {

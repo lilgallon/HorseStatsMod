@@ -10,7 +10,6 @@ displayName="${mod_name}" #mandatory
 authors="${mod_author}"
 description="${description}"
 logoFile= "${mod_id}.png"
-updateJSONURL="${mod_update_json}"
 displayURL="${mod_display_url}"
 
 [[mixins]]
