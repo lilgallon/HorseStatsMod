@@ -18,7 +18,7 @@ run_directory="$loader/runs/$side"
 latest_log="$run_directory/logs/latest.log"
 console_log="${RUNNER_TEMP:-/tmp}/horsestatsmod-$loader-$side.log"
 task=":$loader:run${side^}"
-fatal_pattern='MixinApplyError|MixinTransformerError|Critical injection failure|ModLoadingCrashException|has failed to load correctly'
+fatal_pattern='MixinApplyError|MixinTransformerError|Critical injection failure|ModLoadingCrashException|has failed to load correctly|Failed to create window|Exception in thread "(main|Render thread|Server thread)"|This crash report has been saved to'
 
 mkdir -p "$run_directory"
 rm -f "$latest_log" "$console_log"
@@ -29,7 +29,7 @@ if [[ "$side" == "server" ]]; then
   success_pattern='Done \('
   command=(./gradlew "$task" --console=plain)
 else
-  success_pattern='Sound engine started'
+  success_pattern='Created: .*minecraft:textures/atlas/gui\.png-atlas'
   command=(xvfb-run -a ./gradlew "$task" --console=plain)
 fi
 
