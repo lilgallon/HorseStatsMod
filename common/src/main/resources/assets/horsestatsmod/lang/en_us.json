@@ -26,7 +26,15 @@
   "text.autoconfig.horsestatsmod.option.modConfig.displayStatsOnInteraction.DISABLED": "Disabled",
   "text.autoconfig.horsestatsmod.option.modConfig.coloredStats": "Display statistics with colors",
   "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax": "Display statistics with min and max",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax.MIN_AND_MAX": "Minimum and maximum",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax.MIN_ONLY": "Minimum only",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax.MAX_ONLY": "Maximum only",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayMinMax.DISABLED": "Disabled",
   "text.autoconfig.horsestatsmod.option.modConfig.displayStatsInPercentage": "Display statistics in percentage",
   "text.autoconfig.horsestatsmod.option.modConfig.groupedStats": "Group all statistics into one percentage",
-  "text.autoconfig.horsestatsmod.option.modConfig.includeAttributeModifiers": "Include attribute modifiers"
+  "text.autoconfig.horsestatsmod.option.modConfig.groupedStats.INDIVIDUAL": "Individual",
+  "text.autoconfig.horsestatsmod.option.modConfig.groupedStats.GROUPED": "Grouped",
+  "text.autoconfig.horsestatsmod.option.modConfig.groupedStats.GROUPED_AND_INDIVIDUAL": "Grouped and individual",
+  "text.autoconfig.horsestatsmod.option.modConfig.includeAttributeModifiers": "Include attribute modifiers",
+  "horsestatsmod.configuration.reset": "Reset"
 }

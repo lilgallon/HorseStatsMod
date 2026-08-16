@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-loader="${1:?Usage: smoke-run.sh <fabric|neoforge> <client|server>}"
-side="${2:?Usage: smoke-run.sh <fabric|neoforge> <client|server>}"
+loader="${1:?Usage: smoke-run.sh <fabric|forge|neoforge> <client|server>}"
+side="${2:?Usage: smoke-run.sh <fabric|forge|neoforge> <client|server>}"
 
-if [[ "$loader" != "fabric" && "$loader" != "neoforge" ]]; then
+if [[ "$loader" != "fabric" && "$loader" != "forge" && "$loader" != "neoforge" ]]; then
   echo "Unsupported loader: $loader" >&2
   exit 2
 fi
@@ -18,7 +18,7 @@ run_directory="$loader/runs/$side"
 latest_log="$run_directory/logs/latest.log"
 console_log="${RUNNER_TEMP:-/tmp}/horsestatsmod-$loader-$side.log"
 task=":$loader:run${side^}"
-fatal_pattern='MixinApplyError|MixinTransformerError|Critical injection failure|ModLoadingCrashException|has failed to load correctly|Failed to create window|Exception in thread "(main|Render thread|Server thread)"|This crash report has been saved to'
+fatal_pattern='MixinApplyError|MixinTransformerError|Critical injection failure|ModLoadingCrashException|has failed to load correctly|Failed to initialize mod containers|mods that were not found|Mod Loading has failed|Failed to create window|Missing metadata in pack mod:horsestatsmod|failed to load a valid resourcePackInfo|Exception in thread "(main|Render thread|Server thread)"|This crash report has been saved to'
 
 mkdir -p "$run_directory"
 rm -f "$latest_log" "$console_log"

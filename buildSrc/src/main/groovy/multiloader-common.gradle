@@ -62,6 +62,10 @@ processResources {
             'minecraft_version_range'          : minecraft_version_range,
             'fabric_version'                   : fabric_version,
             'fabric_loader_version'            : fabric_loader_version,
+            'forge_version'                    : forge_version,
+            'forge_loader_version_range'       : forge_loader_version_range,
+            'forge_version_range'              : forge_version_range,
+            'forge_minecraft_version_range'    : forge_minecraft_version_range,
             'mod_name'                         : mod_name,
             'mod_author'                       : mod_author,
             'mod_id'                           : mod_id,
@@ -81,11 +85,11 @@ processResources {
         key, value -> [(key): value instanceof String ? value.replace('\n', '\\\\n') : value]
     }
 
-    filesMatching(['META-INF/neoforge.mods.toml']) {
+    filesMatching(['META-INF/mods.toml', 'META-INF/neoforge.mods.toml']) {
         expand expandProps
     }
 
-    filesMatching(['pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
+    filesMatching(['pack.mcmeta', 'pack.metadata', 'fabric.mod.json', '*.mixins.json']) {
         expand jsonExpandProps
     }
 

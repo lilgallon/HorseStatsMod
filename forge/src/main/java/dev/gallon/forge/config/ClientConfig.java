@@ -1,0 +1,65 @@
+package dev.gallon.forge.config;
+
+import dev.gallon.domain.DisplayMinMax;
+import dev.gallon.domain.GroupedKind;
+import dev.gallon.domain.I18nKeys;
+import dev.gallon.domain.InteractionKind;
+import net.minecraftforge.common.ForgeConfigSpec;
+
+public final class ClientConfig {
+    public final ForgeConfigSpec.BooleanValue displayStatsInInventory;
+    public final ForgeConfigSpec.EnumValue<InteractionKind> displayStatsOnInteraction;
+    public final ForgeConfigSpec.BooleanValue coloredStats;
+    public final ForgeConfigSpec.EnumValue<DisplayMinMax> displayMinMax;
+    public final ForgeConfigSpec.BooleanValue statsInPercentage;
+    public final ForgeConfigSpec.EnumValue<GroupedKind> groupedStats;
+    public final ForgeConfigSpec.BooleanValue includeAttributeModifiers;
+
+    public ClientConfig(ForgeConfigSpec.Builder builder) {
+        builder.push("HorseStatsMod");
+
+        displayStatsInInventory = builder
+                .comment("Shows the stats in the GUI. If turned off, you need to put your mouse on the horse name " +
+                        "(in the GUI) to show a tooltip with its stats. Can be useful with some resource packs or " +
+                        "mods that change the GUI of horses")
+                .translation(I18nKeys.DISPLAY_STATS_IN_INVENTORY)
+                .define("displayStatsInInventory", true);
+
+        displayStatsOnInteraction = builder
+                .comment("Shows the stats when using the configured interaction on a compatible entity " +
+                        "(horse, llama). If disabled, you can still see the stats in the entity's inventory")
+                .translation(I18nKeys.DISPLAY_STATS_ON_INTERACTION)
+                .defineEnum("displayStatsOnInteraction", InteractionKind.RIGHT_CLICK);
+
+        coloredStats = builder
+                .comment("Shows the stats with colors. If turned off, it will display the stats with the default " +
+                        "gray color. Can be useful with some resource packs.")
+                .translation(I18nKeys.COLORED_STATS)
+                .define("coloredStats", true);
+
+        displayMinMax = builder
+                .comment("Shows the stats with their min and/or max. If disabled, it will display the stats without " +
+                        "any information about their min and max.")
+                .translation(I18nKeys.DISPLAY_MIN_MAX)
+                .defineEnum("displayMinMax", DisplayMinMax.DISABLED);
+
+        statsInPercentage = builder
+                .comment("Shows the stats in percentage. If turned off, it will display the stats in their " +
+                        "respective units (blocks/seconds for speed for instance).")
+                .translation(I18nKeys.STATS_IN_PERCENTAGE)
+                .define("displayStatsInPercentage", false);
+
+        groupedStats = builder
+                .comment("Groups all the stats into one percentage.")
+                .translation(I18nKeys.GROUPED_STATS)
+                .defineEnum("groupedStats", GroupedKind.INDIVIDUAL);
+
+        includeAttributeModifiers = builder
+                .comment("Includes attribute modifiers in the displayed statistics. Disable this option to display " +
+                        "only the mount's intrinsic base statistics.")
+                .translation(I18nKeys.INCLUDE_ATTRIBUTE_MODIFIERS)
+                .define("includeAttributeModifiers", true);
+
+        builder.pop();
+    }
+}
