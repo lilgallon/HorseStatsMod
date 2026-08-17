@@ -2,6 +2,7 @@ package dev.gallon.neoforge;
 
 import dev.gallon.HorseStatsMod;
 import dev.gallon.domain.ModMetadata;
+import dev.gallon.mixins.AbstractContainerScreenAccessor;
 import dev.gallon.neoforge.config.TheModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.HorseInventoryScreen;
@@ -13,9 +14,9 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.ContainerScreenEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
@@ -61,18 +62,31 @@ public final class HorseStatsModNeoForge {
         horseStatsMod.onClientTick();
     }
 
-    private void onRenderContainerScreenEvent(ContainerScreenEvent.Render.Foreground event) {
-        if (event.getContainerScreen() instanceof HorseInventoryScreen) {
-            horseStatsMod.onRenderHorseContainerEvent(
-                    (HorseInventoryScreen) event.getContainerScreen(),
-                    event.getGuiGraphics(),
-                    event.getMouseX(),
-                    event.getMouseY()
-            );
+    private void onRenderContainerScreenEvent(ScreenEvent.Render.Foreground event) {
+        if (event.getScreen() instanceof HorseInventoryScreen horseInventoryScreen) {
+            AbstractContainerScreenAccessor screenAccessor =
+                    (AbstractContainerScreenAccessor) horseInventoryScreen;
+
+            event.getGuiGraphics().pose().pushMatrix();
+            try {
+                event.getGuiGraphics().pose().translate(
+                        screenAccessor.getLeftPos(),
+                        screenAccessor.getTopPos()
+                );
+
+                horseStatsMod.onRenderHorseContainerEvent(
+                        horseInventoryScreen,
+                        event.getGuiGraphics(),
+                        event.getMouseX(),
+                        event.getMouseY()
+                );
+            } finally {
+                event.getGuiGraphics().pose().popMatrix();
+            }
         }
     }
 
-    private void onEntityInteractEvent(PlayerInteractEvent.EntityInteractSpecific event) {
+    private void onEntityInteractEvent(PlayerInteractEvent.EntityInteract event) {
         if (event.getLevel().isClientSide()
                 && event.getHand() == InteractionHand.MAIN_HAND
                 && event.getTarget() instanceof AbstractHorse horse) {

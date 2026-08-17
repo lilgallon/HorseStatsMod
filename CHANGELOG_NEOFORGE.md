@@ -1,13 +1,11 @@
-## Version 3.5.2 NeoForge
+## Version 3.5.3 NeoForge
 
 _supports Minecraft 26.2.x_
 
+Tested loader:
+- NeoForge `26.2.0.59` (client).
+- If a newer NeoForge 26.2 release causes a regression, use `26.2.0.59` as the known-good fallback.
+
 Changes:
-- Hardened interactions, HUD rendering, inventory rendering, and owner lookups so a feature failure no longer crashes the client.
-- Sanitized invalid horse attributes, including `NaN` and infinite values.
-- Replaced fragile click and HUD injections with NeoForge events and a dedicated HUD layer.
-- Restored suppression of the vanilla "Press Shift to dismount" hint when mounting a horse, without hiding unrelated vanilla messages.
-- Fixed `coloredStats` being ignored in some displays and removed the duplicated owner in combined mode.
-- Fixed the German translation resource filename.
-- Removed the invalid update manifest URL.
-- Limited compatibility to Minecraft 26.2.x; later Minecraft versions require a tested port.
+- Fixed the startup crash on recent NeoForge 26.2 releases caused by removed interaction and screen-rendering events.
+- Raised the minimum supported NeoForge version to `26.2.0.59`.
