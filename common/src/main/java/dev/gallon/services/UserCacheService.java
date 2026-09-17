@@ -4,11 +4,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.mojang.logging.LogUtils;
-import com.mojang.authlib.minecraft.MinecraftSessionService;
-import com.mojang.authlib.yggdrasil.ProfileResult;
 import dev.gallon.domain.I18nKeys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.server.players.ProfileResolver;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -28,13 +27,13 @@ public class UserCacheService {
             .build(new CacheLoader<>() {
                 @Override
                 public @NotNull Optional<String> load(@NotNull UUID key) {
-                    MinecraftSessionService sessionService = Minecraft.getInstance()
+                    ProfileResolver profileResolver = Minecraft.getInstance()
                             .services()
-                            .sessionService();
+                            .profileResolver();
                     scheduleLookup(
                             key,
                             ForkJoinPool.commonPool(),
-                            ownerId -> fetchUsername(sessionService, ownerId),
+                            ownerId -> fetchUsername(profileResolver, ownerId),
                             UserCacheService::cacheUsername
                     );
                     return Optional.of(I18n.get(I18nKeys.LOADING));
@@ -54,12 +53,10 @@ public class UserCacheService {
     }
 
     private static @NotNull Optional<String> fetchUsername(
-            @NotNull MinecraftSessionService sessionService,
+            @NotNull ProfileResolver profileResolver,
             @NotNull UUID key
     ) {
-        ProfileResult result = sessionService.fetchProfile(key, false);
-        return Optional.ofNullable(result)
-                .map(ProfileResult::profile)
+        return profileResolver.fetchById(key)
                 .map(profile -> profile.name());
     }
 

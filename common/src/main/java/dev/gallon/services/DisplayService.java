@@ -9,15 +9,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class DisplayService {
 
@@ -474,15 +473,15 @@ public class DisplayService {
     }
 
     private static void drawHoveringText(GuiGraphicsExtractor guiGraphics, int x, int y, List<Component> textLines) {
-        guiGraphics.tooltip(
+        // Deferred tooltips are extracted after the container pose has been restored.
+        // Convert the local hover position to scaled screen coordinates while it is still available.
+        Vector2f screenPosition = guiGraphics.pose().transformPosition(x, y, new Vector2f());
+        guiGraphics.setTooltipForNextFrame(
                 Minecraft.getInstance().font,
-                textLines.stream()
-                        .map(component -> ClientTooltipComponent.create(component.getVisualOrderText()))
-                        .collect(Collectors.toList()),
-                x, //(int) (x / getGuiScale()),
-                y, //(int) (y / getGuiScale())
-                DefaultTooltipPositioner.INSTANCE,
-                null
+                textLines,
+                Optional.empty(),
+                Math.round(screenPosition.x),
+                Math.round(screenPosition.y)
         );
     }
 

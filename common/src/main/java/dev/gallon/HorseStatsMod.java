@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import dev.gallon.domain.HorseStats;
 import dev.gallon.domain.InteractionKind;
 import dev.gallon.domain.ModConfig;
-import dev.gallon.mixins.HudAccessor;
 import dev.gallon.mixins.HorseInventoryScreenAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.DeltaTracker;
@@ -29,12 +28,10 @@ public final class HorseStatsMod {
 
     private final @NotNull ModConfig config;
     private final @NotNull OverlayState overlayState = new OverlayState();
-    private final @NotNull MountHintState mountHintState = new MountHintState();
 
     private boolean interactionDisplayEnabled = true;
     private boolean inventoryDisplayEnabled = true;
     private boolean overlayDisplayEnabled = true;
-    private boolean mountHintSuppressionEnabled = true;
 
     public HorseStatsMod(@NotNull ModConfig config) {
         this.config = config;
@@ -85,7 +82,6 @@ public final class HorseStatsMod {
 
     public void onClientTick() {
         overlayState.tick();
-        suppressVanillaMountHint();
     }
 
     public void onRenderOverlayEvent(
@@ -166,26 +162,4 @@ public final class HorseStatsMod {
         );
     }
 
-    private void suppressVanillaMountHint() {
-        if (!mountHintSuppressionEnabled) {
-            return;
-        }
-
-        try {
-            Minecraft minecraft = Minecraft.getInstance();
-            var player = minecraft.player;
-            var vehicle = player == null ? null : player.getVehicle();
-            boolean isHorse = vehicle instanceof AbstractHorse;
-
-            if (mountHintState.update(vehicle == null ? null : vehicle.getUUID(), isHorse)) {
-                ((HudAccessor) minecraft.gui.hud).setOverlayMessageTime(0);
-            }
-        } catch (RuntimeException exception) {
-            mountHintSuppressionEnabled = false;
-            LOGGER.error(
-                    "HorseStatsMod disabled vanilla horse mount hint suppression for this session after a failure",
-                    exception
-            );
-        }
-    }
 }

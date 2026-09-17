@@ -37,7 +37,8 @@ public final class HorseStatsModFabric implements ClientModInitializer {
 
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof HorseInventoryScreen) {
-                ScreenEvents.afterExtract(screen).register((horseScreen, guiGraphics, mouseX, mouseY, tickDelta) -> {
+                // Schedule tooltips before Screen extracts its deferred elements.
+                ScreenEvents.afterForeground(screen).register((horseScreen, guiGraphics, mouseX, mouseY, tickDelta) -> {
                     guiGraphics.pose().pushMatrix();
                     try {
                         guiGraphics.pose().translate(

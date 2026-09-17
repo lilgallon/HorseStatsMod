@@ -1,6 +1,8 @@
 package dev.gallon.fabric.config;
 
 import dev.gallon.domain.InteractionKind;
+import dev.gallon.domain.DisplayMinMax;
+import dev.gallon.domain.GroupedKind;
 import dev.gallon.domain.ModConfig;
 import me.shedaniel.autoconfig.AutoConfigClient;
 import me.shedaniel.autoconfig.gui.registry.api.GuiRegistryAccess;
@@ -9,6 +11,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.network.chat.Component;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 public final class ConfigScreenRegistry {
@@ -19,9 +22,37 @@ public final class ConfigScreenRegistry {
     }
 
     public static void register() {
+        // AutoConfig also enumerates the static defaults of nested config objects.
+        // They are implementation constants, not editable configuration entries.
+        AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
+                (translationKey, field, config, defaults, registryAccess) -> List.of(),
+                field -> field.getDeclaringClass() == ModConfig.class && Modifier.isStatic(field.getModifiers())
+        );
         AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
                 ConfigScreenRegistry::createInteractionKindEntry,
                 ConfigScreenRegistry::isInteractionKindField
+        );
+        AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
+                (key, field, config, defaults, registry) -> List.of(ENTRY_BUILDER.startSelector(
+                                Component.translatable(key), DisplayMinMax.values(),
+                                ((ModConfig) config).getDisplayMinMax())
+                        .setNameProvider(value -> Component.translatable(key + "." + value.name()))
+                        .setDefaultValue(((ModConfig) defaults)::getDisplayMinMax)
+                        .setSaveConsumer(((ModConfig) config)::setDisplayMinMax)
+                        .build()),
+                field -> field.getDeclaringClass() == ModConfig.class
+                        && field.getName().equals("displayMinMax") && field.getType() == DisplayMinMax.class
+        );
+        AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
+                (key, field, config, defaults, registry) -> List.of(ENTRY_BUILDER.startSelector(
+                                Component.translatable(key), GroupedKind.values(),
+                                ((ModConfig) config).getGroupedStats())
+                        .setNameProvider(value -> Component.translatable(key + "." + value.name()))
+                        .setDefaultValue(((ModConfig) defaults)::getGroupedStats)
+                        .setSaveConsumer(((ModConfig) config)::setGroupedStats)
+                        .build()),
+                field -> field.getDeclaringClass() == ModConfig.class
+                        && field.getName().equals("groupedStats") && field.getType() == GroupedKind.class
         );
     }
 
