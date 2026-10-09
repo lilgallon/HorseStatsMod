@@ -27,6 +27,7 @@ Display detailed statistics for **Horses, Donkeys, Mules, and Llamas**:
 
 * **HUD Display:** View stats instantly while riding via the action bar.
 * **Inventory Integration:** See precise values directly inside the horse's inventory screen.
+* **Above-Head Display:** See the stats floating above the mount you are looking at, or above every nearby mount.
 * **Min/Max Comparison:** Compare your mount's stats against the game's theoretical limits.
 * **Color-Coded Feedback:** Quickly identify high-quality stats (Green) versus poor ones (Red).
 * **Percentage Mode:** Display a global "quality score" (0-100%) to easily rank your stable.
@@ -53,8 +54,9 @@ The mod is highly customizable. You can toggle features via the **Mod Menu** (Fa
 * Enable/Disable color indicators and percentage calculations.
 * Show/Hide Min/Max reference values.
 * Group statistics and include or exclude attribute modifiers.
+* Display statistics above the mount you are looking at, above every nearby mount, or never.
 
-The Forge configuration screen keeps edits in a draft: **Done** saves them, **Cancel** or Escape discards them, and **Reset** restores all seven defaults.
+The Forge configuration screen keeps edits in a draft: **Done** saves them, **Cancel** or Escape discards them, and **Reset** restores all eight defaults.
 
 |                                                NeoForge Config                                                |                                               Fabric Config                                               |
 |:-------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|

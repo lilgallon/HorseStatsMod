@@ -389,6 +389,62 @@ public class DisplayService {
         }
     }
 
+    /**
+     * @return one line per statistic, from top to bottom, to be displayed above the mount's head
+     */
+    public static List<Component> buildAboveHeadLines(@NotNull ModConfig config, @NotNull HorseStats stats) {
+        final boolean percentage = config.getDisplayStatsInPercentage();
+        List<Component> lines = new ArrayList<>();
+
+        if (config.getGroupedStats() == GroupedKind.GROUPED) {
+            lines.add(Component.literal(
+                    I18n.get(I18nKeys.STATS) + ": " +
+                            getColorTextFormat(config, stats.getGroupedStats(), 0, 100) + stats.getGroupedStatsStr()
+            ));
+            return lines;
+        }
+
+        lines.add(buildStatLine(config, I18nKeys.HEALTH, stats.health(), stats.minHealth(), stats.maxHealth(), stats.getHealthStr(percentage)));
+        lines.add(buildStatLine(config, I18nKeys.JUMP_HEIGHT, stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight(), stats.getJumpHeightStr(percentage)));
+        lines.add(buildStatLine(config, I18nKeys.SPEED, stats.speed(), stats.minSpeed(), stats.maxSpeed(), stats.getSpeedStr(percentage)));
+        stats.slots().ifPresent(slots -> lines.add(
+                buildStatLine(config, I18nKeys.SLOTS, slots, stats.minSlots(), stats.maxSlots(), stats.getSlotsStr(percentage))
+        ));
+
+        if (config.getGroupedStats() == GroupedKind.GROUPED_AND_INDIVIDUAL) {
+            lines.add(Component.literal(
+                    I18n.get(I18nKeys.OVERALL) + ": " +
+                            getColorTextFormat(config, stats.getGroupedStats(), 0, 100) + stats.getGroupedStatsStr()
+            ));
+        }
+
+        return lines;
+    }
+
+    private static Component buildStatLine(
+            @NotNull ModConfig config,
+            @NotNull String labelKey,
+            double value,
+            @NotNull Number min,
+            @NotNull Number max,
+            @NotNull String valueStr
+    ) {
+        // no min max when using percentage, it makes no sense
+        final DisplayMinMax displayMinMax = config.getDisplayStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
+        final boolean displayMin = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MIN_ONLY;
+        final boolean displayMax = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MAX_ONLY;
+        final String red = config.getColoredStats() ? ChatFormatting.RED.toString() : "";
+        final String green = config.getColoredStats() ? ChatFormatting.GREEN.toString() : "";
+        final String reset = config.getColoredStats() ? ChatFormatting.RESET.toString() : "";
+
+        return Component.literal(
+                I18n.get(labelKey) + ": " +
+                        (displayMin ? (red + min + reset + "/") : "") +
+                        getColorTextFormat(config, value, min.doubleValue(), max.doubleValue()) + valueStr +
+                        (displayMax ? (reset + "/" + green + max) : "")
+        );
+    }
+
     public static void renderOverlayMessage(
             @NotNull GuiGraphicsExtractor guiGraphics,
             @NotNull Component message,

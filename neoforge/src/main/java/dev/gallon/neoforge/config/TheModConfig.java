@@ -36,5 +36,6 @@ public class TheModConfig {
         config.setDisplayStatsInPercentage(CLIENT.statsInPercentage.get());
         config.setGroupedStats(CLIENT.groupedStats.get());
         config.setIncludeAttributeModifiers(CLIENT.includeAttributeModifiers.get());
+        config.setDisplayStatsAboveHead(CLIENT.displayStatsAboveHead.get());
     }
 }

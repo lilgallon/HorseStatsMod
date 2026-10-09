@@ -26,4 +26,5 @@ public final class I18nKeys {
     public static final @NotNull String STATS_IN_PERCENTAGE = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayStatsInPercentage";
     public static final @NotNull String GROUPED_STATS = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.groupedStats";
     public static final @NotNull String INCLUDE_ATTRIBUTE_MODIFIERS = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.includeAttributeModifiers";
+    public static final @NotNull String DISPLAY_STATS_ABOVE_HEAD = "text.autoconfig." + ModMetadata.MOD_ID + ".option.modConfig.displayStatsAboveHead";
 }

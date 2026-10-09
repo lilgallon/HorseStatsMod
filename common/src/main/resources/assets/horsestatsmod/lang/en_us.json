@@ -36,5 +36,9 @@
   "text.autoconfig.horsestatsmod.option.modConfig.groupedStats.GROUPED": "Grouped",
   "text.autoconfig.horsestatsmod.option.modConfig.groupedStats.GROUPED_AND_INDIVIDUAL": "Grouped and individual",
   "text.autoconfig.horsestatsmod.option.modConfig.includeAttributeModifiers": "Include attribute modifiers",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead": "Display statistics above mounts",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead.WHEN_LOOKING": "When looking at it",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead.ALWAYS": "Always",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead.DISABLED": "Disabled",
   "horsestatsmod.configuration.reset": "Reset"
 }

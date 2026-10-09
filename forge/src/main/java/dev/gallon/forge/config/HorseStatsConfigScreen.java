@@ -1,6 +1,7 @@
 package dev.gallon.forge.config;
 
 import com.mojang.logging.LogUtils;
+import dev.gallon.domain.AboveHeadKind;
 import dev.gallon.domain.DisplayMinMax;
 import dev.gallon.domain.GroupedKind;
 import dev.gallon.domain.I18nKeys;
@@ -82,6 +83,13 @@ public final class HorseStatsConfigScreen extends Screen {
                 I18nKeys.INCLUDE_ATTRIBUTE_MODIFIERS,
                 draft.getIncludeAttributeModifiers(),
                 draft::setIncludeAttributeModifiers
+        ));
+        options.addChild(enumOption(
+                I18nKeys.DISPLAY_STATS_ABOVE_HEAD,
+                draft.getDisplayStatsAboveHead(),
+                AboveHeadKind.values(),
+                value -> enumLabel("displayStatsAboveHead", value, aboveHeadFallback(value)),
+                draft::setDisplayStatsAboveHead
         ));
 
         LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
@@ -180,6 +188,14 @@ public final class HorseStatsConfigScreen extends Screen {
         };
     }
 
+    private static String aboveHeadFallback(AboveHeadKind value) {
+        return switch (value) {
+            case WHEN_LOOKING -> "When looking at it";
+            case ALWAYS -> "Always";
+            case DISABLED -> "Disabled";
+        };
+    }
+
     private static @NotNull ModConfig copy(ModConfig source) {
         ModConfig copy = new ModConfig();
         copy.setDisplayStatsInInventory(source.getDisplayStatsInInventory());
@@ -189,6 +205,7 @@ public final class HorseStatsConfigScreen extends Screen {
         copy.setDisplayStatsInPercentage(source.getDisplayStatsInPercentage());
         copy.setGroupedStats(source.getGroupedStats());
         copy.setIncludeAttributeModifiers(source.getIncludeAttributeModifiers());
+        copy.setDisplayStatsAboveHead(source.getDisplayStatsAboveHead());
         return copy;
     }
 }

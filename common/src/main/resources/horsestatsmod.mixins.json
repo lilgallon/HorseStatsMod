@@ -5,6 +5,8 @@
   "minVersion": "0.8",
   "client": [
     "AbstractContainerScreenAccessor",
+    "EntityRendererMixin",
+    "EntityRenderStateMixin",
     "HudMixin",
     "HorseInventoryScreenAccessor"
   ],

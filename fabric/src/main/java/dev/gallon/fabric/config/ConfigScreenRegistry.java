@@ -1,5 +1,6 @@
 package dev.gallon.fabric.config;
 
+import dev.gallon.domain.AboveHeadKind;
 import dev.gallon.domain.InteractionKind;
 import dev.gallon.domain.DisplayMinMax;
 import dev.gallon.domain.GroupedKind;
@@ -46,6 +47,17 @@ public final class ConfigScreenRegistry {
                         .build()),
                 field -> field.getDeclaringClass() == ModConfig.class
                         && field.getName().equals("groupedStats") && field.getType() == GroupedKind.class
+        );
+        AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
+                (key, field, config, defaults, registry) -> List.of(ENTRY_BUILDER.startSelector(
+                                Component.translatable(key), AboveHeadKind.values(),
+                                ((ModConfig) config).getDisplayStatsAboveHead())
+                        .setNameProvider(value -> Component.translatable(key + "." + value.name()))
+                        .setDefaultValue(((ModConfig) defaults)::getDisplayStatsAboveHead)
+                        .setSaveConsumer(((ModConfig) config)::setDisplayStatsAboveHead)
+                        .build()),
+                field -> field.getDeclaringClass() == ModConfig.class
+                        && field.getName().equals("displayStatsAboveHead") && field.getType() == AboveHeadKind.class
         );
     }
 

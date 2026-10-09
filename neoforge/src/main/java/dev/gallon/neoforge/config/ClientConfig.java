@@ -1,5 +1,6 @@
 package dev.gallon.neoforge.config;
 
+import dev.gallon.domain.AboveHeadKind;
 import dev.gallon.domain.DisplayMinMax;
 import dev.gallon.domain.GroupedKind;
 import dev.gallon.domain.I18nKeys;
@@ -14,6 +15,7 @@ public class ClientConfig {
     public final ModConfigSpec.BooleanValue statsInPercentage;
     public final ModConfigSpec.EnumValue<GroupedKind> groupedStats;
     public final ModConfigSpec.BooleanValue includeAttributeModifiers;
+    public final ModConfigSpec.EnumValue<AboveHeadKind> displayStatsAboveHead;
 
     public ClientConfig(ModConfigSpec.Builder builder) {
         builder.push("HorseStatsMod");
@@ -59,6 +61,13 @@ public class ClientConfig {
                         "only the mount's intrinsic base statistics.")
                 .translation(I18nKeys.INCLUDE_ATTRIBUTE_MODIFIERS)
                 .define("includeAttributeModifiers", true);
+
+        displayStatsAboveHead = builder
+                .comment("Shows the stats above the head of compatible entities (horse, llama, camel...). " +
+                        "WHEN_LOOKING only shows them for the entity you are looking at, ALWAYS shows them for every " +
+                        "entity within 32 blocks.")
+                .translation(I18nKeys.DISPLAY_STATS_ABOVE_HEAD)
+                .defineEnum("displayStatsAboveHead", AboveHeadKind.WHEN_LOOKING);
 
         builder.pop();
     }

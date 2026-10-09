@@ -17,6 +17,7 @@ public class ModConfig {
         static final Boolean DISPLAY_STATS_IN_PERCENTAGE = false;
         static final GroupedKind GROUPED_STATS = GroupedKind.INDIVIDUAL;
         static final Boolean INCLUDE_ATTRIBUTE_MODIFIERS = true;
+        static final AboveHeadKind DISPLAY_STATS_ABOVE_HEAD = AboveHeadKind.WHEN_LOOKING;
     }
 
     private Boolean displayStatsInInventory = Defaults.DISPLAY_STATS_IN_INVENTORY;
@@ -26,6 +27,7 @@ public class ModConfig {
     private Boolean displayStatsInPercentage = Defaults.DISPLAY_STATS_IN_PERCENTAGE;
     private GroupedKind groupedStats = Defaults.GROUPED_STATS;
     private Boolean includeAttributeModifiers = Defaults.INCLUDE_ATTRIBUTE_MODIFIERS;
+    private AboveHeadKind displayStatsAboveHead = Defaults.DISPLAY_STATS_ABOVE_HEAD;
 
     public @NotNull Boolean getDisplayStatsInInventory() {
         return Objects.requireNonNullElse(displayStatsInInventory, Defaults.DISPLAY_STATS_IN_INVENTORY);
@@ -95,6 +97,17 @@ public class ModConfig {
         );
     }
 
+    public @NotNull AboveHeadKind getDisplayStatsAboveHead() {
+        return Objects.requireNonNullElse(displayStatsAboveHead, Defaults.DISPLAY_STATS_ABOVE_HEAD);
+    }
+
+    public void setDisplayStatsAboveHead(@NotNull AboveHeadKind displayStatsAboveHead) {
+        this.displayStatsAboveHead = Objects.requireNonNullElse(
+                displayStatsAboveHead,
+                Defaults.DISPLAY_STATS_ABOVE_HEAD
+        );
+    }
+
     /**
      * Replaces entries that a config serializer could not read with their defaults.
      */
@@ -106,5 +119,6 @@ public class ModConfig {
         setDisplayStatsInPercentage(displayStatsInPercentage);
         setGroupedStats(groupedStats);
         setIncludeAttributeModifiers(includeAttributeModifiers);
+        setDisplayStatsAboveHead(displayStatsAboveHead);
     }
 }

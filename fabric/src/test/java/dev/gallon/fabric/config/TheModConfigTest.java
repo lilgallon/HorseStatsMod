@@ -1,5 +1,6 @@
 package dev.gallon.fabric.config;
 
+import dev.gallon.domain.AboveHeadKind;
 import dev.gallon.domain.DisplayMinMax;
 import dev.gallon.domain.GroupedKind;
 import dev.gallon.domain.InteractionKind;
@@ -20,6 +21,7 @@ class TheModConfigTest {
 
         assertEquals(InteractionKind.RIGHT_CLICK, config.modConfig.getDisplayStatsOnInteraction());
         assertEquals(GroupedKind.INDIVIDUAL, config.modConfig.getGroupedStats());
+        assertEquals(AboveHeadKind.WHEN_LOOKING, config.modConfig.getDisplayStatsAboveHead());
     }
 
     @Test
@@ -35,7 +37,8 @@ class TheModConfigTest {
                             "displayMinMax": "MAX_ONLY",
                             "displayStatsInPercentage": true,
                             "groupedStats": "GROUPED_AND_INDIVIDUAL",
-                            "includeAttributeModifiers": false
+                            "includeAttributeModifiers": false,
+                            "displayStatsAboveHead": "ALWAYS"
                           }
                         }
                         """,
@@ -51,6 +54,7 @@ class TheModConfigTest {
         assertTrue(config.modConfig.getDisplayStatsInPercentage());
         assertEquals(GroupedKind.GROUPED_AND_INDIVIDUAL, config.modConfig.getGroupedStats());
         assertFalse(config.modConfig.getIncludeAttributeModifiers());
+        assertEquals(AboveHeadKind.ALWAYS, config.modConfig.getDisplayStatsAboveHead());
     }
 
     @Test
@@ -90,7 +94,8 @@ class TheModConfigTest {
                         {
                           "modConfig": {
                             "displayStatsOnInteraction": "REMOVED_VALUE",
-                            "groupedStats": "REMOVED_VALUE"
+                            "groupedStats": "REMOVED_VALUE",
+                            "displayStatsAboveHead": "REMOVED_VALUE"
                           }
                         }
                         """,
@@ -101,6 +106,7 @@ class TheModConfigTest {
 
         assertEquals(InteractionKind.RIGHT_CLICK, config.modConfig.getDisplayStatsOnInteraction());
         assertEquals(GroupedKind.INDIVIDUAL, config.modConfig.getGroupedStats());
+        assertEquals(AboveHeadKind.WHEN_LOOKING, config.modConfig.getDisplayStatsAboveHead());
     }
 
     @Test

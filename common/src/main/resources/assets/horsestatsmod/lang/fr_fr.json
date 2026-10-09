@@ -36,5 +36,9 @@
   "text.autoconfig.horsestatsmod.option.modConfig.groupedStats.GROUPED": "Groupées",
   "text.autoconfig.horsestatsmod.option.modConfig.groupedStats.GROUPED_AND_INDIVIDUAL": "Groupées et individuelles",
   "text.autoconfig.horsestatsmod.option.modConfig.includeAttributeModifiers": "Inclure les modificateurs d'attribut",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead": "Afficher les statistiques au-dessus des montures",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead.WHEN_LOOKING": "En la regardant",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead.ALWAYS": "Toujours",
+  "text.autoconfig.horsestatsmod.option.modConfig.displayStatsAboveHead.DISABLED": "Désactivé",
   "horsestatsmod.configuration.reset": "Réinitialiser"
 }
