@@ -31,8 +31,8 @@ class ForgeResourcesTest {
         String compactMetadata = metadata.replaceAll("\\s+", "");
 
         assertTrue(metadata.contains("\"description\": \"horsestatsmod resources\""));
-        assertTrue(metadata.contains("\"max_format\": 107"));
-        assertTrue(compactMetadata.contains("\"min_format\":[107,1]"));
+        assertTrue(metadata.contains("\"max_format\": 121"));
+        assertTrue(compactMetadata.contains("\"min_format\":[121,0]"));
         assertNull(ForgeResourcesTest.class.getResource("/pack.metadata"));
     }
 

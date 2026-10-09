@@ -41,7 +41,7 @@ public final class HorseStatsModForge {
         this.horseStatsMod = new HorseStatsMod(TheModConfig.config);
         PlayerInteractEvent.EntityInteractSpecific.BUS.addListener(this::onEntityInteractEvent);
         ContainerScreenEvent.Render.Foreground.BUS.addListener(this::onRenderContainerScreenEvent);
-        InputEvent.InteractionKeyMappingTriggered.BUS.addListener(this::onInteractionKeyMappingTriggered);
+        InputEvent.InteractionKeyMappingTriggered.PickBlock.BUS.addListener(this::onPickBlockKeyMappingTriggered);
         TickEvent.ClientTickEvent.Post.BUS.addListener(this::onClientTick);
         AddGuiOverlayLayersEvent.BUS.addListener(this::onRegisterGuiLayers);
     }
@@ -55,10 +55,8 @@ public final class HorseStatsModForge {
         );
     }
 
-    private void onInteractionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
-        if (event.isPickBlock()) {
-            horseStatsMod.onMiddleClickEvent(Minecraft.getInstance());
-        }
+    private void onPickBlockKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered.PickBlock event) {
+        horseStatsMod.onMiddleClickEvent(Minecraft.getInstance());
     }
 
     private void onClientTick(TickEvent.ClientTickEvent.Post event) {
