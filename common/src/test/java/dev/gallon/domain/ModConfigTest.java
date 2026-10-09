@@ -12,6 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ModConfigTest {
     @Test
+    void declaresNoStaticFieldSoConfigGuisDoNotTryToWriteIt() {
+        for (Field field : ModConfig.class.getDeclaredFields()) {
+            assertFalse(Modifier.isStatic(field.getModifiers()), field.getName() + " must not be static");
+        }
+    }
+
+    @Test
     void resetsEveryNullConfigEntryToItsDefaultValue() throws IllegalAccessException {
         ModConfig config = new ModConfig();
 

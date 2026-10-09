@@ -11,7 +11,6 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.network.chat.Component;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.List;
 
 public final class ConfigScreenRegistry {
@@ -22,12 +21,6 @@ public final class ConfigScreenRegistry {
     }
 
     public static void register() {
-        // AutoConfig also enumerates the static defaults of nested config objects.
-        // They are implementation constants, not editable configuration entries.
-        AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
-                (translationKey, field, config, defaults, registryAccess) -> List.of(),
-                field -> field.getDeclaringClass() == ModConfig.class && Modifier.isStatic(field.getModifiers())
-        );
         AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
                 ConfigScreenRegistry::createInteractionKindEntry,
                 ConfigScreenRegistry::isInteractionKindField
