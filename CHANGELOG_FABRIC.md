@@ -15,8 +15,8 @@ Optional:
 
 Changes:
 - New option `displayStatsAboveHead` to display the statistics above the mounts' heads, like a name tag:
-  - `WHEN_LOOKING` (default): only above the mount you are looking at, up to 64 blocks away.
+  - `WHEN_LOOKING`: only above the mount you are looking at, up to 64 blocks away.
   - `ALWAYS`: above every mount within 32 blocks.
-  - `DISABLED`: never.
+  - `DISABLED` (default): never.
 - Fixed the configuration screen crashing the game when saving, which prevented any setting from being saved.
 - Updated Fabric API, Cloth Config API, and Mod Menu.

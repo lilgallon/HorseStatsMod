@@ -7,7 +7,7 @@ Tested loader:
 
 Changes:
 - New option `displayStatsAboveHead` to display the statistics above the mounts' heads, like a name tag:
-  - `WHEN_LOOKING` (default): only above the mount you are looking at, up to 64 blocks away.
+  - `WHEN_LOOKING`: only above the mount you are looking at, up to 64 blocks away.
   - `ALWAYS`: above every mount within 32 blocks.
-  - `DISABLED`: never.
+  - `DISABLED` (default): never.
 - Raised the minimum supported NeoForge version to `26.3.0.64-beta`.

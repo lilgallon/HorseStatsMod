@@ -17,7 +17,7 @@ public class ModConfig {
         static final Boolean DISPLAY_STATS_IN_PERCENTAGE = false;
         static final GroupedKind GROUPED_STATS = GroupedKind.INDIVIDUAL;
         static final Boolean INCLUDE_ATTRIBUTE_MODIFIERS = true;
-        static final AboveHeadKind DISPLAY_STATS_ABOVE_HEAD = AboveHeadKind.WHEN_LOOKING;
+        static final AboveHeadKind DISPLAY_STATS_ABOVE_HEAD = AboveHeadKind.DISABLED;
     }
 
     private Boolean displayStatsInInventory = Defaults.DISPLAY_STATS_IN_INVENTORY;

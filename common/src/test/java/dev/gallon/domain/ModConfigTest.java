@@ -45,7 +45,7 @@ class ModConfigTest {
         assertFalse(config.getDisplayStatsInPercentage());
         assertEquals(GroupedKind.INDIVIDUAL, config.getGroupedStats());
         assertTrue(config.getIncludeAttributeModifiers());
-        assertEquals(AboveHeadKind.WHEN_LOOKING, config.getDisplayStatsAboveHead());
+        assertEquals(AboveHeadKind.DISABLED, config.getDisplayStatsAboveHead());
     }
 
     @Test

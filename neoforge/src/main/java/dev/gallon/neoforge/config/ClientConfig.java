@@ -67,7 +67,7 @@ public class ClientConfig {
                         "WHEN_LOOKING only shows them for the entity you are looking at, ALWAYS shows them for every " +
                         "entity within 32 blocks.")
                 .translation(I18nKeys.DISPLAY_STATS_ABOVE_HEAD)
-                .defineEnum("displayStatsAboveHead", AboveHeadKind.WHEN_LOOKING);
+                .defineEnum("displayStatsAboveHead", AboveHeadKind.DISABLED);
 
         builder.pop();
     }

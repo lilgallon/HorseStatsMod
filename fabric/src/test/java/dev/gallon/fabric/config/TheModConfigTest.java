@@ -21,7 +21,7 @@ class TheModConfigTest {
 
         assertEquals(InteractionKind.RIGHT_CLICK, config.modConfig.getDisplayStatsOnInteraction());
         assertEquals(GroupedKind.INDIVIDUAL, config.modConfig.getGroupedStats());
-        assertEquals(AboveHeadKind.WHEN_LOOKING, config.modConfig.getDisplayStatsAboveHead());
+        assertEquals(AboveHeadKind.DISABLED, config.modConfig.getDisplayStatsAboveHead());
     }
 
     @Test
@@ -106,7 +106,7 @@ class TheModConfigTest {
 
         assertEquals(InteractionKind.RIGHT_CLICK, config.modConfig.getDisplayStatsOnInteraction());
         assertEquals(GroupedKind.INDIVIDUAL, config.modConfig.getGroupedStats());
-        assertEquals(AboveHeadKind.WHEN_LOOKING, config.modConfig.getDisplayStatsAboveHead());
+        assertEquals(AboveHeadKind.DISABLED, config.modConfig.getDisplayStatsAboveHead());
     }
 
     @Test
