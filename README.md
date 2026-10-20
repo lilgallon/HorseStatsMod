@@ -40,7 +40,7 @@ Display detailed statistics for **Horses, Donkeys, Mules, and Llamas**:
 |                                           Live HUD Stats                                            |                                                 Grouped Inventory Stats                                                 |                                                     Detailed Min/Max View                                                     |
 |:---------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------:|
 | ![Live Stats](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/live-stats.png) | ![Inventory Grouped](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/inventory-grouped-stats.png) | ![Inventory Individual](https://github.com/lilgallon/HorseStatsMod/raw/main/.github/resources/inventory-individual-stats.png) |
-|                                  *Real-time stats while mounting*                                   |                                            *Global score and quick overview*                                            |                                            *Detailed comparison with player speed*                                            |
+|                                  *Real-time stats while mounting*                                   |                                            *Global score and quick overview*                                            |                                                    *Detailed min/max view*                                                    |
 
 ---
 
@@ -52,11 +52,13 @@ The mod is highly customizable. You can toggle features via the **Mod Menu** (Fa
 * Toggle display in the horse inventory.
 * Change interaction triggers (right-click, shift+right-click, or middle-click).
 * Enable/Disable color indicators and percentage calculations.
+* Display the percentages with or without one decimal (they are rounded to the nearest value).
+* Choose the number of decimals (0 to 5) of the health, the jump height and the speed.
 * Show/Hide Min/Max reference values.
 * Group statistics and include or exclude attribute modifiers.
 * Display statistics above the mount you are looking at, above every nearby mount, or never.
 
-The Forge configuration screen keeps edits in a draft: **Done** saves them, **Cancel** or Escape discards them, and **Reset** restores all eight defaults.
+The Forge configuration screen keeps edits in a draft: **Done** saves them, **Cancel** or Escape discards them, and **Reset** restores all twelve defaults.
 
 |                                                NeoForge Config                                                |                                               Fabric Config                                               |
 |:-------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|

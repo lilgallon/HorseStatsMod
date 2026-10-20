@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DisplayServiceTest {
     @Test
@@ -30,6 +31,21 @@ class DisplayServiceTest {
         String message = DisplayService.buildOverlayMessage(config, stats()).getString();
 
         assertEquals(1, occurrences(message, "Alice"));
+    }
+
+    @Test
+    void overlayUsesTheConfiguredDecimals() {
+        ModConfig config = new ModConfig();
+        config.setColoredStats(false);
+        config.setHealthDecimals(1);
+        config.setJumpHeightDecimals(0);
+        config.setSpeedDecimals(4);
+
+        String message = DisplayService.buildOverlayMessage(config, stats()).getString();
+
+        assertTrue(message.contains(String.format("%.1f", 20.0)), message);
+        assertTrue(message.contains(": 3 "), message);
+        assertTrue(message.contains(String.format("%.4f", 10.0)), message);
     }
 
     private static int occurrences(String value, String searched) {

@@ -9,6 +9,7 @@ import dev.gallon.domain.InteractionKind;
 import dev.gallon.domain.ModConfig;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.ScrollableLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public final class HorseStatsConfigScreen extends Screen {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -26,10 +28,14 @@ public final class HorseStatsConfigScreen extends Screen {
     private static final int BUTTON_WIDTH = 95;
     private static final int BUTTON_HEIGHT = 20;
     private static final String OPTION_PREFIX = "text.autoconfig.horsestatsmod.option.modConfig.";
+    private static final Integer[] DECIMALS = IntStream.rangeClosed(ModConfig.Decimals.MIN, ModConfig.Decimals.MAX)
+            .boxed()
+            .toArray(Integer[]::new);
 
     private final Screen parent;
     private final ModConfig draft;
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
+    private ScrollableLayout scrollArea;
 
     public HorseStatsConfigScreen(Screen parent) {
         this(parent, copy(TheModConfig.config));
@@ -46,7 +52,7 @@ public final class HorseStatsConfigScreen extends Screen {
         layout.removeChildren();
         layout.addTitleHeader(title, font);
 
-        LinearLayout options = layout.addToContents(LinearLayout.vertical().spacing(4));
+        LinearLayout options = LinearLayout.vertical().spacing(4);
         options.addChild(booleanOption(
                 I18nKeys.DISPLAY_STATS_IN_INVENTORY,
                 draft.getDisplayStatsInInventory(),
@@ -72,6 +78,18 @@ public final class HorseStatsConfigScreen extends Screen {
                 draft.getDisplayStatsInPercentage(),
                 draft::setDisplayStatsInPercentage
         ));
+        options.addChild(booleanOption(
+                I18nKeys.PERCENTAGE_WITH_DECIMAL,
+                draft.getPercentageWithDecimal(),
+                draft::setPercentageWithDecimal
+        ));
+        options.addChild(decimalsOption(I18nKeys.HEALTH_DECIMALS, draft.getHealthDecimals(), draft::setHealthDecimals));
+        options.addChild(decimalsOption(
+                I18nKeys.JUMP_HEIGHT_DECIMALS,
+                draft.getJumpHeightDecimals(),
+                draft::setJumpHeightDecimals
+        ));
+        options.addChild(decimalsOption(I18nKeys.SPEED_DECIMALS, draft.getSpeedDecimals(), draft::setSpeedDecimals));
         options.addChild(enumOption(
                 I18nKeys.GROUPED_STATS,
                 draft.getGroupedStats(),
@@ -91,6 +109,8 @@ public final class HorseStatsConfigScreen extends Screen {
                 value -> enumLabel("displayStatsAboveHead", value, aboveHeadFallback(value)),
                 draft::setDisplayStatsAboveHead
         ));
+        // The options don't fit on small screens anymore
+        scrollArea = layout.addToContents(new ScrollableLayout(minecraft, options, layout.getContentHeight()));
 
         LinearLayout footer = layout.addToFooter(LinearLayout.horizontal().spacing(8));
         footer.addChild(Button.builder(
@@ -110,6 +130,7 @@ public final class HorseStatsConfigScreen extends Screen {
 
     @Override
     protected void repositionElements() {
+        scrollArea.setMaxHeight(layout.getContentHeight());
         layout.arrangeElements();
     }
 
@@ -136,6 +157,10 @@ public final class HorseStatsConfigScreen extends Screen {
                 Component.translatable(key),
                 (button, value) -> setter.accept(value)
         );
+    }
+
+    private static CycleButton<Integer> decimalsOption(String key, int initialValue, Consumer<Integer> setter) {
+        return enumOption(key, initialValue, DECIMALS, value -> Component.literal(value.toString()), setter);
     }
 
     private static <T> CycleButton<T> enumOption(
@@ -203,6 +228,10 @@ public final class HorseStatsConfigScreen extends Screen {
         copy.setColoredStats(source.getColoredStats());
         copy.setDisplayMinMax(source.getDisplayMinMax());
         copy.setDisplayStatsInPercentage(source.getDisplayStatsInPercentage());
+        copy.setPercentageWithDecimal(source.getPercentageWithDecimal());
+        copy.setHealthDecimals(source.getHealthDecimals());
+        copy.setJumpHeightDecimals(source.getJumpHeightDecimals());
+        copy.setSpeedDecimals(source.getSpeedDecimals());
         copy.setGroupedStats(source.getGroupedStats());
         copy.setIncludeAttributeModifiers(source.getIncludeAttributeModifiers());
         copy.setDisplayStatsAboveHead(source.getDisplayStatsAboveHead());

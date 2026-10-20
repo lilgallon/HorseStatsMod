@@ -13,6 +13,8 @@ import net.minecraft.network.chat.Component;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public final class ConfigScreenRegistry {
     private static final String INTERACTION_FIELD = "displayStatsOnInteraction";
@@ -58,6 +60,31 @@ public final class ConfigScreenRegistry {
                         .build()),
                 field -> field.getDeclaringClass() == ModConfig.class
                         && field.getName().equals("displayStatsAboveHead") && field.getType() == AboveHeadKind.class
+        );
+        registerDecimalsSlider("healthDecimals", ModConfig::getHealthDecimals, ModConfig::setHealthDecimals);
+        registerDecimalsSlider("jumpHeightDecimals", ModConfig::getJumpHeightDecimals, ModConfig::setJumpHeightDecimals);
+        registerDecimalsSlider("speedDecimals", ModConfig::getSpeedDecimals, ModConfig::setSpeedDecimals);
+    }
+
+    /**
+     * Displays the number of decimals of a stat as a slider instead of a text field, so it can't go out of bounds.
+     */
+    private static void registerDecimalsSlider(
+            String fieldName,
+            Function<ModConfig, Integer> getter,
+            BiConsumer<ModConfig, Integer> setter
+    ) {
+        AutoConfigClient.getGuiRegistry(TheModConfig.class).registerPredicateProvider(
+                (key, field, config, defaults, registry) -> List.of(ENTRY_BUILDER.startIntSlider(
+                                Component.translatable(key),
+                                getter.apply((ModConfig) config),
+                                ModConfig.Decimals.MIN,
+                                ModConfig.Decimals.MAX)
+                        .setDefaultValue(() -> getter.apply((ModConfig) defaults))
+                        .setSaveConsumer(value -> setter.accept((ModConfig) config, value))
+                        .build()),
+                field -> field.getDeclaringClass() == ModConfig.class
+                        && field.getName().equals(fieldName) && field.getType() == Integer.class
         );
     }
 

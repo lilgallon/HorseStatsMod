@@ -5,6 +5,7 @@ import dev.gallon.domain.DisplayMinMax;
 import dev.gallon.domain.GroupedKind;
 import dev.gallon.domain.I18nKeys;
 import dev.gallon.domain.InteractionKind;
+import dev.gallon.domain.ModConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public final class ClientConfig {
@@ -13,6 +14,10 @@ public final class ClientConfig {
     public final ForgeConfigSpec.BooleanValue coloredStats;
     public final ForgeConfigSpec.EnumValue<DisplayMinMax> displayMinMax;
     public final ForgeConfigSpec.BooleanValue statsInPercentage;
+    public final ForgeConfigSpec.BooleanValue percentageWithDecimal;
+    public final ForgeConfigSpec.IntValue healthDecimals;
+    public final ForgeConfigSpec.IntValue jumpHeightDecimals;
+    public final ForgeConfigSpec.IntValue speedDecimals;
     public final ForgeConfigSpec.EnumValue<GroupedKind> groupedStats;
     public final ForgeConfigSpec.BooleanValue includeAttributeModifiers;
     public final ForgeConfigSpec.EnumValue<AboveHeadKind> displayStatsAboveHead;
@@ -50,6 +55,27 @@ public final class ClientConfig {
                         "respective units (blocks/seconds for speed for instance).")
                 .translation(I18nKeys.STATS_IN_PERCENTAGE)
                 .define("displayStatsInPercentage", false);
+
+        percentageWithDecimal = builder
+                .comment("Shows the percentages with one decimal (65.4% instead of 65%). Percentages are rounded to " +
+                        "the nearest value.")
+                .translation(I18nKeys.PERCENTAGE_WITH_DECIMAL)
+                .define("percentageWithDecimal", false);
+
+        healthDecimals = builder
+                .comment("Number of decimals displayed for the health. Bred horses can have a fractional health.")
+                .translation(I18nKeys.HEALTH_DECIMALS)
+                .defineInRange("healthDecimals", 0, ModConfig.Decimals.MIN, ModConfig.Decimals.MAX);
+
+        jumpHeightDecimals = builder
+                .comment("Number of decimals displayed for the jump height.")
+                .translation(I18nKeys.JUMP_HEIGHT_DECIMALS)
+                .defineInRange("jumpHeightDecimals", 2, ModConfig.Decimals.MIN, ModConfig.Decimals.MAX);
+
+        speedDecimals = builder
+                .comment("Number of decimals displayed for the speed.")
+                .translation(I18nKeys.SPEED_DECIMALS)
+                .defineInRange("speedDecimals", 2, ModConfig.Decimals.MIN, ModConfig.Decimals.MAX);
 
         groupedStats = builder
                 .comment("Groups all the stats into one percentage.")

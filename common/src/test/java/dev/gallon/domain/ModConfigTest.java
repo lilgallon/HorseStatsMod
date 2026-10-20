@@ -43,6 +43,10 @@ class ModConfigTest {
         assertTrue(config.getColoredStats());
         assertEquals(DisplayMinMax.DISABLED, config.getDisplayMinMax());
         assertFalse(config.getDisplayStatsInPercentage());
+        assertFalse(config.getPercentageWithDecimal());
+        assertEquals(0, config.getHealthDecimals());
+        assertEquals(2, config.getJumpHeightDecimals());
+        assertEquals(2, config.getSpeedDecimals());
         assertEquals(GroupedKind.INDIVIDUAL, config.getGroupedStats());
         assertTrue(config.getIncludeAttributeModifiers());
         assertEquals(AboveHeadKind.DISABLED, config.getDisplayStatsAboveHead());
@@ -56,5 +60,25 @@ class ModConfigTest {
         groupedStats.set(config, null);
 
         assertEquals(GroupedKind.INDIVIDUAL, config.getGroupedStats());
+    }
+
+    @Test
+    void keepsTheNumberOfDecimalsBetweenZeroAndFive() throws ReflectiveOperationException {
+        ModConfig config = new ModConfig();
+
+        config.setHealthDecimals(-1);
+        config.setJumpHeightDecimals(6);
+        config.setSpeedDecimals(3);
+
+        assertEquals(0, config.getHealthDecimals());
+        assertEquals(5, config.getJumpHeightDecimals());
+        assertEquals(3, config.getSpeedDecimals());
+
+        // A manually edited config file bypasses the setters
+        Field speedDecimals = ModConfig.class.getDeclaredField("speedDecimals");
+        speedDecimals.setAccessible(true);
+        speedDecimals.set(config, 42);
+
+        assertEquals(5, config.getSpeedDecimals());
     }
 }

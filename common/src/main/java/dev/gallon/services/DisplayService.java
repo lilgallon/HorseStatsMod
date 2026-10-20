@@ -8,6 +8,7 @@ import dev.gallon.domain.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,30 @@ import java.util.List;
 import java.util.Optional;
 
 public class DisplayService {
+    // Horizontal space between two stats displayed in the horse inventory, and before the overall stat and the owner
+    private static final int STAT_GAP = 5;
+    private static final int SECTION_GAP = 8;
+
+    /**
+     * One statistic of a mount, already formatted according to the config.
+     *
+     * @param labelKey the translation key of the stat's name
+     * @param unitKey  the translation key of the stat's unit, displayed when hovering the stat in the inventory
+     * @param valueStr the value (or percentage) to display
+     * @param minStr   the min possible value to display
+     * @param maxStr   the max possible value to display
+     */
+    private record Stat(
+            @NotNull String labelKey,
+            @NotNull String unitKey,
+            double value,
+            double min,
+            double max,
+            @NotNull String valueStr,
+            @NotNull String minStr,
+            @NotNull String maxStr
+    ) {
+    }
 
     public static void displayContainerStats(
             @NotNull GuiGraphicsExtractor guiGraphics,
@@ -63,56 +88,11 @@ public class DisplayService {
         final int RW = containerWidth - 6;
         final int RH = 14;
 
-        // no min max when using percentage, it makes no sense
-        final DisplayMinMax displayMinMax = config.getDisplayStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
-        final boolean displayMin = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MIN_ONLY;
-        final boolean displayMax = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MAX_ONLY;
-        final String red = config.getColoredStats() ? ChatFormatting.RED.toString() : "";
-        final String green = config.getColoredStats() ? ChatFormatting.GREEN.toString() : "";
-        final String reset = config.getColoredStats() ? ChatFormatting.RESET.toString() : "";
         if (posInRect(containerMouseX, containerMouseY, RX, RY, RW, RH)) {
             List<Component> textLines = new ArrayList<>();
 
-            // Health
-            textLines.add(
-                    Component.literal(
-                            I18n.get(I18nKeys.HEALTH) + ": " +
-                                    (displayMin ? (red + stats.minHealth() + reset + "/") : "") +
-                                    getColorTextFormat(config, stats.health(), stats.minHealth(), stats.maxHealth()) + stats.getHealthStr(config.getDisplayStatsInPercentage()) +
-                                    (displayMax ? (reset + "/" + green + stats.maxHealth()) : "")
-                    )
-            );
-
-            // Jump height
-            textLines.add(
-                    Component.literal(
-                            I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
-                                    (displayMin ? (red + stats.minJumpHeight() + reset + "/") : "") +
-                                    getColorTextFormat(config, stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) + stats.getJumpHeightStr(config.getDisplayStatsInPercentage()) +
-                                    (displayMax ? (reset + "/" + green + stats.maxJumpHeight()) : "")
-                    )
-            );
-
-            // Speed
-            textLines.add(
-                    Component.literal(
-                            I18n.get(I18nKeys.SPEED) + ": " +
-                                    (displayMin ? (red + stats.minSpeed() + reset + "/") : "") +
-                                    getColorTextFormat(config, stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getDisplayStatsInPercentage()) +
-                                    (displayMax ? (reset + "/" + green + stats.maxSpeed()) : "")
-                    )
-            );
-
-            // Slots
-            if (stats.slots().isPresent()) {
-                textLines.add(
-                        Component.literal(
-                                I18n.get(I18nKeys.SLOTS) + ": " +
-                                        (displayMin ? (red + stats.minSlots() + reset + "/") : "") +
-                                        getColorTextFormat(config, stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getDisplayStatsInPercentage()) +
-                                        (displayMax ? (reset + "/" + green + stats.maxSlots()) : "")
-                        )
-                );
+            for (Stat stat : buildStats(config, stats, true)) {
+                textLines.add(Component.literal(buildStatText(config, stat)));
             }
 
             // Owner
@@ -120,7 +100,7 @@ public class DisplayService {
                 textLines.add(
                         Component.literal(
                                 I18n.get(I18nKeys.OWNER) + ": " + stats.owner().get() +
-                                        reset
+                                        reset(config)
                         )
                 );
             }
@@ -141,17 +121,13 @@ public class DisplayService {
             int containerMouseX,
             int containerMouseY
     ) {
+        final Font font = Minecraft.getInstance().font;
+
         // The boxes positions (x,y) and dimensions (w,h) defining when to display the hovering text relative to the
         // top left of the container
         int rx;
         int ry = 6;
-        int rw = 29;
         int rh = 11;
-
-        // dirty, should be refactored, but I had to be fast for release
-        boolean drawHealth = false;
-        boolean drawJump = false;
-        boolean drawSpeed = false;
 
         // Starts at x=60 by displaying "Stats:" (if it fits the GUI)
         if (config.getGroupedStats() == GroupedKind.GROUPED_AND_INDIVIDUAL) {
@@ -174,101 +150,40 @@ public class DisplayService {
             }
         }
 
+        // The stats start 33 units to the right of "Stats:", then each text is followed by a gap so that they never
+        // overlap, whatever the number of decimals displayed
+        rx += 33;
+        Stat hoveredStat = null;
 
-        switch (config.getGroupedStats()) {
-            case GroupedKind.GROUPED :
-                rx += 33;
+        if (config.getGroupedStats() != GroupedKind.GROUPED) {
+            // Only health, jump and speed are displayed in the inventory
+            for (Stat stat : buildStats(config, stats, false)) {
                 drawText(guiGraphics,
-                    stats.getGroupedStatsStr(),
+                        stat.valueStr(),
+                        rx, ry,
+                        config.getColoredStats() ? getColorHex(stat.value(), stat.min(), stat.max()) : 0Xff444444
+                );
+                int width = font.width(stat.valueStr());
+                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, width + 3, rh)) {
+                    hoveredStat = stat;
+                }
+                rx += width + STAT_GAP;
+            }
+            rx += SECTION_GAP - STAT_GAP;
+        }
+
+        if (config.getGroupedStats() != GroupedKind.INDIVIDUAL) {
+            final String groupedStr = stats.getGroupedStatsStr(config);
+            drawText(guiGraphics,
+                    groupedStr,
                     rx, ry,
                     config.getColoredStats() ? getColorHex(stats.getGroupedStats(), 0, 100) : 0Xff444444
-                );
-            break;
-            case GroupedKind.INDIVIDUAL :
-                // Health (30 units shift to the right)
-                rx += 33;
-                drawText(guiGraphics,
-                        stats.getHealthStr(config.getDisplayStatsInPercentage()),
-                        rx, ry,
-                        config.getColoredStats() ? getColorHex(stats.health(), stats.minHealth(), stats.maxHealth()) : 0Xff444444
-                );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw-8, rh)) { // -8 because max is xx and not xx.xx
-                    drawHealth = true;
-                }
-
-                // Jump (30 units shift to the right as well)
-                rx += (config.getDisplayStatsInPercentage() ? 22 : 16);
-                drawText(guiGraphics,
-                        stats.getJumpHeightStr(config.getDisplayStatsInPercentage()),
-                        rx, ry,
-                        config.getColoredStats() ? getColorHex(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) : 0Xff444444
-                );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) {
-                    drawJump = true;
-                }
-
-                // Speed (24 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
-                rx += 24;
-                drawText(guiGraphics,
-                        stats.getSpeedStr(config.getDisplayStatsInPercentage()),
-                        rx, ry,
-                        config.getColoredStats() ? getColorHex(stats.speed(), stats.minSpeed(), stats.maxSpeed()) : 0Xff444444
-                );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) {
-                    drawSpeed = true;
-                }
-            break;
-            case GroupedKind.GROUPED_AND_INDIVIDUAL :
-                // Individual part
-                // Health (33 units shift to the right)
-                rx += 33;
-                drawText(guiGraphics,
-                        stats.getHealthStr(config.getDisplayStatsInPercentage()),
-                        rx, ry,
-                        config.getColoredStats() ? getColorHex(stats.health(), stats.minHealth(), stats.maxHealth()) : 0Xff444444
-                );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw-8, rh)) { // -8 because max is xx and not xx.xx
-                    drawHealth = true;
-                }
-
-                // Jump (27 units shift to the right as well)
-                rx += (config.getDisplayStatsInPercentage() ? 22 : 16);
-                drawText(guiGraphics,
-                        stats.getJumpHeightStr(config.getDisplayStatsInPercentage()),
-                        rx, ry,
-                        config.getColoredStats() ? getColorHex(stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) : 0Xff444444
-                );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw - 6, rh)) {
-                    drawJump = true;
-                }
-
-                // Speed (21 units shift to the right, not the same as before because jump max is x.xx and not xx.xx)
-                rx += (config.getDisplayStatsInPercentage() ? 22 : 24);
-                drawText(guiGraphics,
-                        stats.getSpeedStr(config.getDisplayStatsInPercentage()),
-                        rx, ry,
-                        config.getColoredStats() ? getColorHex(stats.speed(), stats.minSpeed(), stats.maxSpeed()) : 0Xff444444
-                );
-                if (posInRect(containerMouseX, containerMouseY, rx - 2, ry - 2, rw, rh)) {
-                    drawSpeed = true;
-                }
-
-                // Grouped part
-                // Overall (shift 26 units to the right)
-                rx += (config.getDisplayStatsInPercentage() ? 28 : 34);
-                drawText(guiGraphics,
-                    stats.getGroupedStatsStr(),
-                    rx, ry,
-                    config.getColoredStats() ? getColorHex(stats.getGroupedStats(), 0, 100) : 0Xff444444
-                );
-            break;
-            default:
-            break;
+            );
+            rx += font.width(groupedStr) + SECTION_GAP;
         }
 
         // owner
         if (stats.owner().isPresent()) {
-            rx += (config.getDisplayStatsInPercentage() ? 24 : 30);
             drawText(guiGraphics,
                     stats.owner().get(),
                     rx, ry,
@@ -276,173 +191,136 @@ public class DisplayService {
             );
         }
 
-        if (config.getDisplayStatsInPercentage()) {
-            if (drawHealth) {
-                drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(I18nKeys.HEALTH));
-            } else if (drawJump) {
-                drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(I18nKeys.JUMP_HEIGHT));
-            } else if (drawSpeed) {
-                drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(I18nKeys.SPEED));
-            }
-        } else {
-            if (drawHealth) {
-                drawHoveringText(guiGraphics, containerMouseX, containerMouseY,
-                        config.getColoredStats(), I18n.get(I18nKeys.HEALTH) + " (" + I18n.get(I18nKeys.HEALTH) + "):",
-                        stats.minHealth().toString(), stats.maxHealth().toString(),
-                        I18n.get("horsestatsmod.player") + ": 20"
-                );
-            } else if (drawJump) {
+        if (hoveredStat != null) {
+            if (config.getDisplayStatsInPercentage()) {
+                drawHoveringText(guiGraphics, containerMouseX, containerMouseY, I18n.get(hoveredStat.labelKey()));
+            } else {
                 drawHoveringText(guiGraphics,
                         containerMouseX, containerMouseY,
-                        config.getColoredStats(), I18n.get(I18nKeys.JUMP_HEIGHT) + " (" + I18n.get("horsestatsmod.blocks") + "):",
-                        stats.minJumpHeight().toString(), stats.maxJumpHeight().toString(),
-                        I18n.get("horsestatsmod.player") + ": 1.25"
-                );
-            } else if (drawSpeed) {
-                drawHoveringText(guiGraphics,
-                        containerMouseX, containerMouseY,
-                        config.getColoredStats(), I18n.get(I18nKeys.SPEED) + " (" + I18n.get("horsestatsmod.meters_per_seconds") + "):",
-                        stats.minSpeed().toString(), stats.maxSpeed().toString(),
-                        I18n.get("horsestatsmod.player") + ": 4.317 (" + I18n.get("horsestatsmod.walk") + ")",
-                        I18n.get("horsestatsmod.player") + ": 5.612 (" + I18n.get("horsestatsmod.sprint") + ")",
-                        I18n.get("horsestatsmod.player") + ": 7.143 (" + I18n.get("horsestatsmod.sprint") + "+" + I18n.get(I18nKeys.JUMP_HEIGHT) + ")"
+                        config.getColoredStats(),
+                        I18n.get(hoveredStat.labelKey()) + " (" + I18n.get(hoveredStat.unitKey()) + "):",
+                        hoveredStat.minStr(), hoveredStat.maxStr()
                 );
             }
         }
     }
 
     public static Component buildOverlayMessage(@NotNull ModConfig config, @NotNull HorseStats stats) {
-        final DisplayMinMax displayMinMax = config.getDisplayStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
-        final boolean displayMin = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MIN_ONLY;
-        final boolean displayMax = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MAX_ONLY;
-        final String red = config.getColoredStats() ? ChatFormatting.RED.toString() : "";
-        final String green = config.getColoredStats() ? ChatFormatting.GREEN.toString() : "";
-        final String reset = config.getColoredStats() ? ChatFormatting.RESET.toString() : "";
+        final String reset = reset(config);
+        final String overall = I18n.get(I18nKeys.OVERALL) + ": " +
+                getColorTextFormat(config, stats.getGroupedStats(), 0, 100) + stats.getGroupedStatsStr(config);
+        final Optional<String> owner = stats.owner().map(name -> I18n.get(I18nKeys.OWNER) + ": " + name);
 
+        List<String> parts = new ArrayList<>();
         switch (config.getGroupedStats()) {
             case GroupedKind.GROUPED :
             default:
                 return Component.literal(
                 I18n.get(I18nKeys.STATS) + ": " +
-                        getColorTextFormat(config, stats.getGroupedStats(),0, 100) + stats.getGroupedStatsStr() +
-                        reset + " " + (stats.owner().isEmpty() ? "" : (
-                                I18n.get(I18nKeys.OWNER) + ": " + stats.owner().get()
-                        ))
+                        getColorTextFormat(config, stats.getGroupedStats(),0, 100) + stats.getGroupedStatsStr(config) +
+                        reset + " " + owner.orElse("")
                 );
             case GroupedKind.INDIVIDUAL :
-                return Component.literal(
-                    I18n.get(I18nKeys.HEALTH) + ": " +
-                            (displayMin ? (red + stats.minHealth() + reset + "/") : "") +
-                            getColorTextFormat(config, stats.health(), stats.minHealth(), stats.maxHealth()) + stats.getHealthStr(config.getDisplayStatsInPercentage()) +
-                            (displayMax ? (reset + "/" + green + stats.maxHealth()) : "") +
-                            reset + " " +
-                            I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
-                            (displayMin ? (red + stats.minJumpHeight() + reset + "/") : "") +
-                            getColorTextFormat(config, stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) + stats.getJumpHeightStr(config.getDisplayStatsInPercentage()) +
-                            (displayMax ? (reset + "/" + green + stats.maxJumpHeight()) : "") +
-                            reset + " " +
-                            I18n.get(I18nKeys.SPEED) + ": " +
-                            (displayMin ? (red + stats.minSpeed() + reset + "/") : "") +
-                            getColorTextFormat(config, stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getDisplayStatsInPercentage()) +
-                            (displayMax ? (reset + "/" + green + stats.maxSpeed()) : "") +
-                            reset + " " +
-                            (stats.slots().isEmpty() ? "" : (
-                                    I18n.get(I18nKeys.SLOTS) + ": " +
-                                            (displayMin ? (red + stats.minSlots() + reset + "/") : "") +
-                                            getColorTextFormat(config, stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getDisplayStatsInPercentage()) +
-                                            (displayMax ? (reset + "/" + green + stats.maxSlots()) : "")
-                            )) + reset + " " +
-                            (stats.owner().isEmpty() ? "" : (
-                                    I18n.get(I18nKeys.OWNER) + ": " + stats.owner().get()
-                            ))
-                );
+                buildStats(config, stats, true).forEach(stat -> parts.add(buildStatText(config, stat)));
+                owner.ifPresent(parts::add);
+                break;
             case GroupedKind.GROUPED_AND_INDIVIDUAL :
-                return Component.literal(
-                    I18n.get(I18nKeys.HEALTH) + ": " +
-                            (displayMin ? (red + stats.minHealth() + reset + "/") : "") +
-                            getColorTextFormat(config, stats.health(), stats.minHealth(), stats.maxHealth()) + stats.getHealthStr(config.getDisplayStatsInPercentage()) +
-                            (displayMax ? (reset + "/" + green + stats.maxHealth()) : "") +
-                            reset + " " +
-                            I18n.get(I18nKeys.JUMP_HEIGHT) + ": " +
-                            (displayMin ? (red + stats.minJumpHeight() + reset + "/") : "") +
-                            getColorTextFormat(config, stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight()) + stats.getJumpHeightStr(config.getDisplayStatsInPercentage()) +
-                            (displayMax ? (reset + "/" + green + stats.maxJumpHeight()) : "") +
-                            reset + " " +
-                            I18n.get(I18nKeys.SPEED) + ": " +
-                            (displayMin ? (red + stats.minSpeed() + reset + "/") : "") +
-                            getColorTextFormat(config, stats.speed(), stats.minSpeed(), stats.maxSpeed()) + stats.getSpeedStr(config.getDisplayStatsInPercentage()) +
-                            (displayMax ? (reset + "/" + green + stats.maxSpeed()) : "") +
-                            reset +
-                            (stats.slots().isEmpty() ? "" : (
-                                    " " + I18n.get(I18nKeys.SLOTS) + ": " +
-                                            (displayMin ? (red + stats.minSlots() + reset + "/") : "") +
-                                            getColorTextFormat(config, stats.slots().get(), stats.minSlots(), stats.maxSlots()) + stats.getSlotsStr(config.getDisplayStatsInPercentage()) +
-                                            (displayMax ? (reset + "/" + green + stats.maxSlots()) : "")
-                            )) + reset + " " +
-                            (stats.owner().isEmpty() ? "" : (
-                                    I18n.get(I18nKeys.OWNER) + ": " + stats.owner().get()
-                            )) +
-                            reset + " " +
-                            I18n.get(I18nKeys.OVERALL) + ": " +
-                            getColorTextFormat(config, stats.getGroupedStats(),0, 100) + stats.getGroupedStatsStr()
-                );
+                buildStats(config, stats, true).forEach(stat -> parts.add(buildStatText(config, stat)));
+                owner.ifPresent(parts::add);
+                parts.add(overall);
+                break;
         }
+
+        return Component.literal(String.join(reset + " ", parts));
     }
 
     /**
      * @return one line per statistic, from top to bottom, to be displayed above the mount's head
      */
     public static List<Component> buildAboveHeadLines(@NotNull ModConfig config, @NotNull HorseStats stats) {
-        final boolean percentage = config.getDisplayStatsInPercentage();
         List<Component> lines = new ArrayList<>();
 
         if (config.getGroupedStats() == GroupedKind.GROUPED) {
             lines.add(Component.literal(
                     I18n.get(I18nKeys.STATS) + ": " +
-                            getColorTextFormat(config, stats.getGroupedStats(), 0, 100) + stats.getGroupedStatsStr()
+                            getColorTextFormat(config, stats.getGroupedStats(), 0, 100) + stats.getGroupedStatsStr(config)
             ));
             return lines;
         }
 
-        lines.add(buildStatLine(config, I18nKeys.HEALTH, stats.health(), stats.minHealth(), stats.maxHealth(), stats.getHealthStr(percentage)));
-        lines.add(buildStatLine(config, I18nKeys.JUMP_HEIGHT, stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight(), stats.getJumpHeightStr(percentage)));
-        lines.add(buildStatLine(config, I18nKeys.SPEED, stats.speed(), stats.minSpeed(), stats.maxSpeed(), stats.getSpeedStr(percentage)));
-        stats.slots().ifPresent(slots -> lines.add(
-                buildStatLine(config, I18nKeys.SLOTS, slots, stats.minSlots(), stats.maxSlots(), stats.getSlotsStr(percentage))
-        ));
+        for (Stat stat : buildStats(config, stats, true)) {
+            lines.add(Component.literal(buildStatText(config, stat)));
+        }
 
         if (config.getGroupedStats() == GroupedKind.GROUPED_AND_INDIVIDUAL) {
             lines.add(Component.literal(
                     I18n.get(I18nKeys.OVERALL) + ": " +
-                            getColorTextFormat(config, stats.getGroupedStats(), 0, 100) + stats.getGroupedStatsStr()
+                            getColorTextFormat(config, stats.getGroupedStats(), 0, 100) + stats.getGroupedStatsStr(config)
             ));
         }
 
         return lines;
     }
 
-    private static Component buildStatLine(
-            @NotNull ModConfig config,
-            @NotNull String labelKey,
-            double value,
-            @NotNull Number min,
-            @NotNull Number max,
-            @NotNull String valueStr
-    ) {
+    /**
+     * @param includeSlots whether to add the slots, when the mount has some
+     * @return the health, jump height, speed and slots of the mount, formatted according to the config
+     */
+    private static List<Stat> buildStats(@NotNull ModConfig config, @NotNull HorseStats stats, boolean includeSlots) {
+        List<Stat> result = new ArrayList<>();
+        result.add(new Stat(
+                I18nKeys.HEALTH, I18nKeys.HEALTH,
+                stats.health(), stats.minHealth(), stats.maxHealth(),
+                stats.getHealthStr(config),
+                HorseStats.formatHealth(stats.minHealth(), config),
+                HorseStats.formatHealth(stats.maxHealth(), config)
+        ));
+        result.add(new Stat(
+                I18nKeys.JUMP_HEIGHT, I18nKeys.BLOCKS,
+                stats.jumpHeight(), stats.minJumpHeight(), stats.maxJumpHeight(),
+                stats.getJumpHeightStr(config),
+                HorseStats.formatJumpHeight(stats.minJumpHeight(), config),
+                HorseStats.formatJumpHeight(stats.maxJumpHeight(), config)
+        ));
+        result.add(new Stat(
+                I18nKeys.SPEED, I18nKeys.METERS_PER_SECONDS,
+                stats.speed(), stats.minSpeed(), stats.maxSpeed(),
+                stats.getSpeedStr(config),
+                HorseStats.formatSpeed(stats.minSpeed(), config),
+                HorseStats.formatSpeed(stats.maxSpeed(), config)
+        ));
+        if (includeSlots) {
+            stats.slots().ifPresent(slots -> result.add(new Stat(
+                    I18nKeys.SLOTS, I18nKeys.SLOTS,
+                    slots, stats.minSlots(), stats.maxSlots(),
+                    stats.getSlotsStr(config),
+                    stats.minSlots().toString(),
+                    stats.maxSlots().toString()
+            )));
+        }
+        return result;
+    }
+
+    /**
+     * @return the stat as "Name: value", with its min and max according to the config
+     */
+    private static String buildStatText(@NotNull ModConfig config, @NotNull Stat stat) {
         // no min max when using percentage, it makes no sense
         final DisplayMinMax displayMinMax = config.getDisplayStatsInPercentage() ? DisplayMinMax.DISABLED : config.getDisplayMinMax();
         final boolean displayMin = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MIN_ONLY;
         final boolean displayMax = displayMinMax == DisplayMinMax.MIN_AND_MAX || displayMinMax == DisplayMinMax.MAX_ONLY;
         final String red = config.getColoredStats() ? ChatFormatting.RED.toString() : "";
         final String green = config.getColoredStats() ? ChatFormatting.GREEN.toString() : "";
-        final String reset = config.getColoredStats() ? ChatFormatting.RESET.toString() : "";
+        final String reset = reset(config);
 
-        return Component.literal(
-                I18n.get(labelKey) + ": " +
-                        (displayMin ? (red + min + reset + "/") : "") +
-                        getColorTextFormat(config, value, min.doubleValue(), max.doubleValue()) + valueStr +
-                        (displayMax ? (reset + "/" + green + max) : "")
-        );
+        return I18n.get(stat.labelKey()) + ": " +
+                (displayMin ? (red + stat.minStr() + reset + "/") : "") +
+                getColorTextFormat(config, stat.value(), stat.min(), stat.max()) + stat.valueStr() +
+                (displayMax ? (reset + "/" + green + stat.maxStr()) : "");
+    }
+
+    private static String reset(@NotNull ModConfig config) {
+        return config.getColoredStats() ? ChatFormatting.RESET.toString() : "";
     }
 
     public static void renderOverlayMessage(
@@ -504,20 +382,16 @@ public class DisplayService {
             boolean coloredStats,
             String title,
             String min,
-            String max,
-            String... notes
+            String max
     ) {
         List<Component> textLines = new ArrayList<>();
         textLines.add(Component.literal(title));
         textLines.add(Component.literal(
-                (coloredStats ? ChatFormatting.RED.toString() : "") + I18n.get("horsestatsmod.min") + ": " + min
+                (coloredStats ? ChatFormatting.RED.toString() : "") + I18n.get(I18nKeys.MIN) + ": " + min
         ));
         textLines.add(Component.literal(
-                (coloredStats ? ChatFormatting.GREEN.toString() : "") + I18n.get("horsestatsmod.max") + ": " + max
+                (coloredStats ? ChatFormatting.GREEN.toString() : "") + I18n.get(I18nKeys.MAX) + ": " + max
         ));
-        for (String note : notes) {
-            textLines.add(Component.literal(note));
-        }
 
         drawHoveringText(guiGraphics, x, y, textLines);
     }

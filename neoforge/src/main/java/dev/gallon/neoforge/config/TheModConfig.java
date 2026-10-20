@@ -34,6 +34,10 @@ public class TheModConfig {
         config.setColoredStats(CLIENT.coloredStats.get());
         config.setDisplayMinMax(CLIENT.displayMinMax.get());
         config.setDisplayStatsInPercentage(CLIENT.statsInPercentage.get());
+        config.setPercentageWithDecimal(CLIENT.percentageWithDecimal.get());
+        config.setHealthDecimals(CLIENT.healthDecimals.get());
+        config.setJumpHeightDecimals(CLIENT.jumpHeightDecimals.get());
+        config.setSpeedDecimals(CLIENT.speedDecimals.get());
         config.setGroupedStats(CLIENT.groupedStats.get());
         config.setIncludeAttributeModifiers(CLIENT.includeAttributeModifiers.get());
         config.setDisplayStatsAboveHead(CLIENT.displayStatsAboveHead.get());

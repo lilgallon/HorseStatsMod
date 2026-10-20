@@ -1,7 +1,11 @@
 package dev.gallon.domain;
 
+import dev.gallon.services.HorseStatsService;
+import dev.gallon.services.JumpHeightConverter;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 public record HorseStats(
@@ -15,251 +19,99 @@ public record HorseStats(
 ) {
     public @NotNull Integer minHealth() {
         return switch (mountType) {
-            // https://minecraft.wiki/w/Llama: 15 - 30
-            case LLAMA -> 15;
+            // AbstractHorse#generateMaxHealth: 15 + random(0..7) + random(0..8), used by horses, donkeys, mules and
+            // llamas. Bred mounts keep the same 15 - 30 range.
+            case HORSE, DONKEY, MULE, LLAMA, TRADER_LLAMA -> 15;
 
-            // https://minecraft.wiki/w/Trader_Llama: 15 - 30
-            case TRADER_LLAMA -> 15;
-
-            // https://minecraft.wiki/w/Donkey#Health: Donkey's health ranges from 15–30
-            case DONKEY -> 15;
-
-            // https://minecraft.wiki/w/Mule#Health: A mule's health ranges from 15–30, but tends toward the average of
-            // 22–23. Displayed hearts are health, divided by two, rounded down
-            case MULE -> 15;
-
-            // https://minecraft.wiki/w/Horse#Health: Horse's health points range from 15HPx7.5 to 30HPx15
-            case HORSE -> 15;
-
-            // https://minecraft.wiki/w/Skeleton_Horse#Health: A skeleton horse's health is always 15. Displayed hearts
-            // are health, divided by two, rounded down. A horse with an odd number of health points (15, 17, 19, etc.)
-            // does not show the last half-heart. If the horse has lost one health point lower than the inflicted damage
-            // and did not regenerate, it has an odd number of health points, otherwise, it has an even number of health
-            // points.
+            // SkeletonHorse#createAttributes: always 15
             case SKELETON_HORSE -> 15;
 
-            // https://minecraft.wiki/w/Zombie_Horse#Health: Zombie horses are spawned with a constant health of 25
+            // ZombieHorse#createAttributes: always 25
             case ZOMBIE_HORSE -> 25;
 
-            // https://minecraft.wiki/w/Camel
+            // Camel#createAttributes: always 32
             case CAMEL -> 32;
         };
     }
 
     public @NotNull Integer maxHealth() {
         return switch (mountType) {
-            // https://minecraft.wiki/w/Llama: 15 - 30
-            case LLAMA -> 30;
-
-            // https://minecraft.wiki/w/Trader_Llama: 15 - 30
-            case TRADER_LLAMA -> 30;
-
-            // https://minecraft.wiki/w/Donkey#Health: Donkey's health ranges from 15–30
-            case DONKEY -> 30;
-
-            // https://minecraft.wiki/w/Mule#Health: A mule's health ranges from 15–30, but tends toward the average of
-            // 22–23. Displayed hearts are health, divided by two, rounded down
-            case MULE -> 30;
-
-            // https://minecraft.wiki/w/Horse#Health: Horse's health points range from 15HPx7.5 to 30HPx15
-            case HORSE -> 30;
-
-            // https://minecraft.wiki/w/Skeleton_Horse#Health: A skeleton horse's health is always 15. Displayed hearts
-            // are health, divided by two, rounded down. A horse with an odd number of health points (15, 17, 19, etc.)
-            // does not show the last half-heart. If the horse has lost one health point lower than the inflicted damage
-            // and did not regenerate, it has an odd number of health points, otherwise, it has an even number of health
-            // points.
+            case HORSE, DONKEY, MULE, LLAMA, TRADER_LLAMA -> 30;
             case SKELETON_HORSE -> 15;
-
-            // https://minecraft.wiki/w/Zombie_Horse#Health: Zombie horses are spawned with a constant health of 25
             case ZOMBIE_HORSE -> 25;
-
-            // https://minecraft.wiki/w/Camel
             case CAMEL -> 32;
         };
     }
 
     public @NotNull Double minJumpHeight() {
-        return switch (mountType) {
-            // https://minecraft.wiki/w/Donkey#Jump_Strength_2: In Java Edition, A bred donkey's jump strength has the
-            // same limits as other horses, between 0.4 and 1.0.
-            case DONKEY -> 1.153;
-
-            // https://minecraft.wiki/w/Mule#Jump_strength: Spawned mules' jump strength is usually 0.5, which is enough
-            // to clear 1 9⁄16 blocks. Jump strengths between 0.4 and 1.0 can be found in bred mules, depending on the
-            // statistics of the parents => same as horse
-            case MULE -> 1.153;
-
-            // https://minecraft.wiki/w/Horse#Jump_strength: Horse's jump strength ranges from 0.4–1.0, with an average
-            // of 0.7 in internal units. The minimum jump strength of 0.4 is enough to clear 1.153 blocks, while the
-            // maximum of 1.0 is enough to clear 5.9197 blocks. The calculation, however, is not linear with the average
-            // jump strength of 0.7 favoring the lower side with the value of 3.124 blocks.
-            case HORSE -> 1.153;
-
-            // https://minecraft.wiki/w/Zombie_Horse#Jump_strength: Zombie horses' jump strength ranges from 0.5 to 0.7,
-            // with an average of 0.6 in internal units. The minimum jump strength of 0.5 is enough to clear 1.7088
-            // blocks, while the maximum of 0.7 is enough to clear 3.124 blocks. The average jump strength of 0.6 is
-            // enough to clear 2.3675 blocks.
-            case ZOMBIE_HORSE -> 1.7088;
-
-            // https://minecraft.wiki/w/Skeleton_Horse#Jump_strength: Jump strength ranges from 0.4–1.0, averaging 0.7.
-            // A jump strength of 0.5 is enough to clear 1 19/32 blocks, while 1.0 is enough to clear 5 9/32 blocks.
-            case SKELETON_HORSE -> 1.59375;
-
-            // https://minecraft.wiki/w/Llama: No mention of jump height -> use the internal value even though the
-            // user can't jump with it
-            case LLAMA -> 1.67;
-
-            // https://minecraft.wiki/w/Trader_Llama: No mention of jump height -> use the internal value even though the
-            // user can't jump with it
-            case TRADER_LLAMA -> 1.67;
-
-            // https://minecraft.wiki/w/Camel: Camels have the unique ability to step up 1.5 blocks, allowing them to
-            // surmount fences and walls with ease. This is in contrast to horses, donkeys and mules, which can't
-            // automatically step up more than one block without jumping. => no jump => use internal value even though
-            // the user can't jump with it
-            case CAMEL -> 1.25;
-        };
+        return JumpHeightConverter.getJumpHeight(minJumpStrength());
     }
 
     public @NotNull Double maxJumpHeight() {
+        return JumpHeightConverter.getJumpHeight(maxJumpStrength());
+    }
+
+    private double minJumpStrength() {
         return switch (mountType) {
-            // https://minecraft.wiki/w/Donkey#Jump_Strength_2: In Java Edition, A bred donkey's jump strength has the
-            // same limits as other horses, between 0.4 and 1.0.
-            case DONKEY -> 5.9197;
+            // AbstractHorse#generateJumpStrength: 0.4F + 3 * random(0..0.2). Spawned donkeys and mules always have 0.5,
+            // but bred ones have the same 0.4 - 1.0 range as horses. Skeleton horses are randomized like horses.
+            case HORSE, DONKEY, MULE, SKELETON_HORSE -> 0.4F;
 
-            // https://minecraft.wiki/w/Mule#Jump_strength: Spawned mules' jump strength is usually 0.5, which is enough
-            // to clear 1 9⁄16 blocks. Jump strengths between 0.4 and 1.0 can be found in bred mules, depending on the
-            // statistics of the parents => same as horse
-            case MULE -> 5.9197;
+            // ZombieHorse#generateZombieHorseJumpStrength: 0.5 + 3 * random(0..1/15)
+            case ZOMBIE_HORSE -> 0.5;
 
-            // https://minecraft.wiki/w/Horse#Jump_strength: Horse's jump strength ranges from 0.4–1.0, with an average
-            // of 0.7 in internal units. The minimum jump strength of 0.4 is enough to clear 1.153 blocks, while the
-            // maximum of 1.0 is enough to clear 5.9197 blocks. The calculation, however, is not linear with the average
-            // jump strength of 0.7 favoring the lower side with the value of 3.124 blocks.
-            case HORSE -> 5.9197;
+            // AbstractChestedHorse#createBaseChestedHorseAttributes: always 0.5, llamas can't jump with a rider though
+            case LLAMA, TRADER_LLAMA -> 0.5;
 
-            // https://minecraft.wiki/w/Zombie_Horse#Jump_strength: Zombie horses' jump strength ranges from 0.5 to 0.7,
-            // with an average of 0.6 in internal units. The minimum jump strength of 0.5 is enough to clear 1.7088
-            // blocks, while the maximum of 0.7 is enough to clear 3.124 blocks. The average jump strength of 0.6 is
-            // enough to clear 2.3675 blocks.
-            case ZOMBIE_HORSE -> 3.124;
+            // Camel#createAttributes: always 0.42F, camels dash instead of jumping
+            case CAMEL -> 0.42F;
+        };
+    }
 
-            // https://minecraft.wiki/w/Skeleton_Horse#Jump_strength: Jump strength ranges from 0.4–1.0, averaging 0.7.
-            // A jump strength of 0.5 is enough to clear 1 19/32 blocks, while 1.0 is enough to clear 5 9/32 blocks.
-            case SKELETON_HORSE -> 5.28125;
-
-            // https://minecraft.wiki/w/Llama: No mention of jump height -> use the internal value even though the
-            // user can't jump with it
-            case LLAMA -> 1.67;
-
-            // https://minecraft.wiki/w/Trader_Llama: No mention of jump height -> use the internal value even though the
-            // user can't jump with it
-            case TRADER_LLAMA -> 1.67;
-
-            // https://minecraft.wiki/w/Camel: Camels have the unique ability to step up 1.5 blocks, allowing them to
-            // surmount fences and walls with ease. This is in contrast to horses, donkeys and mules, which can't
-            // automatically step up more than one block without jumping. => no jump => use internal value even though
-            // the user can't jump with it
-            case CAMEL -> 1.25;
+    private double maxJumpStrength() {
+        return switch (mountType) {
+            case HORSE, DONKEY, MULE, SKELETON_HORSE -> 0.4F + 0.2 + 0.2 + 0.2;
+            case ZOMBIE_HORSE -> 0.5 + 0.06666666666666667 + 0.06666666666666667 + 0.06666666666666667;
+            case LLAMA, TRADER_LLAMA -> 0.5;
+            case CAMEL -> 0.42F;
         };
     }
 
     public @NotNull Double minSpeed() {
-        return switch (mountType) {
-            // https://minecraft.wiki/w/Donkey#Movement_speed: A spawned donkey's speed value is always 0.175, but it
-            // moves at the slightly reduced 7.38 blocks/sec. For reference, the player's normal walking speed is 0.1,
-            // equivalent to 4.3 blocks/sec, and the player's sprinting speed is equivalent to 5.6 blocks/sec. The speed
-            // listed does not include any status effect that affects the speed of a horse or a player.
-            // But, in https://minecraft.wiki/w/Donkey#Movement_Speed_2: In Java Edition, a bred donkey's speed value
-            // has the same limits as other horses, between 0.1125 and 0.3375.
-            case DONKEY -> 4.856625;
-
-            // https://minecraft.wiki/w/Mule#Movement_speed: Spawned mules' speed is always 0.175; the player's normal
-            // walking speed is 0.1. The speed listed does not include any status effect that affects the speed of a
-            // horse or a player. Bred mules have speed between 0.1125 and 0.3375 based on their parent's speeds, like
-            // all other horse breeding. => same as horse
-            case MULE -> 4.856625;
-
-            // https://minecraft.wiki/w/Horse#Movement_speed: Horse's movement speed ranges from 0.1125–0.3375 in
-            // internal units, with an average of 0.225. For reference, the player's normal walking speed is 0.1. The
-            // speed listed does not include any status effect that affects the speed of the horse or the player.
-            // The conversion factor between internal units and blocks/sec is roughly 43.17, putting the best horse's
-            // maximum speed at about 14.57 blocks/second, and the average horse's speed at about 9.71 blocks/sec
-            // => 0.1125*43.17
-            case HORSE -> 4.856625;
-
-            // https://minecraft.wiki/w/Skeleton_Horse#Movement_speed: Skeleton horse's speed is always 0.2; the
-            // player's normal walking speed is 0.1. The speed listed does not include any status effect that affects
-            // the speed of a horse or a player. => 2 times the player's normal walking speed (4.317*2)
-            case SKELETON_HORSE -> 8.634;
-
-            // https://minecraft.wiki/w/Zombie_Horse#Movement_speed: In Java Edition, it ranges between ~0.21347 and
-            // ~0.28463 in internal units, with an average of ~0.24905. The conversion factor between internal units and
-            // blocks/sec is roughly 43.17
-            case ZOMBIE_HORSE -> 9.216;
-
-            // https://minecraft.wiki/w/Llama: 0.175 internal units
-            case LLAMA -> 7.55475;
-
-            // https://minecraft.wiki/w/Trader_Llama: 0.175 internal units
-            case TRADER_LLAMA -> 7.55475;
-
-            // https://minecraft.wiki/w/Camel: Camels are less maneuverable than other mounts, with their turning and
-            // strafing speed being slower. They gradually gain speed while moving in a straight line, up to a walking
-            // speed of 3.885 blocks/s, and can also manually sprint at a speed of 8.203 blocks/s by double tapping
-            // forward or by holding the sprint control while moving forward => use 3.885 as speed because it's the
-            // internal value used
-            case CAMEL -> 3.885;
-        };
+        return HorseStatsService.convertSpeedToBlocksPerSeconds(minSpeedAttribute());
     }
 
     public @NotNull Double maxSpeed() {
+        return HorseStatsService.convertSpeedToBlocksPerSeconds(maxSpeedAttribute());
+    }
+
+    private double minSpeedAttribute() {
         return switch (mountType) {
-            // https://minecraft.wiki/w/Donkey#Movement_speed: A spawned donkey's speed value is always 0.175, but it
-            // moves at the slightly reduced 7.38 blocks/sec. For reference, the player's normal walking speed is 0.1,
-            // equivalent to 4.3 blocks/sec, and the player's sprinting speed is equivalent to 5.6 blocks/sec. The speed
-            // listed does not include any status effect that affects the speed of a horse or a player.
-            // But, in https://minecraft.wiki/w/Donkey#Movement_Speed_2: In Java Edition, a bred donkey's speed value
-            // has the same limits as other horses, between 0.1125 and 0.3375.
-            case DONKEY -> 14.569875;
+            // AbstractHorse#generateSpeed: (0.45F + 3 * random(0..0.3)) * 0.25. Spawned donkeys and mules always have
+            // 0.175, but bred ones have the same 0.1125 - 0.3375 range as horses.
+            case HORSE, DONKEY, MULE -> 0.45F * 0.25;
 
-            // https://minecraft.wiki/w/Mule#Movement_speed: Spawned mules' speed is always 0.175; the player's normal
-            // walking speed is 0.1. The speed listed does not include any status effect that affects the speed of a
-            // horse or a player. Bred mules have speed between 0.1125 and 0.3375 based on their parent's speeds, like
-            // all other horse breeding. => same as horse
-            case MULE -> 14.569875;
+            // SkeletonHorse#createAttributes: always 0.2F
+            case SKELETON_HORSE -> 0.2F;
 
-            // https://minecraft.wiki/w/Horse#Movement_speed: Horse's movement speed ranges from 0.1125–0.3375 in
-            // internal units, with an average of 0.225. For reference, the player's normal walking speed is 0.1. The
-            // speed listed does not include any status effect that affects the speed of the horse or the player.
-            // The conversion factor between internal units and blocks/sec is roughly 43.17, putting the best horse's
-            // maximum speed at about 14.57 blocks/second, and the average horse's speed at about 9.71 blocks/sec
-            // => 0.1125*43.17
-            case HORSE -> 14.569875;
+            // ZombieHorse#generateZombieHorseSpeed: (9 + 3 * random(0..1)) / 42.16F
+            case ZOMBIE_HORSE -> 9.0 / 42.16F;
 
-            // https://minecraft.wiki/w/Skeleton_Horse#Movement_speed: Skeleton horse's speed is always 0.2; the
-            // player's normal walking speed is 0.1. The speed listed does not include any status effect that affects
-            // the speed of a horse or a player. => 2 times the player's normal walking speed (4.317*2)
-            case SKELETON_HORSE -> 8.634;
+            // AbstractChestedHorse#createBaseChestedHorseAttributes: always 0.175F
+            case LLAMA, TRADER_LLAMA -> 0.175F;
 
-            // https://minecraft.wiki/w/Zombie_Horse#Movement_speed: In Java Edition, it ranges between ~0.2134746, and
-            // ~0.28463 in internal units, with an average of ~0.24905. The conversion factor between internal units and
-            // blocks/sec is roughly 43.17
-            case ZOMBIE_HORSE -> 12.288;
+            // Camel#createAttributes: always 0.09F (walking speed, camels can also dash and sprint)
+            case CAMEL -> 0.09F;
+        };
+    }
 
-            // https://minecraft.wiki/w/Llama: 0.175 internal units
-            case LLAMA -> 7.55475;
-
-            // https://minecraft.wiki/w/Trader_Llama: 0.175 internal units
-            case TRADER_LLAMA -> 7.55475;
-
-            // https://minecraft.wiki/w/Camel: Camels are less maneuverable than other mounts, with their turning and
-            // strafing speed being slower. They gradually gain speed while moving in a straight line, up to a walking
-            // speed of 3.885 blocks/s, and can also manually sprint at a speed of 8.203 blocks/s by double tapping
-            // forward or by holding the sprint control while moving forward => use 3.885 as speed because it's the
-            // internal value used
-            case CAMEL -> 3.885;
+    private double maxSpeedAttribute() {
+        return switch (mountType) {
+            case HORSE, DONKEY, MULE -> (0.45F + 0.3 + 0.3 + 0.3) * 0.25;
+            case SKELETON_HORSE -> 0.2F;
+            case ZOMBIE_HORSE -> (9.0 + 1.0 + 1.0 + 1.0) / 42.16F;
+            case LLAMA, TRADER_LLAMA -> 0.175F;
+            case CAMEL -> 0.09F;
         };
     }
 
@@ -317,53 +169,84 @@ public record HorseStats(
         }
     }
 
-    private @NotNull Integer computePercentage(double value, double min, double max) {
-        return (int) (normalize(value, min, max) * 100);
+    public double getHealthPercentage() {
+        return normalize(health, minHealth(), maxHealth()) * 100;
     }
 
-    private @NotNull Integer getHealthPercentage() {
-        return computePercentage(health, minHealth(), maxHealth());
+    public double getJumpHeightPercentage() {
+        return normalize(jumpHeight, minJumpHeight(), maxJumpHeight()) * 100;
     }
 
-    private @NotNull Integer getJumpHeightPercentage() {
-        return computePercentage(jumpHeight, minJumpHeight(), maxJumpHeight());
+    public double getSpeedPercentage() {
+        return normalize(speed, minSpeed(), maxSpeed()) * 100;
     }
 
-    private @NotNull Integer getSpeedPercentage() {
-        return computePercentage(speed, minSpeed(), maxSpeed());
+    public double getSlotsPercentage() {
+        return normalize(slots.orElse(minSlots()), minSlots(), maxSlots()) * 100;
     }
 
-    private @NotNull Integer getSlotsPercentage() {
-        return computePercentage(slots.orElse(minSlots()), minSlots(), maxSlots());
+    public @NotNull String getHealthStr(@NotNull ModConfig config) {
+        return config.getDisplayStatsInPercentage()
+                ? formatPercentage(getHealthPercentage(), config)
+                : formatHealth(health, config);
     }
 
-    public @NotNull String getHealthStr(Boolean percentage) {
-        return percentage ? (getHealthPercentage() + "%") : String.format("%.0f", health);
+    public @NotNull String getJumpHeightStr(@NotNull ModConfig config) {
+        return config.getDisplayStatsInPercentage()
+                ? formatPercentage(getJumpHeightPercentage(), config)
+                : formatJumpHeight(jumpHeight, config);
     }
 
-    public @NotNull String getJumpHeightStr(Boolean percentage) {
-        return percentage ? (getJumpHeightPercentage() + "%") : String.format("%.2f", jumpHeight);
+    public @NotNull String getSpeedStr(@NotNull ModConfig config) {
+        return config.getDisplayStatsInPercentage()
+                ? formatPercentage(getSpeedPercentage(), config)
+                : formatSpeed(speed, config);
     }
 
-    public @NotNull String getSpeedStr(Boolean percentage) {
-        return percentage ? (getSpeedPercentage() + "%") : String.format("%.2f", speed);
+    public @NotNull String getSlotsStr(@NotNull ModConfig config) {
+        return config.getDisplayStatsInPercentage()
+                ? formatPercentage(getSlotsPercentage(), config)
+                : slots.orElse(0).toString();
     }
 
-    public @NotNull String getSlotsStr(Boolean percentage) {
-        return percentage ? (getSlotsPercentage() + "%") : slots.orElse(0).toString();
+    /**
+     * @return the average of the health, jump height and speed percentages (0 - 100)
+     */
+    public double getGroupedStats() {
+        return (getHealthPercentage() + getJumpHeightPercentage() + getSpeedPercentage()) / 3;
     }
 
-    public @NotNull Integer getGroupedStats() {
-        double average = (
-                normalize(health, minHealth(), maxHealth()) +
-                normalize(jumpHeight, minJumpHeight(), maxJumpHeight()) +
-                normalize(speed, minSpeed(), maxSpeed())
-        ) / 3;
-
-        return (int) (average * 100);
+    public @NotNull String getGroupedStatsStr(@NotNull ModConfig config) {
+        return formatPercentage(getGroupedStats(), config);
     }
 
-    public @NotNull String getGroupedStatsStr() {
-        return getGroupedStats() + "%";
+    public static @NotNull String formatHealth(double health, @NotNull ModConfig config) {
+        return formatDecimals(health, config.getHealthDecimals());
+    }
+
+    public static @NotNull String formatJumpHeight(double jumpHeight, @NotNull ModConfig config) {
+        return formatDecimals(jumpHeight, config.getJumpHeightDecimals());
+    }
+
+    public static @NotNull String formatSpeed(double speed, @NotNull ModConfig config) {
+        return formatDecimals(speed, config.getSpeedDecimals());
+    }
+
+    public static @NotNull String formatPercentage(double percentage, @NotNull ModConfig config) {
+        return formatDecimals(percentage, config.getPercentageWithDecimal() ? 1 : 0) + "%";
+    }
+
+    /**
+     * Rounds half up (65.5 -> 66, 65.45 -> 65.5 with one decimal) and formats with the user's locale.
+     */
+    static @NotNull String formatDecimals(double value, int decimals) {
+        if (!Double.isFinite(value)) {
+            return String.valueOf(value);
+        }
+
+        // BigDecimal.valueOf rounds from the shortest decimal representation of the double, so 65.45 stays 65.45
+        // instead of 65.4499999... A BigDecimal is never negative zero, so -0.001 is displayed as 0 and not -0.
+        BigDecimal rounded = BigDecimal.valueOf(value).setScale(decimals, RoundingMode.HALF_UP);
+        return String.format("%." + decimals + "f", rounded);
     }
 }

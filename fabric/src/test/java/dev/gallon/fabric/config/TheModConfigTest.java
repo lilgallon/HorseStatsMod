@@ -36,6 +36,10 @@ class TheModConfigTest {
                             "coloredStats": false,
                             "displayMinMax": "MAX_ONLY",
                             "displayStatsInPercentage": true,
+                            "percentageWithDecimal": true,
+                            "healthDecimals": 3,
+                            "jumpHeightDecimals": 9,
+                            "speedDecimals": 0,
                             "groupedStats": "GROUPED_AND_INDIVIDUAL",
                             "includeAttributeModifiers": false,
                             "displayStatsAboveHead": "ALWAYS"
@@ -52,6 +56,10 @@ class TheModConfigTest {
         assertFalse(config.modConfig.getColoredStats());
         assertEquals(DisplayMinMax.MAX_ONLY, config.modConfig.getDisplayMinMax());
         assertTrue(config.modConfig.getDisplayStatsInPercentage());
+        assertTrue(config.modConfig.getPercentageWithDecimal());
+        assertEquals(3, config.modConfig.getHealthDecimals());
+        assertEquals(5, config.modConfig.getJumpHeightDecimals());
+        assertEquals(0, config.modConfig.getSpeedDecimals());
         assertEquals(GroupedKind.GROUPED_AND_INDIVIDUAL, config.modConfig.getGroupedStats());
         assertFalse(config.modConfig.getIncludeAttributeModifiers());
         assertEquals(AboveHeadKind.ALWAYS, config.modConfig.getDisplayStatsAboveHead());

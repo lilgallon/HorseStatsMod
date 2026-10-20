@@ -37,6 +37,10 @@ public final class TheModConfig {
         config.setColoredStats(CLIENT.coloredStats.get());
         config.setDisplayMinMax(CLIENT.displayMinMax.get());
         config.setDisplayStatsInPercentage(CLIENT.statsInPercentage.get());
+        config.setPercentageWithDecimal(CLIENT.percentageWithDecimal.get());
+        config.setHealthDecimals(CLIENT.healthDecimals.get());
+        config.setJumpHeightDecimals(CLIENT.jumpHeightDecimals.get());
+        config.setSpeedDecimals(CLIENT.speedDecimals.get());
         config.setGroupedStats(CLIENT.groupedStats.get());
         config.setIncludeAttributeModifiers(CLIENT.includeAttributeModifiers.get());
         config.setDisplayStatsAboveHead(CLIENT.displayStatsAboveHead.get());
@@ -49,6 +53,10 @@ public final class TheModConfig {
         CLIENT.coloredStats.set(source.getColoredStats());
         CLIENT.displayMinMax.set(source.getDisplayMinMax());
         CLIENT.statsInPercentage.set(source.getDisplayStatsInPercentage());
+        CLIENT.percentageWithDecimal.set(source.getPercentageWithDecimal());
+        CLIENT.healthDecimals.set(source.getHealthDecimals());
+        CLIENT.jumpHeightDecimals.set(source.getJumpHeightDecimals());
+        CLIENT.speedDecimals.set(source.getSpeedDecimals());
         CLIENT.groupedStats.set(source.getGroupedStats());
         CLIENT.includeAttributeModifiers.set(source.getIncludeAttributeModifiers());
         CLIENT.displayStatsAboveHead.set(source.getDisplayStatsAboveHead());
